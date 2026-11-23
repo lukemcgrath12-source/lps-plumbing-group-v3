@@ -103,6 +103,7 @@ async function handleSubmit(event) {
       headers: { 'Accept': 'application/json' }
     });
     if (r.ok) {
+      if (typeof fbq === 'function') fbq('track', 'Lead');
       if (typeof gtag === 'function') {
         gtag('event', 'generate_lead', {
           'form_name': 'quote_request',
@@ -130,4 +131,4 @@ async function handleSubmit(event) {
 
 
 /* click to call + email tracking */
-document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e.target.closest('a[href^="tel:"],a[href^="mailto:"]'):null;if(!a||typeof gtag!=='function')return;var h=a.getAttribute('href');if(h.indexOf('tel:')===0)gtag('event','click_to_call',{page_path:location.pathname});else gtag('event','email_click',{page_path:location.pathname});},true);
+document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e.target.closest('a[href^="tel:"],a[href^="mailto:"],a[href^="sms:"],a[href*="wa.me"]'):null;if(!a||typeof gtag!=='function')return;var h=a.getAttribute('href');var ev=h.indexOf('tel:')===0?'click_to_call':h.indexOf('sms:')===0?'click_to_text':h.indexOf('wa.me')>-1?'click_to_whatsapp':'email_click';gtag('event',ev,{page_path:location.pathname});if(typeof fbq==='function'&&ev!=='email_click')fbq('track','Contact');},true);
