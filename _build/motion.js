@@ -25,7 +25,7 @@
   /* generic reveals */
   var heroI = 0;
   gsap.utils.toArray('.rv').forEach(function(el){
-    var inHero = !!el.closest('.h2x');
+    var inHero = !!el.closest('.h2x,.vh');
     var d = inHero ? 2.2 + (heroI++) * 0.1 : 0;
     gsap.to(el, { opacity: 1, y: 0, duration: 1.1, ease: 'expo.out', delay: d, scrollTrigger: inHero ? null : { trigger: el, start: 'top 90%' } });
   });

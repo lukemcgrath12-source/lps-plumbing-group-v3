@@ -111,7 +111,7 @@ async function handleSubmit(event) {
       }
       form.reset();
       status.style.display = 'block';
-      status.style.background = 'rgba(62,140,119,.16)';
+      status.style.background = 'rgba(62,140,119,.16)'; status.style.marginTop='14px'; status.style.borderRadius='12px';
       status.style.color = 'var(--text)';
       status.textContent = "Thanks, your enquiry's in. Lewis will be in touch within one business day.";
     } else {

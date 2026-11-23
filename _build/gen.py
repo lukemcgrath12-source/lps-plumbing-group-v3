@@ -179,51 +179,38 @@ def faq_block(n='05'):
 </section>'''
 
 def quote_form(n='06', heading='Send us the plans.', sub='Builders, send through plans or a scope and we will price the full plumbing package. Homeowners, tell us about the job and we will come back with a clear, itemised quote.'):
+    w = heading.split(' '); h1, h2 = ' '.join(w[:-2]), ' '.join(w[-2:])
     return f'''
-<section class="sec sec-dark" id="quote">
-  <div class="wrap px">
-    {badge(n, 'Get a quote')}
-    <div class="rv" style="max-width:60ch">
-      <h2 class="big">{heading.split(' ',1)[0]} <em>{heading.split(' ',1)[1]}</em></h2>
-      <p class="lead" style="margin-top:16px">{sub}</p>
-    </div>
-    <div class="contact-grid">
-      <div class="cinfo rv">
-        <div class="crow"><div class="crow-k">Call Lewis, 24/7</div><div class="crow-v"><a href="tel:{TEL}">{PHONE}</a></div><div class="crow-s">You deal with the director, start to finish.</div></div>
-        <div class="crow"><div class="crow-k">Email</div><div class="crow-v" style="font-size:16px"><a href="mailto:{EMAIL}">{EMAIL}</a></div></div>
-        <div class="crow"><div class="crow-k">Hours</div><div class="crow-v" style="font-size:16px">7am to 7pm, 7 days</div><div class="crow-s">Emergency call outs 24/7.</div></div>
-        <div class="crow"><div class="crow-k">Service area</div><div class="crow-v" style="font-size:16px">Shire, Inner South, North Shore &amp; the East</div><div class="crow-s">Miranda, Mascot, Neutral Bay and the Eastern Suburbs.</div></div>
-      </div>
-      <div class="form-card rv">
-        <div class="form-head"><h3>Request a quote</h3><p>Takes a minute. We reply within one business day.</p></div>
-        <form id="quoteForm" action="{FORMSPREE}" method="POST" onsubmit="handleSubmit(event)">
-          <input type="hidden" name="_subject" value="New quote request: LPS Plumbing Group website">
-          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
-          <div class="fgrid two">
-            <div class="field"><label for="f-name">Your name *</label><input id="f-name" type="text" name="name" required autocomplete="name"></div>
-            <div class="field"><label for="f-phone">Phone *</label><input id="f-phone" type="tel" name="phone" required autocomplete="tel"></div>
-          </div>
-          <div class="fgrid two" style="margin-top:14px">
-            <div class="field"><label for="f-email">Email *</label><input id="f-email" type="email" name="email" required autocomplete="email"></div>
-            <div class="field"><label for="f-co">Company <span style="text-transform:none;letter-spacing:0">(builders)</span></label><input id="f-co" type="text" name="company" autocomplete="organization"></div>
-          </div>
-          <div class="fgrid two" style="margin-top:14px">
-            <div class="field"><label for="f-type">I am a *</label><select id="f-type" name="client_type" required><option value="">Select…</option><option>Builder</option><option>Homeowner</option><option>Developer</option><option>Strata or property manager</option><option>Commercial client</option></select></div>
-            <div class="field"><label for="f-job">Job type *</label><select id="f-job" name="job_type" required><option value="">Select…</option><option>New build</option><option>Renovation</option><option>Bathroom</option><option>Commercial</option><option>Emergency</option><option>Other</option></select></div>
-          </div>
-          <div class="fgrid" style="margin-top:14px">
-            <div class="field"><label for="f-sub">Site suburb *</label><input id="f-sub" type="text" name="suburb" required></div>
-            <div class="field"><label for="f-plans">Link to plans or photos</label><input id="f-plans" type="url" name="plans_link" placeholder="Dropbox, Google Drive or WeTransfer link"><span class="hint">No link? Mention it below and we will send you an email to reply to with attachments.</span></div>
-            <div class="field"><label for="f-msg">About the job</label><textarea id="f-msg" name="message" placeholder="Scope, timing, stage of the build…"></textarea></div>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="btn btn-gold"><span class="roll"><i><b>Send enquiry</b><b>Send enquiry</b></i></span><span class="circ">{ARROW}</span></button>
-            <span class="form-note">Licensed &amp; insured · Lic {LIC}</span>
-          </div>
-          <div id="formStatus" role="status"></div>
-        </form>
+<section class="qs" id="quote">
+  <div class="wrap px qs-grid">
+    <div class="qs-l">
+      {badge(n, 'Get a quote')}
+      <h2 class="big rv">{h1} <em>{h2}</em></h2>
+      <p class="lead rv" style="margin-top:18px">{sub}</p>
+      <div class="qs-c rv">
+        <a href="tel:{TEL}"><span>Call Lewis, 24/7</span><b>{PHONE}</b></a>
+        <a href="mailto:{EMAIL}"><span>Email</span><b>{EMAIL}</b></a>
+        <div><span>Hours</span><b>7am to 7pm, 7 days</b></div>
       </div>
     </div>
+    <form class="qf rv" id="quoteForm" action="{FORMSPREE}" method="POST" onsubmit="handleSubmit(event)">
+      <input type="hidden" name="_subject" value="New quote request: LPS Plumbing Group website">
+      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+      <div class="qf-h"><b>Request a quote</b><span>We reply within one business day</span></div>
+      <div class="qf-g">
+        <label class="qf-f"><span>Name or company *</span><input type="text" name="name" required autocomplete="name"></label>
+        <label class="qf-f"><span>Phone *</span><input type="tel" name="phone" required autocomplete="tel"></label>
+        <label class="qf-f qf-w"><span>Email *</span><input type="email" name="email" required autocomplete="email"></label>
+        <label class="qf-f"><span>I am a *</span><select name="client_type" required><option value="">Select</option><option>Builder</option><option>Homeowner</option><option>Developer</option><option>Strata or property manager</option><option>Commercial client</option></select></label>
+        <label class="qf-f"><span>Job type *</span><select name="job_type" required><option value="">Select</option><option>New build</option><option>Renovation</option><option>Bathroom</option><option>Commercial</option><option>Emergency</option><option>Other</option></select></label>
+        <label class="qf-f qf-w"><span>Site suburb *</span><input type="text" name="suburb" required></label>
+        <label class="qf-f qf-w"><span>Link to plans or photos <em>(optional)</em></span><input type="url" name="plans_link" placeholder="Dropbox, Google Drive or WeTransfer"></label>
+        <label class="qf-f qf-w"><span>About the job</span><textarea name="message" rows="3" placeholder="Scope, timing, stage of the build"></textarea></label>
+      </div>
+      <button type="submit" class="qf-btn">Send enquiry <span>&rarr;</span></button>
+      <p class="qf-n">Licensed &amp; insured · Lic {LIC}</p>
+      <div id="formStatus" role="status"></div>
+    </form>
   </div>
 </section>'''
 
@@ -237,31 +224,27 @@ def band():
 </section>'''
 
 def foot():
-    svc = ''.join(f'<li><a href="{L("/"+s[0])}">{s[1]}</a></li>' for s in SERVICES)
-    areas = ''.join(f'<li><a href="{L("/"+a[0])}">{a[1].replace("the ","").title() if a[1].startswith("the") else a[1]}</a></li>' for a in AREAS)
+    links = [('/services','Services'),('/builders','For builders'),('/projects','Projects'),('/about','About'),('/quote','Get a quote')]
+    nav_l = ''.join(f'<a href="{L(p)}">{n}</a>' for p, n in links)
+    svc = ''.join(f'<a href="{L("/"+x[0])}">{x[1]}</a>' for x in SERVICES)
+    areas = ''.join(f'<a href="{L("/"+a[0])}">{a[1].replace("the ","").title() if a[1].startswith("the") else a[1]}</a>' for a in AREAS)
     return f'''
-<footer class="foot">
+<footer class="ft2">
   <div class="wrap px">
-    <div class="foot-top" style="grid-template-columns:1.4fr 1fr 1fr 1fr">
-      <div>
-        <img class="foot-logo" src="{W('logo',600,150)}" alt="LPS Plumbing Group">
-        <p>Plumbing, drainage and gas fitting for high end builds, renovations and commercial projects across Sydney.</p>
-        <p style="margin-top:12px">Lic {LIC} · ABN {ABN}</p>
-      </div>
-      <div><h5>Services</h5><ul>{svc}</ul></div>
-      <div><h5>Areas</h5><ul>{areas}</ul></div>
-      <div><h5>Contact</h5><ul>
-        <li><a href="tel:{TEL}">{PHONE}</a></li>
-        <li><a href="mailto:{EMAIL}">{EMAIL}</a></li>
-        <li><a href="https://www.instagram.com/{IG}/" target="_blank" rel="noopener">@{IG}</a></li>
-        <li><a href="{L('/builders')}">For builders</a></li>
-        <li><a href="{L('/privacy')}">Privacy</a></li>
-        <li><a href="{L('/terms')}">Terms</a></li>
-      </ul></div>
+    <div class="ft2-cta">
+      <h2>Got a build <em>coming up?</em></h2>
+      <div class="ft2-btns">{btn(L('/quote'), 'Send us your plans')}{btn('tel:'+TEL, PHONE, 'ghost', PHONE_SVG)}</div>
     </div>
-    <div class="foot-btm">
-      <span>© <span id="yr">2026</span> LPS Plumbing Group · Licensed &amp; insured</span>
-      <span>Site by <a href="https://www.latitudemarketing.au/?utm_source=lps-plumbing&utm_medium=referral&utm_campaign=client_credit" target="_blank" rel="noopener">Latitude Marketing</a></span>
+    <div class="ft2-mid">
+      <div class="ft2-brand"><img src="{W('logo',600,150)}" alt="LPS Plumbing Group"><p>Plumbing, drainage and gas fitting for high end builds across Sydney.</p></div>
+      <div class="ft2-col"><h5>Explore</h5>{nav_l}</div>
+      <div class="ft2-col"><h5>Services</h5>{svc}</div>
+      <div class="ft2-col"><h5>Areas</h5>{areas}</div>
+      <div class="ft2-col"><h5>Contact</h5><a href="tel:{TEL}">{PHONE}</a><a href="mailto:{EMAIL}">{EMAIL}</a><a href="https://www.instagram.com/{IG}/" target="_blank" rel="noopener">Instagram</a></div>
+    </div>
+    <div class="ft2-btm">
+      <span>© <span id="yr">2026</span> LPS Plumbing Group · Lic {LIC} · ABN {ABN}</span>
+      <span><a href="{L('/privacy')}">Privacy</a> · <a href="{L('/terms')}">Terms</a> · Site by <a href="https://www.latitudemarketing.au/?utm_source=lps-plumbing&utm_medium=referral&utm_campaign=client_credit" target="_blank" rel="noopener">Latitude Marketing</a></span>
     </div>
   </div>
 </footer>
@@ -305,20 +288,18 @@ arows = ''.join(f'<a class="arow" href="{L("/"+a[0])}"><span>{a[1][0].upper()+a[
 
 home = head('LPS Plumbing Group | Plumber for High End Builds, Sydney',
             'Plumbing, drainage and gas for high end builds, renos and bathrooms across Sydney. Licensed, insured, 24/7. Call Lewis on 0452 611 522.', '/', ld) + nav(True) + f'''
-<header class="h2x">
-  <div class="wrap px h2x-grid">
-    <div>
-      <p class="h2x-k rv">Plumbing · Drainage · Gas · Sydney</p>
-      <h1 data-lines="now">{lines('Plumbing for', 'builds where the', '<em>finish matters.</em>')}</h1>
+<header class="vh">
+  <video class="vh-vid" autoplay muted loop playsinline preload="auto" poster="{BASE}/lps-hero-poster.jpg" aria-hidden="true"><source src="{BASE}/lps-hero.mp4" type="video/mp4"></video>
+  <div class="vh-shade"></div>
+  <div class="wrap px vh-in">
+    <p class="h2x-k vh-k rv">Plumbing · Drainage · Gas · Sydney</p>
+    <h1 data-lines="now">{lines('Plumbing for builds', 'where the <em>finish matters.</em>')}</h1>
+    <div class="vh-row">
       <p class="lead rv">High end new builds, renovations, bathrooms and commercial work. One crew, led by director Lewis Slatter, from first pit to final tap.</p>
-      <div class="h2x-cta rv">{btn(L('/quote'), 'Send us your plans', 'teal')}{btn('tel:'+TEL, PHONE, 'line', PHONE_SVG)}</div>
-      <div class="scroll-cue rv"><i></i>Scroll</div>
-    </div>
-    <div class="h2x-media clip" data-delay="1.9">
-      <img data-par src="{W('vanity',1200,1500)}" alt="Bathroom vanity with brushed wall mixer plumbed by LPS Plumbing Group" fetchpriority="high">
-      <div class="h2x-card"><i></i><div><b>24/7</b><br><span>Emergency call outs<br>Lic {LIC}</span></div></div>
+      <div class="h2x-cta rv">{btn(L('/quote'), 'Send us your plans')}{btn('tel:'+TEL, PHONE, 'ghost', PHONE_SVG)}</div>
     </div>
   </div>
+  <div class="vh-card rv"><i></i><div><b>24/7</b><span>Emergency call outs · Lic {LIC}</span></div></div>
 </header>
 <div class="mq" aria-hidden="true"><div class="mq-track">{mq}</div></div>
 
@@ -362,8 +343,7 @@ home = head('LPS Plumbing Group | Plumber for High End Builds, Sydney',
   </div>
 </section>
 {faq_block('05')}
-{quote_form('06')}
-{band()}''' + foot() + tail()
+{quote_form('06')}''' + foot() + tail()
 pages['index.html'] = home
 
 # ---------------- SERVICES HUB ----------------
