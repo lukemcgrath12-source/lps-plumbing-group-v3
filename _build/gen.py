@@ -11,7 +11,7 @@ LIC, ABN = '476073C', '34 280 954 515'
 FORMSPREE = 'https://formspree.io/f/mjglroqj'          # TODO at launch: LPS's own Formspree form
 GA4 = ''                                                  # TODO at launch: LPS GA4 ID
 IG = 'lpsplumbinggroup'
-CSS = open(os.path.join(os.path.dirname(__file__), 'base.css')).read()
+CSS = open(os.path.join(os.path.dirname(__file__), 'base.css')).read() + open(os.path.join(os.path.dirname(__file__), 'design2.css')).read()
 
 def W(i, w=1600, h=1200):
     ids = {
@@ -123,7 +123,7 @@ def head(title, desc, path, extra=''):
 def nav(hold=False):
     h = ''
     if hold:
-        h = '''<div class="hold" id="hold" aria-hidden="true"><div class="hold-stack"><div class="hold-mask"><span class="hold-word">LPS<em>.</em>PLUMBING</span></div><div class="hold-track"><div class="hold-fill"></div></div><div class="hold-status">Plumbing · Drainage · Gas</div></div></div>'''
+        h = f'<div class="hold" id="hold" aria-hidden="true"><img class="hold-logo" src="{W("logo",900,230)}" alt=""><div class="hold-line"><i></i></div><div class="hold-drop"></div></div>'
     links = ''.join(f'<a href="{L(p)}">{n}</a>' for p, n in NAV)
     sheet = ''.join(f'<a href="{L(p)}">{n} <i>0{i+1}</i></a>' for i, (p, n) in enumerate(NAV + [('/quote', 'Get a quote')]))
     return h + f'''
@@ -158,8 +158,8 @@ def phead(crumb, eyebrow, h1, lead, ctas=True):
   <div class="phead-in wrap px">
     <div class="crumb"><a href="{L('/')}">Home</a><span>/</span><span>{crumb}</span></div>
     <span class="eyebrow">{eyebrow}</span>
-    <h1>{h1}</h1>
-    <p class="lead">{lead}</p>
+    <h1 class="rv">{h1}</h1>
+    <p class="lead rv">{lead}</p>
     {c}
   </div>
 </header>'''
@@ -269,9 +269,13 @@ def foot():
 '''
 
 JS = open(os.path.join(os.path.dirname(__file__), 'site.js')).read()
+MOTION = open(os.path.join(os.path.dirname(__file__), 'motion.js')).read()
+LIBS = '<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script><script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>'
+def lines(*ls):
+    return ''.join(f'<span class="ln-wrap"><span class="ln-in">{l}</span></span>' for l in ls)
 
 def tail():
-    return f'<script>{JS}</script>\n<script>window.va=window.va||function(){{(window.vaq=window.vaq||[]).push(arguments);}};</script><script defer src="/_vercel/insights/script.js"></script>\n</body>\n</html>\n'
+    return f'{LIBS}<script>{JS}</script><script>{MOTION}</script>\n<script>window.va=window.va||function(){{(window.vaq=window.vaq||[]).push(arguments);}};</script><script defer src="/_vercel/insights/script.js"></script>\n</body>\n</html>\n'
 
 pages = {}
 
@@ -293,76 +297,68 @@ ld = f'<script type="application/ld+json">{json.dumps(schema)}</script><script t
 
 svc_rows = ''.join(f'''<article class="svc-row rv"><span class="svc-n">0{i+1}</span><h3 class="svc-t">{s[1]}</h3><p class="svc-d">{s[3]} <a href="{L('/'+s[0])}" style="color:var(--gold);font-weight:500;white-space:nowrap">Learn more</a></p><div class="svc-img"><img src="{W(s[2],900,560)}" alt="{s[1]} plumbing by LPS Plumbing Group" loading="lazy"></div></article>''' for i, s in enumerate(SERVICES))
 
+scards = ''.join(f'''<article class="scard"><div class="scard-b"><div><span class="scard-n">0{i+1} / 05</span><h3 style="margin-top:18px">{s[1]}</h3><p>{s[4]}</p></div><div><ul>{''.join(f'<li>{x}</li>' for x in s[5][:4])}</ul><a class="more" href="{L('/'+s[0])}" style="margin-top:22px">Explore {s[1].lower()} &rarr;</a></div></div><div class="scard-m"><img src="{W(s[2],1100,1100)}" alt="{s[1]} plumbing by LPS Plumbing Group" loading="lazy"></div></article>''' for i, s in enumerate(SERVICES))
+gal = [('miranda','Bathroom','Ensuite renovation, Miranda'),('kitchen','New build','Open plan kitchen'),('shower','Outdoor','Copper outdoor shower'),('basin','Renovation','Brushed brass wall mixer'),('commercial','Commercial','Stack and riser install'),('ensuite','Bathroom','Walk in shower ensuite'),('hotwater','Hot water','Hot water replacement')]
+hz = ''.join(f'<figure class="hz-item"><div class="hz-img"><img src="{W(i,800,1000)}" alt="{t}" loading="lazy"></div><figcaption class="hz-cap"><b>{t}</b><span>{k}</span></figcaption></figure>' for i,k,t in gal)
+mq = ''.join(f'<span>{x}</span>' for x in ['New builds','Renovations','Bathrooms','Commercial','Gas fitting','Drainage','Hot water','24/7 emergency']*2)
+arows = ''.join(f'<a class="arow" href="{L("/"+a[0])}"><span>{a[1][0].upper()+a[1][1:]}</span><small>{a[2]} &rarr;</small></a>' for a in AREAS)
+
 home = head('LPS Plumbing Group | Plumber for High End Builds, Sydney',
             'Plumbing, drainage and gas for high end builds, renos and bathrooms across Sydney. Licensed, insured, 24/7. Call Lewis on 0452 611 522.', '/', ld) + nav(True) + f'''
-<header class="hero">
-  <img class="hero-video" src="{W('vanity',2000,1400)}" alt="Bathroom vanity with brushed brass tapware plumbed by LPS Plumbing Group" fetchpriority="high">
-  <div class="hero-shade"></div><div class="hero-seam"></div>
-  <div class="hero-inner wrap px">
-    <p class="hero-label">Plumbing · Drainage · Gas fitting · Sydney</p>
-    <h1><span class="ln"><span>Plumbing for</span></span><span class="ln"><span>builds where the</span></span><span class="ln"><span><em>finish matters.</em></span></span></h1>
-    <div class="hero-cta">
-      {btn(L('/quote'), 'Send us your plans')}
-      {btn('tel:'+TEL, PHONE, 'ghost', PHONE_SVG)}
-      <div class="hero-badge"><b>Licensed &amp; insured</b><i>24/7</i></div>
+<header class="h2x">
+  <div class="wrap px h2x-grid">
+    <div>
+      <p class="h2x-k rv">Plumbing · Drainage · Gas · Sydney</p>
+      <h1 data-lines="now">{lines('Plumbing for', 'builds where the', '<em>finish matters.</em>')}</h1>
+      <p class="lead rv">High end new builds, renovations, bathrooms and commercial work. One crew, led by director Lewis Slatter, from first pit to final tap.</p>
+      <div class="h2x-cta rv">{btn(L('/quote'), 'Send us your plans', 'teal')}{btn('tel:'+TEL, PHONE, 'line', PHONE_SVG)}</div>
+      <div class="scroll-cue rv"><i></i>Scroll</div>
+    </div>
+    <div class="h2x-media clip" data-delay="1.9">
+      <img data-par src="{W('vanity',1200,1500)}" alt="Bathroom vanity with brushed wall mixer plumbed by LPS Plumbing Group" fetchpriority="high">
+      <div class="h2x-card"><i></i><div><b>24/7</b><br><span>Emergency call outs<br>Lic {LIC}</span></div></div>
     </div>
   </div>
 </header>
-<section class="ledger" aria-label="Key facts">
-  <div class="ledger-in wrap">
-    <div class="lcell"><span class="lnum">8+</span><span class="llab">Years in the trade</span></div>
-    <div class="lcell"><span class="lnum">24/7</span><span class="llab">Emergency call outs</span></div>
-    <div class="lcell"><span class="lnum">1</span><span class="llab">Point of contact, the director</span></div>
-    <div class="lcell"><span class="lnum">{LIC}</span><span class="llab">Licensed &amp; insured</span></div>
-  </div>
-</section>
-<section class="sec">
+<div class="mq" aria-hidden="true"><div class="mq-track">{mq}</div></div>
+
+<section class="stmt">
   <div class="wrap px">
-    {badge('01', 'Built for builders')}
-    <div class="about-grid">
-      <div class="rv"><h2 class="big">The plumber high end builders <em>keep on speed dial.</em></h2></div>
-      <div class="rv">
-        <p class="lead">LPS Plumbing Group specialises in high end residential builds, renovations and commercial projects. We are a small, tight crew led by director Lewis Slatter, with over 8 years in the trade and a reputation for detail that holds up after handover.</p>
-        <div class="pillars">
-          <div class="pillar"><span class="pillar-k">A</span><div><h4>Work to your program</h4><p>Rough in and fit off when the schedule says, so the next trade is never waiting on us.</p></div></div>
-          <div class="pillar"><span class="pillar-k">B</span><div><h4>Finished like it is our own home</h4><p>Level mixers, tidy set outs and premium fixtures installed right the first time.</p></div></div>
-          <div class="pillar"><span class="pillar-k">C</span><div><h4>Straight communication</h4><p>You deal with Lewis directly. Clear quotes, clear updates, no chasing.</p></div></div>
-        </div>
-      </div>
+    {badge('01', 'Who we are')}
+    <p class="big">We plumb high end homes, renovations and commercial builds for builders who care how the job finishes. Small crew, high standards, no shortcuts.</p>
+    <div class="stmt-row">
+      <div class="stat rv"><b><span data-count="8" data-suf="+">0</span></b><span>Years in the trade</span></div>
+      <div class="stat rv"><b>24/7</b><span>Emergency call outs, any day of the year</span></div>
+      <div class="stat rv"><b><span data-count="1">0</span></b><span>Point of contact. You deal with Lewis, start to finish</span></div>
     </div>
   </div>
 </section>
-<section class="sec sec-dark">
+
+<section class="stack">
   <div class="wrap px">
-    {badge('02', 'What we do')}
-    <div class="rv" style="display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-end">
-      <h2 class="big">Plumbing, drainage and gas, <em>done properly.</em></h2>
-      <p class="lead" style="max-width:38ch">From the first stormwater pit to the last tap. Same crew, same standard, start to finish.</p>
+    <div class="stack-head">
+      <div>{badge('02', 'What we do')}<h2 class="big" data-lines>{lines('Everything in the wall,', '<em>done properly.</em>')}</h2></div>
+      {btn(L('/services'), 'All services', 'teal')}
     </div>
-    <div class="svc">{svc_rows}</div>
+    <div class="scards">{scards}</div>
   </div>
 </section>
-<section class="sec sec-cream2">
-  <div class="wrap px">
-    {badge('03', 'Recent work')}
-    <div class="rv" style="display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-end">
-      <h2 class="big">The work <em>speaks for itself.</em></h2>
-      {btn(L('/projects'), 'See projects', 'dark')}
+
+<section class="hz">
+  <div class="hz-pin">
+    <div class="wrap px hz-head">
+      <div><div class="badge-row"><span class="badge-num" style="background:var(--mint);color:var(--teal)">03</span><span class="badge-lab" style="color:rgba(255,255,255,.5)">Recent work</span></div><h2 data-lines>{lines('The work', '<em>speaks for itself.</em>')}</h2></div>
+      {btn(L('/projects'), 'See projects')}
     </div>
-    <div class="gal">
-      <figure class="rv"><img src="{W('miranda',600,800)}" alt="Ensuite renovation in Miranda" loading="lazy"></figure>
-      <figure class="rv"><img src="{W('shower',600,800)}" alt="Copper outdoor shower installation" loading="lazy"></figure>
-      <figure class="rv"><img src="{W('basin',600,800)}" alt="Vessel basin with brushed brass wall mixer" loading="lazy"></figure>
-      <figure class="rv"><img src="{W('commercial',600,800)}" alt="Commercial stack and riser installation" loading="lazy"></figure>
-    </div>
+    <div class="hz-track">{hz}</div>
   </div>
 </section>
-<section class="sec">
+
+<section class="areas">
   <div class="wrap px">
     {badge('04', 'Where we work')}
-    <div class="rv"><h2 class="big">Sydney's best suburbs, <em>covered.</em></h2></div>
-    <p class="lead rv" style="margin-top:16px">Based in the Sutherland Shire, working across Sydney wherever quality builds are happening.</p>
-    <div class="chips rv">{''.join(f'<a href="{L("/"+a[0])}">{a[1][0].upper()+a[1][1:]}</a>' for a in AREAS)}</div>
+    <h2 class="big" data-lines>{lines("Sydney's best suburbs,", '<em>covered.</em>')}</h2>
+    <div class="alist rv">{arows}</div>
   </div>
 </section>
 {faq_block('05')}
