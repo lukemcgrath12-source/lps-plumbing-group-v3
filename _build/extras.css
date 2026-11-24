@@ -5,3 +5,5 @@
 .sblock.flip.noimg .sb-body{order:0}
 .nav-chip img{height:26px;width:auto;display:block}
 .chips a{text-decoration:none}
+.form-card .form-head h3{color:var(--text)}
+.sec:not(.sec-dark) :is(.pillar-k,.sb-n,.quote-mk,.tstep-n){color:var(--gold-dk)}
