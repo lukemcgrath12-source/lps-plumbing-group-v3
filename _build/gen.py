@@ -27,7 +27,7 @@ REVIEWS = [     # real Google reviews only, copied from LPS's Google Business Pr
     ('Anton L.', 'Big shoutout to Lewis, he\u2019s come through a couple times now when our shop has had issues, handled with professionalism and been great to deal with throughout. Will definitely be in contact again in future when needed!'),
 ]
 CASES = []      # [{'img':'key','title':'','suburb':'','builder':'','scope':'','result':''}]
-CSS = open(os.path.join(os.path.dirname(__file__), 'base.css')).read() + open(os.path.join(os.path.dirname(__file__), 'extras.css')).read()
+CSS = open(os.path.join(os.path.dirname(__file__), 'editorial.css')).read()
 
 LOCAL = {
     'kitchen': 'lps-new-build-kitchen.jpg', 'vanity': 'lps-brass-kitchen-mixer.jpg', 'ensuite': 'lps-ensuite-brass-fit-off.jpg',
@@ -167,14 +167,14 @@ def head(title, desc, path, extra=''):
 <meta name="description" content="{d}">
 {robots}
 <link rel="canonical" href="{canon}">
-<meta name="theme-color" content="#0B384D">
+<meta name="theme-color" content="#ffffff">
 <meta property="og:type" content="website"><meta property="og:site_name" content="LPS Plumbing Group"><meta property="og:locale" content="en_AU">
 <meta property="og:url" content="{canon}"><meta property="og:title" content="{t}"><meta property="og:description" content="{d}">
 <meta property="og:image" content="{SHARE_HOST}/lps-share.jpg">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{t}"><meta name="twitter:description" content="{d}"><meta name="twitter:image" content="{SHARE_HOST}/lps-share.jpg">
 <link rel="icon" type="image/png" sizes="32x32" href="{BASE}/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="{BASE}/favicon-16x16.png"><link rel="icon" href="{BASE}/favicon.ico" sizes="any"><link rel="apple-touch-icon" sizes="180x180" href="{BASE}/apple-touch-icon.png"><link rel="manifest" href="{BASE}/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,600;1,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 {ga}
 {extra}
 <style>
@@ -186,7 +186,7 @@ def head(title, desc, path, extra=''):
 
 def nav(hold=False):
     h = ''
-    if hold:
+    if False:
         h = '<div class="hold" id="hold" aria-hidden="true"><div class="hold-stack"><div class="hold-mask"><span class="hold-word">LPS<em>.</em>PLUMBING</span></div><div class="hold-track"><div class="hold-fill"></div></div><div class="hold-status">Sydney · Plumbing · Drainage · Gas</div></div></div>'
     links = ''.join(f'<a href="{L(p)}">{n}</a>' for p, n in NAV)
     sheet = ''.join(f'<a href="{L(p)}">{n} <i>0{i+1}</i></a>' for i, (p, n) in enumerate(NAV + [('/quote', 'Get a quote')]))
@@ -250,10 +250,9 @@ def faq_block(n='05', faqs=None):
     items = ''.join(f'<div class="fq"><button class="fq-q" aria-expanded="false">{q}</button><div class="fq-a"><p>{a}</p></div></div>' for q, a in (faqs or FAQ))
     return f'''
 <section class="sec">
-  <div class="wrap px">
-    {badge(n, 'Before you call')}
-    <div class="rv"><h2 class="big">Common <em>questions.</em></h2></div>
-    <div class="faq rv">{items}</div>
+  <div class="wrap px center">
+    <div class="rv"><h2 class="big">Before you <em>book.</em></h2><p class="lead" style="margin-top:16px">Still got a question? Call Lewis on <a href="tel:{TEL}" style="color:var(--ink)">{PHONE}</a>.</p></div>
+    <div class="faq rv" style="text-align:left">{items}</div>
   </div>
 </section>'''
 
@@ -328,13 +327,17 @@ def builders_block(n='04'):
 def reviews_block(n='04'):
     if not REVIEWS:
         return ''
-    q = ''.join(f'<blockquote class="quote rv"><span class="quote-mk">0{i+1}</span><p>{t}</p><cite>{nm}<span>Google review</span></cite></blockquote>' for i, (nm, t) in enumerate(REVIEWS))
+    card = lambda nm, t: f'<blockquote class="quote"><span class="quote-mk">★★★★★</span><p>“{t}”</p><cite>{nm}<span>Google review</span></cite></blockquote>'
+    cols = ''
+    for c in range(3):
+        order = REVIEWS[c:] + REVIEWS[:c]
+        one = ''.join(card(nm, t) for nm, t in order)
+        cols += f'<div class="rev-col">{one}{one}</div>'
     return f'''
-<section class="sec sec-cream2">
-  <div class="wrap px">
-    {badge(n, 'Rated 5.0 on Google')}
-    <div class="rv"><h2 class="big">Real jobs. <em>Real reviews.</em></h2></div>
-    <div class="rev">{q}</div>
+<section class="sec">
+  <div class="wrap px center">
+    <div class="rv"><h2 class="big">What our <em>customers say.</em></h2><p class="lead" style="margin-top:16px">Rated 5.0 on Google by homeowners and businesses across Sydney.</p></div>
+    <div class="rev" style="text-align:left">{cols}</div>
   </div>
 </section>'''
 
@@ -392,6 +395,7 @@ def foot():
       <span>Site by <a href="https://www.latitudemarketing.au/?utm_source=lps-plumbing&utm_medium=referral&utm_campaign=client_credit" target="_blank" rel="noopener">Latitude Marketing</a></span>
     </div>
   </div>
+  <div class="foot-word" aria-hidden="true">LPS<em style="color:var(--line);font-style:normal">.</em></div>
 </footer>
 <div class="callbar" id="callbar"><a href="tel:{TEL}" class="cb-call">Call Lewis</a><a href="{L('/quote')}" class="cb-quote">Get a quote</a></div>
 '''
@@ -431,84 +435,83 @@ hz = ''.join(f'<figure class="hz-item"><div class="hz-img"><img src="{W(i,800,10
 mq = ''.join(f'<span>{x}</span>' for x in ['New builds','Renovations','Bathrooms','Commercial','Gas fitting','Drainage','Hot water','24/7 emergency']*2)
 arows = ''.join(f'<a class="arow" href="{L("/"+a[0])}"><span>{a[1][0].upper()+a[1][1:]}</span><small>{a[2]} &rarr;</small></a>' for a in AREAS)
 
-work = ''.join(f'<article class="mate rv"><div class="mate-img"><img src="{W(i,700,900)}" alt="{t}" loading="lazy"></div><div class="mate-b"><div class="mate-r">{k}</div><div class="mate-n">{t}</div></div></article>' for i,k,t in gal[:4])
+pm_items = [('miranda','Powder room'),('kitchen','New build'),('ensuite','Ensuite'),('stonevanity','Renovation')]
+pm = ''.join(f'<div class="pm-item"><div class="pm-track" aria-hidden="true">{("<span>"+t+"</span>")*8}</div><a class="pm-card" href="{L("/projects")}"><img src="{W(k)}" alt="{t} plumbing by LPS Plumbing Group" loading="lazy"><b>{t}</b></a></div>' for k, t in pm_items)
+svc_rows = ''.join(f'''<article class="svc-row rv"><div class="svc-img"><img src="{W(s[2])}" alt="{s[1]} plumbing by LPS Plumbing Group" loading="lazy"></div><div><h3 class="svc-t">{s[1]}</h3><p class="svc-d">{s[4]}<br><a href="{L('/'+s[0])}">More on {s[1].lower()}</a></p></div></article>''' for s in SERVICES)
 area_chips = ''.join(f'<a href="{L("/"+a[0])}">{a[1][4:].title() if a[1].startswith("the ") else a[1]}</a>' for a in AREAS)
 home = head('LPS Plumbing Group | Plumber for High End Builds, Sydney',
-            'Plumbing, drainage and gas for high end builds, renos and bathrooms across Sydney. Licensed, insured, 24/7. Call Lewis on 0452 611 522.', '/', ld) + nav(True) + f'''
+            'Plumbing, drainage and gas for high end builds, renos and bathrooms across Sydney. Licensed, insured, 24/7. Call Lewis on 0452 611 522.', '/', ld) + nav() + f'''
 <header class="hero">
-  <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="{BASE}/lps-hero-poster.jpg" aria-hidden="true"><source src="{BASE}/lps-hero.mp4" type="video/mp4"></video>
-  <div class="hero-shade"></div>
-  <div class="hero-seam"></div>
-  <div class="hero-inner wrap px">
-    <p class="hero-label">Plumbing · Drainage · Gas · Sydney &amp; South Coast</p>
+  <div class="wrap px">
+    <span class="hero-label">Licensed · Insured · 24/7</span>
     <h1>
       <span class="ln"><span>Plumbing for builds</span></span>
-      <span class="ln"><span>where the</span></span>
-      <span class="ln"><span><em>finish matters.</em></span></span>
+      <span class="ln"><span>where the <em>finish</em> matters.</span></span>
     </h1>
     <div class="hero-cta">
       {btn(L('/quote'), 'Send us your plans')}
-      {btn('tel:'+TEL, PHONE, 'ghost', PHONE_SVG)}
-      <div class="hero-badge"><b>Licensed &amp; insured</b><i>24/7</i></div>
+      <div class="hero-call">For emergencies call Lewis<a href="tel:{TEL}">{PHONE}</a></div>
     </div>
   </div>
+  <div class="hero-media"><video autoplay muted loop playsinline preload="auto" poster="{BASE}/lps-hero-poster.jpg" aria-hidden="true"><source src="{BASE}/lps-hero.mp4" type="video/mp4"></video></div>
 </header>
 
-<section class="ledger" aria-label="Key facts">
+<section class="sec" style="padding-bottom:40px">
+  <div class="wrap px center">
+    <div class="rv"><span class="eyebrow">Services</span><h2 class="big" style="margin-top:14px">Everything <em>in the wall.</em></h2>
+    <p class="lead" style="margin-top:18px">From new builds to burst pipes, one licensed crew led by director Lewis Slatter, from first pit to final tap.</p></div>
+  </div>
+  <div class="wrap px"><div class="svc" style="text-align:left">{svc_rows}</div></div>
+</section>
+
+<section class="sec" style="padding-top:60px">
+  <div class="wrap px">
+    <div class="about-grid">
+      <div class="rv"><span class="eyebrow">Our promise</span><h2 class="big" style="margin-top:14px">No shortcuts. <br>Just <em>solid</em> work.</h2></div>
+      <div class="rv" style="justify-self:end;width:100%;max-width:420px">{btn(L('/quote'), 'Get a quote')}</div>
+    </div>
+  </div>
+</section>
+<section class="ledger" aria-label="Why LPS">
   <div class="ledger-in wrap">
     <div class="lcell"><span class="lnum">8+</span><span class="llab">Years in the trade</span></div>
     <div class="lcell"><span class="lnum">24/7</span><span class="llab">Emergencies, Lewis picks up</span></div>
-    <div class="lcell"><span class="lnum">1</span><span class="llab">Point of contact, start to finish</span></div>
+    <div class="lcell"><span class="lnum">Lic.</span><span class="llab">{LIC}, fully insured</span></div>
     <div class="lcell"><span class="lnum">5.0</span><span class="llab">Rated on Google</span></div>
   </div>
 </section>
 
+<section class="pm">
+  <p class="pm-head">Recent projects</p>
+  {pm}
+  <div class="center" style="margin-top:30px">{btn(L('/projects'), 'See all projects')}</div>
+</section>
+
 <section class="sec">
-  <div class="wrap px">
-    {badge('01', 'Who we are')}
-    <div class="about-grid">
-      <div class="rv"><h2 class="big">Small crew. High standards. <em>No shortcuts.</em></h2></div>
-      <div class="rv">
-        <p class="lead">We plumb high end homes, renovations and commercial builds for builders and homeowners who care how the job finishes. Director Lewis Slatter runs every job, from first pit to final tap.</p>
-        <div class="pillars">
-          <div class="pillar"><span class="pillar-k">A</span><div><h4>Licensed &amp; insured</h4><p>Lic {LIC}. Compliance certificates on every job.</p></div></div>
-          <div class="pillar"><span class="pillar-k">B</span><div><h4>Priced from your plans</h4><p>Clear, itemised quotes. No surprises at fit off.</p></div></div>
-          <div class="pillar"><span class="pillar-k">C</span><div><h4>Built to program</h4><p>We line up with your trades so walls close on time.</p></div></div>
-        </div>
+  <div class="wrap px steps">
+    <div class="rv">
+      <h2 class="big"><em>Sorted</em> in three simple steps.</h2>
+      <div class="step-list">
+        <div class="step"><h4><i>01</i>Send the plans or the problem</h4><p>Plans, photos or a quick description. Builders, homeowners and developers all welcome.</p></div>
+        <div class="step"><h4><i>02</i>Get a clear, itemised price</h4><p>We reply within one business day. Emergencies get a call straight back.</p></div>
+        <div class="step"><h4><i>03</i>We do it once, properly</h4><p>Clean work, compliance paperwork sorted, and Lewis on site from start to finish.</p></div>
       </div>
+      {btn(L('/quote'), 'Get a quote')}
     </div>
-  </div>
-</section>
-
-<section class="sec sec-dark">
-  <div class="wrap px">
-    {badge('02', 'What we do')}
-    <div class="rv" style="display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-end">
-      <h2 class="big">Everything in the wall, <em>done properly.</em></h2>
-      <p class="lead" style="max-width:38ch">New builds to burst pipes. Same crew, same standard, start to finish.</p>
-    </div>
-    <div class="svc">{svc_rows}</div>
-    <div class="rv" style="margin-top:34px">{btn(L('/services'), 'See all services')}</div>
-  </div>
-</section>
-
-<section class="sec">
-  <div class="wrap px">
-    {badge('03', 'Recent work')}
-    <div class="rv" style="display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-end">
-      <h2 class="big">The work <em>speaks for itself.</em></h2>
-      {btn(L('/projects'), 'See projects', 'dark')}
-    </div>
-    <div class="crew">{work}</div>
+    <div class="steps-img rv"><img src="{W('basin')}" alt="Brushed brass wall spout installed by LPS Plumbing Group" loading="lazy"></div>
   </div>
 </section>
 {reviews_block('04')}
 
-<section class="sec">
-  <div class="wrap px">
-    {badge('05', 'Where we work')}
-    <div class="rv"><h2 class="big">All of Sydney. <em>Down the South Coast.</em></h2></div>
-    <div class="chips rv" style="margin-top:30px">{area_chips}</div>
+<section class="cta-img">
+  <img src="{W('stonevanity')}" alt="Stone vanity with wall mixer by LPS Plumbing Group" loading="lazy">
+  <div class="wrap px rv"><h2>Plumbing that holds up at handover.</h2>{btn(L('/quote'), 'Send us your plans')}</div>
+</section>
+
+<section class="sec" style="padding-bottom:40px">
+  <div class="wrap px center">
+    <div class="rv"><span class="eyebrow">Where we work</span><h2 class="big" style="margin-top:14px">All of Sydney. <em>Down the South Coast.</em></h2></div>
+    <div class="chips rv" style="margin-top:34px">{area_chips}</div>
   </div>
 </section>
 {faq_block('06')}
