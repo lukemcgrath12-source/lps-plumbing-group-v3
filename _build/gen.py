@@ -27,7 +27,7 @@ REVIEWS = [     # real Google reviews only, copied from LPS's Google Business Pr
     ('Anton L.', 'Big shoutout to Lewis, he\u2019s come through a couple times now when our shop has had issues, handled with professionalism and been great to deal with throughout. Will definitely be in contact again in future when needed!'),
 ]
 CASES = []      # [{'img':'key','title':'','suburb':'','builder':'','scope':'','result':''}]
-CSS = open(os.path.join(os.path.dirname(__file__), 'base.css')).read() + open(os.path.join(os.path.dirname(__file__), 'design2.css')).read()
+CSS = open(os.path.join(os.path.dirname(__file__), 'base.css')).read() + open(os.path.join(os.path.dirname(__file__), 'extras.css')).read()
 
 def W(i, w=1600, h=1200):
     ids = {
@@ -53,6 +53,7 @@ ARROW = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-widt
 PHONE_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>'
 
 def btn(href, label, kind='gold', icon=ARROW):
+    kind = 'gold' if kind == 'teal' else kind
     return f'<a href="{href}" class="btn btn-{kind}"><span class="roll"><i><b>{label}</b><b>{label}</b></i></span><span class="circ">{icon}</span></a>'
 
 FAV = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230B384D'/%3E%3Ctext x='50' y='66' font-family='Poppins,Arial,sans-serif' font-size='40' font-weight='700' fill='%23CFEADF' text-anchor='middle'%3ELPS%3C/text%3E%3C/svg%3E"
@@ -186,7 +187,7 @@ def head(title, desc, path, extra=''):
 def nav(hold=False):
     h = ''
     if hold:
-        h = f'<div class="hold" id="hold" aria-hidden="true"><img class="hold-logo" src="{W("logo",900,230)}" alt=""><div class="hold-line"><i></i></div><div class="hold-drop"></div></div>'
+        h = '<div class="hold" id="hold" aria-hidden="true"><div class="hold-stack"><div class="hold-mask"><span class="hold-word">LPS<em>.</em>PLUMBING</span></div><div class="hold-track"><div class="hold-fill"></div></div><div class="hold-status">Sydney · Plumbing · Drainage · Gas</div></div></div>'
     links = ''.join(f'<a href="{L(p)}">{n}</a>' for p, n in NAV)
     sheet = ''.join(f'<a href="{L(p)}">{n} <i>0{i+1}</i></a>' for i, (p, n) in enumerate(NAV + [('/quote', 'Get a quote')]))
     return h + f'''
@@ -227,6 +228,17 @@ def phead(crumb, eyebrow, h1, lead, ctas=True):
   </div>
 </header>'''
 
+def hidden(subject):
+    if WEB3FORMS_KEY:
+        return f'<input type="hidden" name="access_key" value="{WEB3FORMS_KEY}"><input type="hidden" name="subject" value="{subject}"><input type="hidden" name="from_name" value="LPS Plumbing Group website"><input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">'
+    return f'<input type="hidden" name="_subject" value="{subject}"><input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">'
+
+def form_action():
+    return 'https://api.web3forms.com/submit' if WEB3FORMS_KEY else FORMSPREE
+
+def field(label, inner):
+    return f'<div class="field"><label>{label}</label>{inner}</div>'
+
 def badge(n, lab):
     return f'<div class="badge-row rv"><span class="badge-num">{n}</span><span class="badge-lab">{lab}</span></div>'
 
@@ -247,54 +259,54 @@ def faq_block(n='05', faqs=None):
 
 def quote_form(n='06', heading='Send us the plans.', sub='Builders, send through plans or a scope and we will price the full plumbing package. Homeowners, tell us about the job and we will come back with a clear, itemised quote.'):
     w = heading.split(' '); h1, h2 = ' '.join(w[:-2]), ' '.join(w[-2:])
+    sel = lambda nm, opts: f'<select name="{nm}" required><option value="">Select</option>' + ''.join(f'<option>{o}</option>' for o in opts) + '</select>'
     return f'''
-<section class="qs" id="quote">
-  <div class="wrap px qs-grid">
-    <div class="qs-l">
-      {badge(n, 'Get a quote')}
-      <h2 class="big rv">{h1} <em>{h2}</em></h2>
-      <p class="lead rv" style="margin-top:18px">{sub}</p>
-      <div class="qs-c rv">
-        <a href="tel:{TEL}"><span>Call Lewis, 24/7</span><b>{PHONE}</b></a>
-        <a href="mailto:{EMAIL}"><span>Email</span><b>{EMAIL}</b></a>
-        <a href="sms:+{WA}"><span>Text Lewis</span><b>Send a text</b></a>
-        <a href="https://wa.me/{WA}" target="_blank" rel="noopener"><span>WhatsApp</span><b>Message on WhatsApp</b></a>
-        <div><span>Hours</span><b>7am to 7pm, 7 days</b></div>
+<section class="sec sec-dark" id="quote">
+  <div class="wrap px">
+    {badge(n, 'Get a quote')}
+    <div class="rv" style="max-width:60ch">
+      <h2 class="big">{h1} <em>{h2}</em></h2>
+      <p class="lead" style="margin-top:16px">{sub}</p>
+    </div>
+    <div class="contact-grid">
+      <div class="cinfo rv">
+        <div class="crow"><div class="crow-k">Call Lewis, 24/7</div><div class="crow-v"><a href="tel:{TEL}">{PHONE}</a></div><div class="crow-s">Text or <a href="https://wa.me/{WA}" target="_blank" rel="noopener">WhatsApp</a> works too.</div></div>
+        <div class="crow"><div class="crow-k">Email</div><div class="crow-v" style="font-size:16px"><a href="mailto:{EMAIL}">{EMAIL}</a></div></div>
+        <div class="crow"><div class="crow-k">Service area</div><div class="crow-v" style="font-size:16px">Sydney &amp; the South Coast</div><div class="crow-s">Based in the Sutherland Shire. Hours 7am to 7pm, 7 days, plus 24/7 emergencies.</div></div>
+      </div>
+      <div class="form-card rv">
+        <div class="form-head"><h3>Request a quote</h3><p>We reply within one business day with a clear, itemised price.</p></div>
+        <form id="quoteForm" action="{form_action()}" method="POST" onsubmit="handleSubmit(event)">
+          {hidden('New quote request: LPS Plumbing Group website')}
+          <div class="fgrid two">{field('Name or company *', '<input type="text" name="name" required autocomplete="name">')}{field('Phone *', '<input type="tel" name="phone" required autocomplete="tel">')}</div>
+          <div class="fgrid two" style="margin-top:14px">{field('Email *', '<input type="email" name="email" required autocomplete="email">')}{field('Site suburb *', '<input type="text" name="suburb" required>')}</div>
+          <div class="fgrid two" style="margin-top:14px">{field('I am a *', sel('client_type', ['Builder','Homeowner','Developer','Strata or property manager','Commercial client']))}{field('Job type *', sel('job_type', ['New build','Renovation','Bathroom','Commercial','Emergency','Other']))}</div>
+          <div class="fgrid" style="margin-top:14px">{field('Link to plans or photos (optional)', '<input type="url" name="plans_link" placeholder="Dropbox, Google Drive or WeTransfer">')}{field('About the job', '<textarea name="message" placeholder="Scope, timing, stage of the build"></textarea>')}</div>
+          <div class="form-actions">{btn_submit('Send enquiry')}<span class="form-note">Licensed &amp; insured · Lic {LIC}</span></div>
+          <div id="formStatus" role="status"></div>
+        </form>
       </div>
     </div>
-    <form class="qf rv" id="quoteForm" action="{'https://api.web3forms.com/submit' if WEB3FORMS_KEY else FORMSPREE}" method="POST" onsubmit="handleSubmit(event)">
-      {f'<input type="hidden" name="access_key" value="{WEB3FORMS_KEY}"><input type="hidden" name="subject" value="New quote request: LPS Plumbing Group website"><input type="hidden" name="from_name" value="LPS Plumbing Group website"><input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">' if WEB3FORMS_KEY else '<input type="hidden" name="_subject" value="New quote request: LPS Plumbing Group website"><input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">'}
-      <div class="qf-h"><b>Request a quote</b><span>We reply within one business day</span></div>
-      <div class="qf-g">
-        <label class="qf-f"><span>Name or company *</span><input type="text" name="name" required autocomplete="name"></label>
-        <label class="qf-f"><span>Phone *</span><input type="tel" name="phone" required autocomplete="tel"></label>
-        <label class="qf-f qf-w"><span>Email *</span><input type="email" name="email" required autocomplete="email"></label>
-        <label class="qf-f"><span>I am a *</span><select name="client_type" required><option value="">Select</option><option>Builder</option><option>Homeowner</option><option>Developer</option><option>Strata or property manager</option><option>Commercial client</option></select></label>
-        <label class="qf-f"><span>Job type *</span><select name="job_type" required><option value="">Select</option><option>New build</option><option>Renovation</option><option>Bathroom</option><option>Commercial</option><option>Emergency</option><option>Other</option></select></label>
-        <label class="qf-f qf-w"><span>Site suburb *</span><input type="text" name="suburb" required></label>
-        <label class="qf-f qf-w"><span>Link to plans or photos <em>(optional)</em></span><input type="url" name="plans_link" placeholder="Dropbox, Google Drive or WeTransfer"></label>
-        <label class="qf-f qf-w"><span>About the job</span><textarea name="message" rows="3" placeholder="Scope, timing, stage of the build"></textarea></label>
-      </div>
-      <button type="submit" class="qf-btn">Send enquiry <span>&rarr;</span></button>
-      <p class="qf-n">Licensed &amp; insured · Lic {LIC}</p>
-      <div id="formStatus" role="status"></div>
-    </form>
   </div>
 </section>'''
 
+def btn_submit(label):
+    return f'<button type="submit" class="btn btn-gold"><span class="roll"><i><b>{label}</b><b>{label}</b></i></span><span class="circ">{ARROW}</span></button>'
+
 
 def creds_block(n='05', dark=False):
-    ins = f'<a class="cr-a" href="{L("/"+INSURANCE_PDF)}" target="_blank" rel="noopener">Download certificate &rarr;</a>' if INSURANCE_PDF else '<span class="cr-s">Certificate of currency on request</span>'
+    ins = f'<a href="{L("/"+INSURANCE_PDF)}" target="_blank" rel="noopener">Download certificate</a>' if INSURANCE_PDF else 'Certificate of currency on request.'
+    items = [('NSW contractor licence', f'Lic {LIC}. <a href="{LIC_CHECK}" target="_blank" rel="noopener">Verify on Service NSW</a>.'),
+             ('Fully insured', ins), ('Certificates on every job', 'Compliance paperwork lodged and handed over at completion.'),
+             ('Director on every job', 'Lewis Slatter, 8+ years in the trade.')]
+    pil = ''.join(f'<div class="pillar"><span class="pillar-k">{"ABCD"[i]}</span><div><h4>{t}</h4><p>{d}</p></div></div>' for i, (t, d) in enumerate(items))
     return f'''
-<section class="creds2">
+<section class="sec sec-cream2">
   <div class="wrap px">
     {badge(n, 'Licensed and accountable')}
-    <h2 class="big rv">Check us out <em>before you book.</em></h2>
-    <div class="cr-g">
-      <div class="cr rv"><span class="cr-k">NSW contractor licence</span><b>{LIC}</b><a class="cr-a" href="{LIC_CHECK}" target="_blank" rel="noopener">Verify on Service NSW &rarr;</a></div>
-      <div class="cr rv"><span class="cr-k">Insurance</span><b>Fully insured</b>{ins}</div>
-      <div class="cr rv"><span class="cr-k">Compliance</span><b>Certificates on every job</b><span class="cr-s">Compliance paperwork lodged and handed over at completion</span></div>
-      <div class="cr rv"><span class="cr-k">Accountability</span><b>Director on every job</b><span class="cr-s">Lewis Slatter, 8+ years in the trade</span></div>
+    <div class="about-grid">
+      <div class="rv"><h2 class="big">Check us out <em>before you book.</em></h2></div>
+      <div class="rv"><div class="pillars">{pil}</div></div>
     </div>
   </div>
 </section>'''
@@ -316,13 +328,13 @@ def builders_block(n='04'):
 def reviews_block(n='04'):
     if not REVIEWS:
         return ''
-    cards = ''.join(f'<figure class="rvw rv"><div class="stars">★★★★★</div><blockquote>{t}</blockquote><figcaption>{nm} · Google review</figcaption></figure>' for nm, t in REVIEWS)
+    q = ''.join(f'<blockquote class="quote rv"><span class="quote-mk">0{i+1}</span><p>{t}</p><cite>{nm}<span>Google review</span></cite></blockquote>' for i, (nm, t) in enumerate(REVIEWS))
     return f'''
-<section class="revs">
+<section class="sec sec-cream2">
   <div class="wrap px">
-    {badge(n, 'Reviews')}
-    <h2 class="big rv">What clients <em>say.</em></h2>
-    <div class="rvg">{cards}</div>
+    {badge(n, 'Rated 5.0 on Google')}
+    <div class="rv"><h2 class="big">Real jobs. <em>Real reviews.</em></h2></div>
+    <div class="rev">{q}</div>
   </div>
 </section>'''
 
@@ -341,10 +353,10 @@ def ig_block(n='07'):
 
 def checklist_cta():
     return f'''
-<section class="ckc">
-  <div class="wrap px ckc-in rv">
-    <div><span class="badge-lab" style="color:var(--teal)">Free for builders</span><h3>The builder's plumbing checklist.</h3><p>Everything to lock in before pricing, slab, rough in and handover, so plumbing never holds up your program.</p></div>
-    {btn(L('/builders-checklist'), 'Get the checklist', 'teal')}
+<section class="sec">
+  <div class="wrap px rv" style="display:flex;flex-wrap:wrap;gap:26px;justify-content:space-between;align-items:flex-end">
+    <div><span class="badge-lab">Free for builders</span><h2 class="big" style="margin-top:12px">The builder's <em>plumbing checklist.</em></h2><p class="lead" style="margin-top:14px;max-width:52ch">Everything to lock in before pricing, slab, rough in and handover, so plumbing never holds up your program.</p></div>
+    {btn(L('/builders-checklist'), 'Get the checklist')}
   </div>
 </section>'''
 
@@ -358,31 +370,30 @@ def band():
 </section>'''
 
 def foot():
-    links = [('/services','Services'),('/builders','For builders'),('/builders-checklist','Builder checklist'),('/projects','Projects'),('/about','About'),('/careers','Careers'),('/quote','Get a quote')]
-    nav_l = ''.join(f'<a href="{L(p)}">{n}</a>' for p, n in links)
-    svc = ''.join(f'<a href="{L("/"+x[0])}">{x[1]}</a>' for x in SERVICES)
-    areas = ''.join(f'<a href="{L("/"+a[0])}">{a[1].replace("the ","").title() if a[1].startswith("the") else a[1]}</a>' for a in AREAS)
-    return f'''
-<footer class="ft2">
+    pages_l = [('/services','Services'),('/builders','For builders'),('/projects','Projects'),('/about','About'),('/careers','Careers'),('/builders-checklist','Builder checklist'),('/privacy','Privacy'),('/terms','Terms')]
+    li = lambda items: ''.join(f'<li><a href="{L(p)}">{n}</a></li>' for p, n in items)
+    svc = li([('/'+x[0], x[1]) for x in SERVICES])
+    areas = li([('/'+a[0], a[1][4:].title() if a[1].startswith('the ') else a[1]) for a in AREAS])
+    return band() + f'''
+<footer class="foot">
   <div class="wrap px">
-    <div class="ft2-cta">
-      <h2>Got a build <em>coming up?</em></h2>
-      <div class="ft2-btns">{btn(L('/quote'), 'Send us your plans')}{btn('tel:'+TEL, PHONE, 'ghost', PHONE_SVG)}</div>
+    <div class="foot-top foot-top5">
+      <div>
+        <img src="{W('logo',600,150)}" alt="LPS Plumbing Group" style="height:34px;width:auto;margin-bottom:18px">
+        <p>Plumbing, drainage and gas fitting for high end builds, renovations and bathrooms across Sydney and the South Coast. Lic {LIC}.</p>
+      </div>
+      <div><h5>Pages</h5><ul>{li(pages_l)}</ul></div>
+      <div><h5>Services</h5><ul>{svc}</ul></div>
+      <div><h5>Areas</h5><ul>{areas}</ul></div>
+      <div><h5>Contact</h5><ul><li><a href="tel:{TEL}">{PHONE}</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="https://www.instagram.com/{IG}/" target="_blank" rel="noopener">@{IG}</a></li><li><a href="{L('/quote')}">Get a quote</a></li></ul></div>
     </div>
-    <div class="ft2-mid">
-      <div class="ft2-brand"><img src="{W('logo',600,150)}" alt="LPS Plumbing Group"><p>Plumbing, drainage and gas fitting for high end builds across Sydney.</p></div>
-      <div class="ft2-col"><h5>Explore</h5>{nav_l}</div>
-      <div class="ft2-col"><h5>Services</h5>{svc}</div>
-      <div class="ft2-col"><h5>Areas</h5>{areas}</div>
-      <div class="ft2-col"><h5>Contact</h5><a href="tel:{TEL}">{PHONE}</a><a href="mailto:{EMAIL}">{EMAIL}</a><a href="https://www.instagram.com/{IG}/" target="_blank" rel="noopener">Instagram</a></div>
-    </div>
-    <div class="ft2-btm">
+    <div class="foot-btm">
       <span>© <span id="yr">2026</span> LPS Plumbing Group · Lic {LIC} · ABN {ABN}</span>
-      <span><a href="{L('/privacy')}">Privacy</a> · <a href="{L('/terms')}">Terms</a> · Site by <a href="https://www.latitudemarketing.au/?utm_source=lps-plumbing&utm_medium=referral&utm_campaign=client_credit" target="_blank" rel="noopener">Latitude Marketing</a></span>
+      <span>Site by <a href="https://www.latitudemarketing.au/?utm_source=lps-plumbing&utm_medium=referral&utm_campaign=client_credit" target="_blank" rel="noopener">Latitude Marketing</a></span>
     </div>
   </div>
 </footer>
-<div class="callbar" id="callbar"><a href="tel:{TEL}" class="cb-call">Call</a><a href="sms:+{WA}" class="cb-call cb-sms">Text</a><a href="{L('/quote')}" class="cb-quote">Get a quote</a></div>
+<div class="callbar" id="callbar"><a href="tel:{TEL}" class="cb-call">Call Lewis</a><a href="{L('/quote')}" class="cb-quote">Get a quote</a></div>
 '''
 
 JS = open(os.path.join(os.path.dirname(__file__), 'site.js')).read()
@@ -392,7 +403,7 @@ def lines(*ls):
     return ''.join(f'<span class="ln-wrap"><span class="ln-in">{l}</span></span>' for l in ls)
 
 def tail():
-    return f'{LIBS}<script>{JS}</script><script>{MOTION}</script>\n<script>window.va=window.va||function(){{(window.vaq=window.vaq||[]).push(arguments);}};</script><script defer src="/_vercel/insights/script.js"></script>\n</body>\n</html>\n'
+    return f'<script>{JS}</script>\n<script>window.va=window.va||function(){{(window.vaq=window.vaq||[]).push(arguments);}};</script><script defer src="/_vercel/insights/script.js"></script>\n</body>\n</html>\n'
 
 pages = {}
 
@@ -420,68 +431,88 @@ hz = ''.join(f'<figure class="hz-item"><div class="hz-img"><img src="{W(i,800,10
 mq = ''.join(f'<span>{x}</span>' for x in ['New builds','Renovations','Bathrooms','Commercial','Gas fitting','Drainage','Hot water','24/7 emergency']*2)
 arows = ''.join(f'<a class="arow" href="{L("/"+a[0])}"><span>{a[1][0].upper()+a[1][1:]}</span><small>{a[2]} &rarr;</small></a>' for a in AREAS)
 
+work = ''.join(f'<article class="mate rv"><div class="mate-img"><img src="{W(i,700,900)}" alt="{t}" loading="lazy"></div><div class="mate-b"><div class="mate-r">{k}</div><div class="mate-n">{t}</div></div></article>' for i,k,t in gal[:4])
+area_chips = ''.join(f'<a href="{L("/"+a[0])}">{a[1][4:].title() if a[1].startswith("the ") else a[1]}</a>' for a in AREAS)
 home = head('LPS Plumbing Group | Plumber for High End Builds, Sydney',
             'Plumbing, drainage and gas for high end builds, renos and bathrooms across Sydney. Licensed, insured, 24/7. Call Lewis on 0452 611 522.', '/', ld) + nav(True) + f'''
-<header class="vh">
-  <video class="vh-vid" autoplay muted loop playsinline preload="auto" poster="{BASE}/lps-hero-poster.jpg" aria-hidden="true"><source src="{BASE}/lps-hero.mp4" type="video/mp4"></video>
-  <div class="vh-shade"></div>
-  <div class="wrap px vh-in">
-    <p class="h2x-k vh-k rv">Plumbing · Drainage · Gas · Sydney</p>
-    <h1 data-lines="now">{lines('Plumbing for builds', 'where the <em>finish matters.</em>')}</h1>
-    <div class="vh-row">
-      <p class="lead rv">High end new builds, renovations, bathrooms and commercial work. One crew, led by director Lewis Slatter, from first pit to final tap.</p>
-      <div class="h2x-cta rv">{btn(L('/quote'), 'Send us your plans')}{btn('tel:'+TEL, PHONE, 'ghost', PHONE_SVG)}</div>
+<header class="hero">
+  <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="{BASE}/lps-hero-poster.jpg" aria-hidden="true"><source src="{BASE}/lps-hero.mp4" type="video/mp4"></video>
+  <div class="hero-shade"></div>
+  <div class="hero-seam"></div>
+  <div class="hero-inner wrap px">
+    <p class="hero-label">Plumbing · Drainage · Gas · Sydney &amp; South Coast</p>
+    <h1>
+      <span class="ln"><span>Plumbing for builds</span></span>
+      <span class="ln"><span>where the</span></span>
+      <span class="ln"><span><em>finish matters.</em></span></span>
+    </h1>
+    <div class="hero-cta">
+      {btn(L('/quote'), 'Send us your plans')}
+      {btn('tel:'+TEL, PHONE, 'ghost', PHONE_SVG)}
+      <div class="hero-badge"><b>Licensed &amp; insured</b><i>24/7</i></div>
     </div>
   </div>
-  <div class="vh-card rv"><i></i><div><b>24/7</b><span>Emergency call outs · Lic {LIC}</span></div></div>
 </header>
-<div class="mq" aria-hidden="true"><div class="mq-track">{mq}</div></div>
 
-<section class="stmt">
+<section class="ledger" aria-label="Key facts">
+  <div class="ledger-in wrap">
+    <div class="lcell"><span class="lnum">8+</span><span class="llab">Years in the trade</span></div>
+    <div class="lcell"><span class="lnum">24/7</span><span class="llab">Emergencies, Lewis picks up</span></div>
+    <div class="lcell"><span class="lnum">1</span><span class="llab">Point of contact, start to finish</span></div>
+    <div class="lcell"><span class="lnum">5.0</span><span class="llab">Rated on Google</span></div>
+  </div>
+</section>
+
+<section class="sec">
   <div class="wrap px">
     {badge('01', 'Who we are')}
-    <p class="big">We plumb high end homes, renovations and commercial builds for builders who care how the job finishes. Small crew, high standards, no shortcuts.</p>
-    <div class="stmt-row">
-      <div class="stat rv"><b><span data-count="8" data-suf="+">0</span></b><span>Years in the trade</span></div>
-      <div class="stat rv"><b>24/7</b><span>Emergency call outs, any day of the year</span></div>
-      <div class="stat rv"><b><span data-count="1">0</span></b><span>Point of contact. You deal with Lewis, start to finish</span></div>
+    <div class="about-grid">
+      <div class="rv"><h2 class="big">Small crew. High standards. <em>No shortcuts.</em></h2></div>
+      <div class="rv">
+        <p class="lead">We plumb high end homes, renovations and commercial builds for builders and homeowners who care how the job finishes. Director Lewis Slatter runs every job, from first pit to final tap.</p>
+        <div class="pillars">
+          <div class="pillar"><span class="pillar-k">A</span><div><h4>Licensed &amp; insured</h4><p>Lic {LIC}. Compliance certificates on every job.</p></div></div>
+          <div class="pillar"><span class="pillar-k">B</span><div><h4>Priced from your plans</h4><p>Clear, itemised quotes. No surprises at fit off.</p></div></div>
+          <div class="pillar"><span class="pillar-k">C</span><div><h4>Built to program</h4><p>We line up with your trades so walls close on time.</p></div></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="stack">
+<section class="sec sec-dark">
   <div class="wrap px">
-    <div class="stack-head">
-      <div>{badge('02', 'What we do')}<h2 class="big" data-lines>{lines('Everything in the wall,', '<em>done properly.</em>')}</h2></div>
-      {btn(L('/services'), 'All services', 'teal')}
+    {badge('02', 'What we do')}
+    <div class="rv" style="display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-end">
+      <h2 class="big">Everything in the wall, <em>done properly.</em></h2>
+      <p class="lead" style="max-width:38ch">New builds to burst pipes. Same crew, same standard, start to finish.</p>
     </div>
-    <div class="scards">{scards}</div>
+    <div class="svc">{svc_rows}</div>
+    <div class="rv" style="margin-top:34px">{btn(L('/services'), 'See all services')}</div>
   </div>
 </section>
 
-<section class="hz">
-  <div class="hz-pin">
-    <div class="wrap px hz-head">
-      <div><div class="badge-row"><span class="badge-num" style="background:var(--mint);color:var(--teal)">03</span><span class="badge-lab" style="color:rgba(255,255,255,.5)">Recent work</span></div><h2 data-lines>{lines('The work', '<em>speaks for itself.</em>')}</h2></div>
-      {btn(L('/projects'), 'See projects')}
-    </div>
-    <div class="hz-track">{hz}</div>
-  </div>
-</section>
-
-<section class="areas">
+<section class="sec">
   <div class="wrap px">
-    {badge('04', 'Where we work')}
-    <h2 class="big" data-lines>{lines("Sydney's best suburbs,", '<em>covered.</em>')}</h2>
-    <div class="alist rv">{arows}</div>
+    {badge('03', 'Recent work')}
+    <div class="rv" style="display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-end">
+      <h2 class="big">The work <em>speaks for itself.</em></h2>
+      {btn(L('/projects'), 'See projects', 'dark')}
+    </div>
+    <div class="crew">{work}</div>
   </div>
 </section>
-{builders_block('05')}
-{reviews_block('05')}
-{creds_block('05')}
+{reviews_block('04')}
+
+<section class="sec">
+  <div class="wrap px">
+    {badge('05', 'Where we work')}
+    <div class="rv"><h2 class="big">All of Sydney. <em>Down the South Coast.</em></h2></div>
+    <div class="chips rv" style="margin-top:30px">{area_chips}</div>
+  </div>
+</section>
 {faq_block('06')}
-{ig_block('07')}
-{quote_form('08')}''' + foot() + tail()
+{quote_form('07')}''' + foot() + tail()
 pages['index.html'] = home
 
 # ---------------- SERVICES HUB ----------------
@@ -501,35 +532,32 @@ for i, s in enumerate(SERVICES):
     if len(desc) > 158: desc = f'{short} Call Lewis on 0452 611 522.'
     faqs = SFAQ[slug] + FAQ[:2]
     if slug == 'emergency':
-        pages[f'{slug}.html'] = head(title, desc, '/' + slug, faq_ld(faqs)) + nav() + f'''
-<header class="em">
-  <div class="wrap px em-in">
-    <span class="em-live"><i></i>Answering now · 24/7</span>
-    <h1 class="rv">Emergency plumber, <em>24/7.</em></h1>
-    <p class="lead rv">Burst pipe, blocked drain, no hot water or a gas leak. Call Lewis now. Licensed, insured, Lic {LIC}.</p>
-    <a class="em-call rv" href="tel:{TEL}">{PHONE_SVG}<span>Call {PHONE}</span></a>
-    <div class="em-alt rv"><a href="sms:+{WA}">Text instead</a><a href="https://wa.me/{WA}" target="_blank" rel="noopener">WhatsApp</a></div>
-    <ul class="em-list rv">{''.join(f'<li>{x}</li>' for x in bullets)}</ul>
-    <p class="em-tip rv"><b>While you wait:</b> turn the water off at the main. Smell gas? Leave the house and call from outside.</p>
-  </div>
-</header>
-<section class="qs" id="quote"><div class="wrap px" style="max-width:720px">
-  <form class="qf rv" id="quoteForm" action="{FORMSPREE}" method="POST" onsubmit="handleSubmit(event)">
-    <input type="hidden" name="_subject" value="EMERGENCY call back request: LPS website">
-    <input type="hidden" name="job_type" value="Emergency">
-    <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
-    <div class="qf-h"><b>Can't call right now?</b><span>Leave your number and we will call you straight back</span></div>
-    <div class="qf-g">
-      <label class="qf-f"><span>Name *</span><input type="text" name="name" required autocomplete="name"></label>
-      <label class="qf-f"><span>Phone *</span><input type="tel" name="phone" required autocomplete="tel"></label>
-      <label class="qf-f qf-w"><span>Suburb *</span><input type="text" name="suburb" required></label>
-      <label class="qf-f qf-w"><span>What's happening?</span><textarea name="message" rows="3"></textarea></label>
+        pages[f'{slug}.html'] = head(title, desc, '/' + slug, faq_ld(faqs)) + nav() + phead('Emergency', 'Answering now · 24/7', h1, f'Burst pipe, blocked drain, no hot water or a gas leak. Call Lewis now. Licensed, insured, Lic {LIC}.') + f'''
+<section class="ledger" aria-label="Emergency response">
+  <div class="ledger-in wrap">{''.join(f'<div class="lcell"><span class="lnum">0{k+1}</span><span class="llab">{x}</span></div>' for k, x in enumerate(bullets[:4]))}</div>
+</section>
+<section class="sec sec-dark" id="quote">
+  <div class="wrap px">
+    {badge('01', 'Call back')}
+    <div class="contact-grid">
+      <div class="cinfo rv">
+        <div class="crow"><div class="crow-k">Call now, 24/7</div><div class="crow-v"><a href="tel:{TEL}">{PHONE}</a></div><div class="crow-s">Text or <a href="https://wa.me/{WA}" target="_blank" rel="noopener">WhatsApp</a> if you can't talk.</div></div>
+        <div class="crow"><div class="crow-k">While you wait</div><div class="crow-v" style="font-size:16px">Water off at the main</div><div class="crow-s">Smell gas? Leave the house and call from outside.</div></div>
+      </div>
+      <div class="form-card rv">
+        <div class="form-head"><h3>Can't call right now?</h3><p>Leave your number and we'll call you straight back.</p></div>
+        <form id="quoteForm" action="{form_action()}" method="POST" onsubmit="handleSubmit(event)">
+          {hidden('EMERGENCY call back request: LPS website')}<input type="hidden" name="job_type" value="Emergency">
+          <div class="fgrid two">{field('Name *', '<input type="text" name="name" required autocomplete="name">')}{field('Phone *', '<input type="tel" name="phone" required autocomplete="tel">')}</div>
+          <div class="fgrid" style="margin-top:14px">{field('Suburb *', '<input type="text" name="suburb" required>')}{field("What's happening?", '<textarea name="message"></textarea>')}</div>
+          <div class="form-actions">{btn_submit('Call me back')}</div>
+          <div id="formStatus" role="status"></div>
+        </form>
+      </div>
     </div>
-    <button type="submit" class="qf-btn">Call me back <span>&rarr;</span></button>
-    <div id="formStatus" role="status"></div>
-  </form>
-</div></section>
-{faq_block('01', faqs)}''' + foot() + tail()
+  </div>
+</section>
+{faq_block('02', faqs)}''' + foot() + tail()
         continue
     pages[f'{slug}.html'] = head(title, desc, '/' + slug, faq_ld(faqs)) + nav() + phead(name, 'Services', h1, short) + f'''
 <section class="sec"><div class="wrap px">
@@ -621,9 +649,9 @@ pages['careers.html'] = head('Plumbing Jobs Sydney | Work with LPS Plumbing Grou
     'LPS Plumbing Group is hiring plumbers and apprentices for high end builds across Sydney. Apply in two minutes or call Lewis on 0452 611 522.', '/careers') + nav() + phead('Careers', 'We are hiring', 'Work on builds <em>worth your name.</em>', 'We are growing the crew to keep up with high end builders across Sydney. If you take pride in the finish, we want to hear from you.', False) + f'''
 <section class="sec"><div class="wrap px">
   {badge('01', 'Open roles')}
-  <div class="roles">
-    <article class="role rv"><span class="role-k">Full time</span><h3>Plumber</h3><p>Licensed, or close to it. You can run a rough in and fit off on a high end build without being chased, and you care what the finished wall looks like.</p></article>
-    <article class="role rv"><span class="role-k">Apprenticeship</span><h3>Apprentice plumber</h3><p>Already in your apprenticeship, or keen to start. You turn up, listen and want to learn the trade properly on quality work.</p></article>
+  <div class="sblocks">
+    <article class="sblock noimg rv"><span class="sb-n">01</span><div class="sb-body"><h3>Plumber</h3><p>Full time. Licensed, or close to it. You can run a rough in and fit off on a high end build without being chased, and you care what the finished wall looks like.</p></div></article>
+    <article class="sblock noimg rv"><span class="sb-n">02</span><div class="sb-body"><h3>Apprentice plumber</h3><p>Apprenticeship. Already in your apprenticeship, or keen to start. You turn up, listen and want to learn the trade properly on quality work.</p></div></article>
   </div>
 </div></section>
 <section class="sec sec-dark"><div class="wrap px">
@@ -634,62 +662,59 @@ pages['careers.html'] = head('Plumbing Jobs Sydney | Work with LPS Plumbing Grou
     <div class="vrow rv"><span class="vrow-n">03</span><h4>Steady builder work</h4><p>Repeat work from builders, so the diary stays full and you are not sitting around waiting for jobs.</p></div>
   </div>
 </div></section>
-<section class="qs" id="apply"><div class="wrap px qs-grid">
-  <div class="qs-l">
+<section class="sec sec-dark" id="apply">
+  <div class="wrap px">
     {badge('03', 'Apply')}
-    <h2 class="big rv">Two minutes. <em>No resume needed.</em></h2>
-    <p class="lead rv" style="margin-top:18px">Fill this in and Lewis will give you a call. Got a resume? Add a link or email it to <a href="mailto:{EMAIL}" style="color:var(--sea)">{EMAIL}</a>.</p>
-    <div class="qs-c rv"><a href="tel:{TEL}"><span>Rather chat?</span><b>Call {PHONE}</b></a></div>
-  </div>
-  <form class="qf rv" id="quoteForm" action="{FORMSPREE}" method="POST" onsubmit="handleSubmit(event)">
-    <input type="hidden" name="_subject" value="Job application: LPS Plumbing Group website">
-    <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
-    <div class="qf-h"><b>Apply now</b><span>Lewis calls every applicant back</span></div>
-    <div class="qf-g">
-      <label class="qf-f"><span>Name *</span><input type="text" name="name" required autocomplete="name"></label>
-      <label class="qf-f"><span>Phone *</span><input type="tel" name="phone" required autocomplete="tel"></label>
-      <label class="qf-f qf-w"><span>Email *</span><input type="email" name="email" required autocomplete="email"></label>
-      <label class="qf-f"><span>Role *</span><select name="role" required><option value="">Select</option><option>Plumber</option><option>Apprentice plumber</option><option>Other</option></select></label>
-      <label class="qf-f"><span>Years in the trade</span><input type="text" name="experience" inputmode="numeric"></label>
-      <label class="qf-f"><span>Licence number <em>(if any)</em></span><input type="text" name="licence"></label>
-      <label class="qf-f"><span>Where are you based? *</span><input type="text" name="suburb" required></label>
-      <label class="qf-f qf-w"><span>Driver's licence and White Card?</span><select name="tickets"><option>Both</option><option>Driver's licence only</option><option>White Card only</option><option>Neither yet</option></select></label>
-      <label class="qf-f qf-w"><span>Tell us about yourself</span><textarea name="message" rows="3" placeholder="Recent jobs, what you're after, resume link"></textarea></label>
+    <div class="rv" style="max-width:60ch"><h2 class="big">Two minutes. <em>No resume needed.</em></h2><p class="lead" style="margin-top:16px">Fill this in and Lewis will give you a call. Got a resume? Add a link or email it to <a href="mailto:{EMAIL}">{EMAIL}</a>.</p></div>
+    <div class="contact-grid">
+      <div class="cinfo rv"><div class="crow"><div class="crow-k">Rather chat?</div><div class="crow-v"><a href="tel:{TEL}">{PHONE}</a></div></div></div>
+      <div class="form-card rv">
+        <div class="form-head"><h3>Apply now</h3><p>Lewis calls every applicant back.</p></div>
+        <form id="quoteForm" action="{form_action()}" method="POST" onsubmit="handleSubmit(event)">
+          {hidden('Job application: LPS Plumbing Group website')}
+          <div class="fgrid two">{field('Name *', '<input type="text" name="name" required autocomplete="name">')}{field('Phone *', '<input type="tel" name="phone" required autocomplete="tel">')}</div>
+          <div class="fgrid two" style="margin-top:14px">{field('Email *', '<input type="email" name="email" required autocomplete="email">')}{field('Role *', '<select name="role" required><option value="">Select</option><option>Plumber</option><option>Apprentice plumber</option><option>Other</option></select>')}</div>
+          <div class="fgrid two" style="margin-top:14px">{field('Years in the trade', '<input type="text" name="experience" inputmode="numeric">')}{field('Licence number (if any)', '<input type="text" name="licence">')}</div>
+          <div class="fgrid two" style="margin-top:14px">{field('Where are you based? *', '<input type="text" name="suburb" required>')}{field("Driver's licence and White Card?", "<select name=\"tickets\"><option>Both</option><option>Driver's licence only</option><option>White Card only</option><option>Neither yet</option></select>")}</div>
+          <div class="fgrid" style="margin-top:14px">{field('Tell us about yourself', '<textarea name="message" placeholder="Recent jobs, what you are after, resume link"></textarea>')}</div>
+          <div class="form-actions">{btn_submit('Send application')}</div>
+          <div id="formStatus" role="status"></div>
+        </form>
+      </div>
     </div>
-    <button type="submit" class="qf-btn">Send application <span>&rarr;</span></button>
-    <div id="formStatus" role="status"></div>
-  </form>
-</div></section>''' + foot() + tail()
+  </div>
+</section>''' + foot() + tail()
 
 # ---------------- BUILDER CHECKLIST (lead magnet) ----------------
 pages['builders-checklist.html'] = head("Builder's Plumbing Checklist | LPS Plumbing Group",
     'Free plumbing checklist for builders: what to lock in before pricing, slab, rough in and handover so plumbing never holds up your program.', '/builders-checklist') + nav() + phead('Builder checklist', 'Free for builders', "The builder's <em>plumbing checklist.</em>", 'What to lock in before pricing, slab, rough in, fit off and handover, so plumbing never holds up your program. One page, free.', False) + f'''
-<section class="qs"><div class="wrap px qs-grid">
-  <div class="qs-l">
+<section class="sec sec-dark">
+  <div class="wrap px">
     {badge('01', "What's inside")}
-    <ul class="ck-list rv">
-      <li><b>Before pricing</b>Plans, selections and site info a plumber needs to give you a real price</li>
-      <li><b>Before the slab</b>Set out, sewer and stormwater checks that save a jackhammer later</li>
-      <li><b>Rough in</b>Heights, mixer bodies and niches to confirm before walls close</li>
-      <li><b>Fit off</b>What needs to be on site so fit off happens in one visit</li>
-      <li><b>Handover</b>The compliance paperwork your certifier will ask for</li>
-    </ul>
-  </div>
-  <form class="qf rv" id="ckForm" action="{FORMSPREE}" method="POST">
-    <input type="hidden" name="_subject" value="Builder checklist download: LPS website">
-    <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
-    <div class="qf-h"><b>Get the checklist</b><span>Download straight away, no spam</span></div>
-    <div class="qf-g">
-      <label class="qf-f"><span>Name *</span><input type="text" name="name" required autocomplete="name"></label>
-      <label class="qf-f"><span>Company *</span><input type="text" name="company" required autocomplete="organization"></label>
-      <label class="qf-f qf-w"><span>Email *</span><input type="email" name="email" required autocomplete="email"></label>
-      <label class="qf-f qf-w"><span>Phone</span><input type="tel" name="phone" autocomplete="tel"></label>
+    <div class="contact-grid">
+      <div class="cinfo rv">
+        <div class="crow"><div class="crow-k">Before pricing</div><div class="crow-s">Plans, selections and site info a plumber needs to give you a real price</div></div>
+        <div class="crow"><div class="crow-k">Before the slab</div><div class="crow-s">Set out, sewer and stormwater checks that save a jackhammer later</div></div>
+        <div class="crow"><div class="crow-k">Rough in</div><div class="crow-s">Heights, mixer bodies and niches to confirm before walls close</div></div>
+        <div class="crow"><div class="crow-k">Fit off</div><div class="crow-s">What needs to be on site so fit off happens in one visit</div></div>
+        <div class="crow"><div class="crow-k">Handover</div><div class="crow-s">The compliance paperwork your certifier will ask for</div></div>
+      </div>
+      <div class="form-card rv">
+        <div class="form-head"><h3>Get the checklist</h3><p>Download straight away, no spam.</p></div>
+        <form id="ckForm" action="{form_action()}" method="POST">
+          {hidden('Builder checklist download: LPS website')}
+          <div class="ck-fields">
+          <div class="fgrid two">{field('Name *', '<input type="text" name="name" required autocomplete="name">')}{field('Company *', '<input type="text" name="company" required autocomplete="organization">')}</div>
+          <div class="fgrid two" style="margin-top:14px">{field('Email *', '<input type="email" name="email" required autocomplete="email">')}{field('Phone', '<input type="tel" name="phone" autocomplete="tel">')}</div>
+          <div class="form-actions">{btn_submit('Get the checklist')}</div>
+          </div>
+          <div id="ckDone" hidden style="margin-top:16px;padding:16px;border-radius:12px;background:var(--gold-soft)"><b>Here you go.</b> <a href="{L('/lps-builders-plumbing-checklist.pdf')}" target="_blank" rel="noopener" style="font-weight:600">Download the checklist (PDF) &rarr;</a></div>
+        </form>
+      </div>
     </div>
-    <button type="submit" class="qf-btn">Get the checklist <span>&rarr;</span></button>
-    <div id="ckDone" hidden style="margin-top:16px;padding:16px;border-radius:12px;background:var(--mint-2)"><b style="color:var(--teal)">Here you go.</b> <a href="{L('/lps-builders-plumbing-checklist.pdf')}" target="_blank" rel="noopener" style="color:var(--sea);font-weight:600">Download the checklist (PDF) &rarr;</a></div>
-  </form>
-</div></section>
-<script>document.addEventListener('DOMContentLoaded',function(){{var f=document.getElementById('ckForm');if(!f)return;f.addEventListener('submit',function(e){{e.preventDefault();var b=f.querySelector('button');b.disabled=true;fetch(f.action,{{method:'POST',body:new FormData(f),headers:{{Accept:'application/json'}}}}).finally(function(){{f.querySelector('.qf-g').hidden=true;b.hidden=true;document.getElementById('ckDone').hidden=false;if(typeof gtag==='function')gtag('event','generate_lead',{{form:'builder_checklist'}});if(typeof fbq==='function')fbq('track','Lead');}});}});}});</script>
+  </div>
+</section>
+<script>document.addEventListener('DOMContentLoaded',function(){{var f=document.getElementById('ckForm');if(!f)return;f.addEventListener('submit',function(e){{e.preventDefault();var b=f.querySelector('button');b.disabled=true;fetch(f.action,{{method:'POST',body:new FormData(f),headers:{{Accept:'application/json'}}}}).finally(function(){{f.querySelector('.ck-fields').hidden=true;document.getElementById('ckDone').hidden=false;if(typeof gtag==='function')gtag('event','generate_lead',{{form:'builder_checklist'}});if(typeof fbq==='function')fbq('track','Lead');}});}});}});</script>
 ''' + foot() + tail()
 
 # ---------------- LEGAL ----------------
