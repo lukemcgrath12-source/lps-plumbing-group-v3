@@ -6,6 +6,8 @@ OUT = sys.argv[1] if len(sys.argv) > 1 else 'out'
 BASE = sys.argv[2] if len(sys.argv) > 2 else ''          # '' at launch, '/preview/lps-plumbing-group' for preview
 NOINDEX = BASE != ''
 DOMAIN = 'https://www.lpsplumbinggroup.com.au'
+# Share image host. Points at the preview until the site moves to DOMAIN, then set back to DOMAIN.
+SHARE_HOST = 'https://lps.latitudemarketing.au'
 PHONE, TEL, EMAIL = '0452 611 522', '0452611522', 'info@lpsplumbinggroup.com'
 LIC, ABN = '476073C', '34 280 954 515'
 FORMSPREE = 'https://formspree.io/f/mjglroqj'          # TODO at launch: LPS's own Formspree form
@@ -147,8 +149,8 @@ def head(title, desc, path, extra=''):
 <meta name="theme-color" content="#0B384D">
 <meta property="og:type" content="website"><meta property="og:site_name" content="LPS Plumbing Group"><meta property="og:locale" content="en_AU">
 <meta property="og:url" content="{canon}"><meta property="og:title" content="{t}"><meta property="og:description" content="{d}">
-<meta property="og:image" content="{DOMAIN}/lps-share.jpg">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{t}"><meta name="twitter:description" content="{d}"><meta name="twitter:image" content="{DOMAIN}/lps-share.jpg">
+<meta property="og:image" content="{SHARE_HOST}/lps-share.jpg">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{t}"><meta name="twitter:description" content="{d}"><meta name="twitter:image" content="{SHARE_HOST}/lps-share.jpg">
 <link rel="icon" type="image/png" sizes="32x32" href="{BASE}/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="{BASE}/favicon-16x16.png"><link rel="icon" href="{BASE}/favicon.ico" sizes="any"><link rel="apple-touch-icon" sizes="180x180" href="{BASE}/apple-touch-icon.png"><link rel="manifest" href="{BASE}/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,600;1,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -379,7 +381,7 @@ pages = {}
 schema = {
     "@context": "https://schema.org", "@type": "Plumber", "name": "LPS Plumbing Group",
     "description": "Plumbing, drainage and gas fitting for high end residential builds, renovations, bathrooms and commercial projects across Sydney.",
-    "telephone": "+61452611522", "email": EMAIL, "url": DOMAIN, "image": DOMAIN + "/lps-share.jpg",
+    "telephone": "+61452611522", "email": EMAIL, "url": DOMAIN, "image": SHARE_HOST + "/lps-share.jpg",
     "founder": {"@type": "Person", "name": "Lewis Slatter"},
     "address": {"@type": "PostalAddress", "addressRegion": "NSW", "addressCountry": "AU"},
     "areaServed": [{"@type": "Place", "name": n} for n in ["Miranda", "Sutherland Shire", "Mascot", "Neutral Bay", "Eastern Suburbs, Sydney"]],
