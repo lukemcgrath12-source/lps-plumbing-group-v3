@@ -27,7 +27,7 @@ REVIEWS = [     # real Google reviews only, copied from LPS's Google Business Pr
     ('Anton L.', 'Big shoutout to Lewis, he\u2019s come through a couple times now when our shop has had issues, handled with professionalism and been great to deal with throughout. Will definitely be in contact again in future when needed!'),
 ]
 CASES = []      # [{'img':'key','title':'','suburb':'','builder':'','scope':'','result':''}]
-CSS = open(os.path.join(os.path.dirname(__file__), 'editorial.css')).read()
+CSS = open(os.path.join(os.path.dirname(__file__), 'editorial.css')).read() + open(os.path.join(os.path.dirname(__file__), 'brand.css')).read()
 
 LOCAL = {
     'kitchen': 'lps-new-build-kitchen.jpg', 'vanity': 'lps-brass-kitchen-mixer.jpg', 'ensuite': 'lps-ensuite-brass-fit-off.jpg',
@@ -167,14 +167,14 @@ def head(title, desc, path, extra=''):
 <meta name="description" content="{d}">
 {robots}
 <link rel="canonical" href="{canon}">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#0B384D">
 <meta property="og:type" content="website"><meta property="og:site_name" content="LPS Plumbing Group"><meta property="og:locale" content="en_AU">
 <meta property="og:url" content="{canon}"><meta property="og:title" content="{t}"><meta property="og:description" content="{d}">
 <meta property="og:image" content="{SHARE_HOST}/lps-share.jpg">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{t}"><meta name="twitter:description" content="{d}"><meta name="twitter:image" content="{SHARE_HOST}/lps-share.jpg">
 <link rel="icon" type="image/png" sizes="32x32" href="{BASE}/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="{BASE}/favicon-16x16.png"><link rel="icon" href="{BASE}/favicon.ico" sizes="any"><link rel="apple-touch-icon" sizes="180x180" href="{BASE}/apple-touch-icon.png"><link rel="manifest" href="{BASE}/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,600&display=swap" rel="stylesheet">
 {ga}
 {extra}
 <style>
@@ -194,7 +194,7 @@ def nav(hold=False):
 <div class="navwrap" id="navwrap">
   <nav class="navbar px" style="padding-left:5px;padding-right:5px">
     <div class="nav-left">
-      <a href="{L('/')}" class="nav-chip" aria-label="LPS Plumbing Group home"><img src="{W('logo',400,100)}" alt="LPS Plumbing Group"></a>
+      <a href="{L('/')}" class="nav-chip" aria-label="LPS Plumbing Group home"><img class="logo-light" src="{W('logo',400,100)}" alt="LPS Plumbing Group"><img class="logo-dark" src="{W('logo',400,100)}" alt="" aria-hidden="true"></a>
       <div class="nav-links">{links}</div>
     </div>
     <div class="nav-right">
@@ -395,7 +395,7 @@ def foot():
       <span>Site by <a href="https://www.latitudemarketing.au/?utm_source=lps-plumbing&utm_medium=referral&utm_campaign=client_credit" target="_blank" rel="noopener">Latitude Marketing</a></span>
     </div>
   </div>
-  <div class="foot-word" aria-hidden="true">LPS<em style="color:var(--line);font-style:normal">.</em></div>
+  <div class="foot-word" aria-hidden="true">LPS<em style="font-style:normal">.</em></div>
 </footer>
 <div class="callbar" id="callbar"><a href="tel:{TEL}" class="cb-call">Call Lewis</a><a href="{L('/quote')}" class="cb-quote">Get a quote</a></div>
 '''
@@ -437,13 +437,13 @@ arows = ''.join(f'<a class="arow" href="{L("/"+a[0])}"><span>{a[1][0].upper()+a[
 
 pm_items = [('miranda','Powder room'),('kitchen','New build'),('ensuite','Ensuite'),('stonevanity','Renovation')]
 pm = ''.join(f'<div class="pm-item"><div class="pm-track" aria-hidden="true">{("<span>"+t+"</span>")*8}</div><a class="pm-card" href="{L("/projects")}"><img src="{W(k)}" alt="{t} plumbing by LPS Plumbing Group" loading="lazy"><b>{t}</b></a></div>' for k, t in pm_items)
-svc_rows = ''.join(f'''<article class="svc-row rv"><div class="svc-img"><img src="{W(s[2])}" alt="{s[1]} plumbing by LPS Plumbing Group" loading="lazy"></div><div><h3 class="svc-t">{s[1]}</h3><p class="svc-d">{s[4]}<br><a href="{L('/'+s[0])}">More on {s[1].lower()}</a></p></div></article>''' for s in SERVICES)
+svc_rows = ''.join(f'''<article class="svc-row rv"><div class="svc-img"><img src="{W(s[2])}" alt="{s[1]} plumbing by LPS Plumbing Group" loading="lazy"></div><div><span class="svc-n">0{SERVICES.index(s)+1} / 0{len(SERVICES)}</span><h3 class="svc-t">{s[1]}</h3><p class="svc-d">{s[4]}<br><a href="{L('/'+s[0])}">More on {s[1].lower()}</a></p></div></article>''' for s in SERVICES)
 area_chips = ''.join(f'<a href="{L("/"+a[0])}">{a[1][4:].title() if a[1].startswith("the ") else a[1]}</a>' for a in AREAS)
 home = head('LPS Plumbing Group | Plumber for High End Builds, Sydney',
             'Plumbing, drainage and gas for high end builds, renos and bathrooms across Sydney. Licensed, insured, 24/7. Call Lewis on 0452 611 522.', '/', ld) + nav() + f'''
 <header class="hero">
   <div class="wrap px">
-    <span class="hero-label">Licensed · Insured · 24/7</span>
+    <span class="hero-label">Plumbing · Drainage · Gas · Sydney</span>
     <h1>
       <span class="ln"><span>Plumbing for builds</span></span>
       <span class="ln"><span>where the <em>finish</em> matters.</span></span>
@@ -451,6 +451,7 @@ home = head('LPS Plumbing Group | Plumber for High End Builds, Sydney',
     <div class="hero-cta">
       {btn(L('/quote'), 'Send us your plans')}
       <div class="hero-call">For emergencies call Lewis<a href="tel:{TEL}">{PHONE}</a></div>
+      <div class="hero-badge"><i>24/7</i>Licensed &amp; insured · Lic {LIC}</div>
     </div>
   </div>
   <div class="hero-media"><video autoplay muted loop playsinline preload="auto" poster="{BASE}/lps-hero-poster.jpg" aria-hidden="true"><source src="{BASE}/lps-hero.mp4" type="video/mp4"></video></div>

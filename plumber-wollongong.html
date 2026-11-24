@@ -7,14 +7,14 @@
 <meta name="description" content="Licensed plumber for new builds, renovations and bathrooms in Wollongong. Working with builders and homeowners. Call Lewis on 0452 611 522.">
 
 <link rel="canonical" href="https://www.lpsplumbinggroup.com.au/plumber-wollongong">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#0B384D">
 <meta property="og:type" content="website"><meta property="og:site_name" content="LPS Plumbing Group"><meta property="og:locale" content="en_AU">
 <meta property="og:url" content="https://www.lpsplumbinggroup.com.au/plumber-wollongong"><meta property="og:title" content="Plumber Wollongong | LPS Plumbing Group"><meta property="og:description" content="Licensed plumber for new builds, renovations and bathrooms in Wollongong. Working with builders and homeowners. Call Lewis on 0452 611 522.">
 <meta property="og:image" content="https://lps.latitudemarketing.au/lps-share.jpg">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Plumber Wollongong | LPS Plumbing Group"><meta name="twitter:description" content="Licensed plumber for new builds, renovations and bathrooms in Wollongong. Working with builders and homeowners. Call Lewis on 0452 611 522."><meta name="twitter:image" content="https://lps.latitudemarketing.au/lps-share.jpg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,600&display=swap" rel="stylesheet">
 
 
 <style>
@@ -349,6 +349,132 @@ h4{font-weight:600;font-size:16px}
 /* LPS logo file is light: render it dark on the white template */
 .nav-chip img,.sheet-top img,.foot-top img{filter:brightness(0);opacity:.88}
 
+/* =========================================================
+   LPS brand layer: editorial layout + SAL-style navy, LPS colours and type
+   ========================================================= */
+:root{
+  --ink:#0B384D; --text:#14262F; --text-mid:#51606A; --text-faint:#83919A;
+  --grey:#3E8C77; --line:#D5E0DC; --paper:#F4F7F6; --soft:#E7F1EE;
+  --dark:#0B384D; --accent:#3E8C77; --mint:#CFEADF;
+  --serif:'Poppins',-apple-system,BlinkMacSystemFont,sans-serif;
+  --sans:'Poppins',-apple-system,BlinkMacSystemFont,sans-serif;
+}
+body{background:var(--paper);font-weight:300}
+h1,h2,.big,h3{font-weight:600;letter-spacing:-.035em}
+.big em,h1 em,h2 em{font-style:italic;font-weight:600;color:var(--accent)}
+.lead{font-weight:300}
+.eyebrow,.badge-lab,.hero-label,.pm-head{font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:var(--accent)}
+.navwrap{background:rgba(244,247,246,.92)}
+.nav-chip img,.sheet-top img,.foot-top img{filter:none;opacity:1}
+
+/* buttons: navy with mint corner ticks */
+.btn{border-color:var(--ink);color:var(--ink);font-weight:500;border-radius:0}
+.btn::before,.btn::after{border-color:var(--accent)}
+.btn-gold{background:var(--ink);color:#fff}
+.btn-gold:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-ghost{background:transparent}
+.btn-dark{background:var(--mint);color:var(--ink);border-color:var(--mint)}
+.btn-dark:hover{background:#fff;color:var(--ink)}
+.sec-dark .btn-gold,.band .btn-gold,.hero .btn-gold,.cta-img .btn-gold{background:var(--mint);color:var(--ink);border-color:var(--mint)}
+.sec-dark .btn::before,.sec-dark .btn::after,.hero .btn::before,.hero .btn::after,.cta-img .btn::before,.cta-img .btn::after,.band .btn::before,.band .btn::after{border-color:var(--mint)}
+.sec-dark .btn-gold:hover,.hero .btn-gold:hover,.cta-img .btn-gold:hover,.band .btn-gold:hover{background:#fff;color:var(--ink);border-color:#fff}
+
+/* hero: navy, centred editorial type, video below */
+.hero{background:var(--dark);color:#fff;padding-top:140px;position:relative}
+.hero h1{color:#fff;font-size:clamp(42px,7.4vw,92px);max-width:16ch}
+.hero h1 em{color:var(--mint);font-weight:600}
+.hero-label{color:var(--mint)}
+.hero-call{color:rgba(255,255,255,.6)}
+.hero-call a{color:#fff;font-weight:500}
+.hero-media{position:relative;margin-top:70px}
+.hero-media::after{content:"";position:absolute;left:0;right:0;top:0;height:30%;background:linear-gradient(var(--dark),transparent)}
+.hero-badge{display:inline-flex;align-items:center;gap:10px;font-size:12.5px;color:rgba(255,255,255,.75)}
+.hero-badge i{font-style:normal;background:var(--mint);color:var(--ink);font-weight:600;padding:4px 10px;font-size:11px}
+.navwrap:not(.scrolled){background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
+.navwrap:not(.scrolled) .nav-links a,.navwrap:not(.scrolled) .nav-note{color:rgba(255,255,255,.75)}
+.navwrap:not(.scrolled) .menu-btn span,.navwrap:not(.scrolled) .menu-btn::before,.navwrap:not(.scrolled) .menu-btn::after{background:#fff}
+body.light-top .navwrap:not(.scrolled){background:rgba(244,247,246,.92)}
+body.light-top .navwrap:not(.scrolled) .nav-links a,body.light-top .navwrap:not(.scrolled) .nav-note{color:var(--text-mid)}
+body.light-top .navwrap:not(.scrolled) .menu-btn span,body.light-top .navwrap:not(.scrolled) .menu-btn::before,body.light-top .navwrap:not(.scrolled) .menu-btn::after{background:var(--ink)}
+.navwrap .nav-chip .logo-dark{display:none}
+body.light-top .navwrap .nav-chip .logo-light,.navwrap.scrolled .nav-chip .logo-light{display:none}
+body.light-top .navwrap .nav-chip .logo-dark,.navwrap.scrolled .nav-chip .logo-dark{display:block}
+.nav-chip img.logo-dark,.foot-top img.logo-dark{filter:brightness(0) saturate(100%) invert(17%) sepia(36%) saturate(1590%) hue-rotate(164deg) brightness(92%)}
+
+/* SAL-style stats ledger in navy */
+.ledger{background:var(--dark);border:0;color:#fff}
+.lcell{border-right-color:rgba(255,255,255,.12)}
+.lnum{font-weight:600;color:var(--mint);font-size:34px}
+.llab{color:rgba(255,255,255,.6);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+
+/* page heads: navy like SAL */
+.phead{background:var(--dark);color:#fff;border:0}
+.phead h1{color:#fff}
+.phead h1 em{color:var(--mint)}
+.phead .lead{color:rgba(255,255,255,.7)}
+.phead .eyebrow{color:var(--mint)}
+.crumb,.crumb a{color:rgba(255,255,255,.5)}
+.phead .btn-ghost{color:#fff;border-color:rgba(255,255,255,.3)}
+
+/* services + blocks */
+.svc-t,.sb-body h3{font-weight:600}
+.svc-n{display:block;font-size:11px;letter-spacing:.22em;color:var(--accent);font-weight:500;margin-bottom:10px}
+.svc-d a{color:var(--accent)!important;border-color:var(--accent)}
+.sb-list li::before{content:"";display:inline-block;width:6px;height:6px;background:var(--accent);margin-right:12px;vertical-align:middle}
+.pillar-k{color:var(--accent);font-weight:600}
+.pillar h4,.tstep h4,.vrow h4,.step h4{font-weight:600}
+.step h4 i,.tstep-n{color:var(--accent)!important;font-weight:600}
+
+/* projects marquee in brand */
+.pm{background:var(--paper)}
+.pm-track{font-weight:700;color:var(--ink);letter-spacing:-.04em}
+.pm-item:nth-child(even) .pm-track{color:transparent;-webkit-text-stroke:1.5px var(--ink)}
+.pm-card{border-radius:0}
+
+/* reviews */
+.quote{border-color:var(--line)}
+.quote-mk{color:var(--accent)!important}
+.quote cite{font-weight:600}
+
+/* cta image: navy tint */
+.cta-img::before{background:linear-gradient(rgba(11,56,77,.55),rgba(11,56,77,.75))}
+.cta-img h2 em{color:var(--mint)}
+
+/* chips, faq */
+.chips a:hover{border-color:var(--accent);color:var(--accent)}
+.fq-q{font-weight:500}
+.fq-q::after{color:var(--accent)}
+
+/* dark sections */
+.sec-dark{background:var(--dark)}
+.sec-dark .big em{color:var(--mint)}
+.crow-v{font-weight:600}
+.form-head h3{font-weight:600}
+.field input,.field select,.field textarea{background:rgba(255,255,255,.05)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--mint)}
+
+/* band */
+.band{background:var(--mint);color:var(--ink)}
+.band h2{color:var(--ink)}
+.band h2 em{color:var(--accent)}
+.band p{color:var(--text-mid)}
+.band .btn{background:var(--ink);color:#fff;border-color:var(--ink)}
+.band .btn::before,.band .btn::after{border-color:var(--ink)}
+
+/* footer: navy with giant mint wordmark */
+.foot{background:var(--dark);color:#fff}
+.foot p{color:rgba(255,255,255,.55)}
+.foot h5{color:var(--mint);font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+.foot ul a{color:rgba(255,255,255,.8)}
+.foot ul a:hover{color:var(--mint)}
+.foot-btm{border-top-color:rgba(255,255,255,.12);color:rgba(255,255,255,.45)}
+.foot-word{font-weight:700;color:var(--mint);opacity:.12;letter-spacing:-.06em}
+.foot-word em{color:var(--accent)!important;opacity:1}
+
+/* callbar */
+.cb-call{border-color:var(--ink);color:var(--ink)}
+.cb-quote{background:var(--ink)}
+
 </style>
 </head>
 <body>
@@ -356,7 +482,7 @@ h4{font-weight:600;font-size:16px}
 <div class="navwrap" id="navwrap">
   <nav class="navbar px" style="padding-left:5px;padding-right:5px">
     <div class="nav-left">
-      <a href="/" class="nav-chip" aria-label="LPS Plumbing Group home"><img src="https://static.wixstatic.com/media/84f08c_9dd65380a4c24c1b927187305cc5b8ae~mv2.png/v1/fit/w_400,h_100,q_95/lps.png" alt="LPS Plumbing Group"></a>
+      <a href="/" class="nav-chip" aria-label="LPS Plumbing Group home"><img class="logo-light" src="https://static.wixstatic.com/media/84f08c_9dd65380a4c24c1b927187305cc5b8ae~mv2.png/v1/fit/w_400,h_100,q_95/lps.png" alt="LPS Plumbing Group"><img class="logo-dark" src="https://static.wixstatic.com/media/84f08c_9dd65380a4c24c1b927187305cc5b8ae~mv2.png/v1/fit/w_400,h_100,q_95/lps.png" alt="" aria-hidden="true"></a>
       <div class="nav-links"><a href="/services">Services</a><a href="/builders">For builders</a><a href="/projects">Projects</a><a href="/about">About</a><a href="/careers">Careers</a></div>
     </div>
     <div class="nav-right">
@@ -443,7 +569,7 @@ h4{font-weight:600;font-size:16px}
       <span>Site by <a href="https://www.latitudemarketing.au/?utm_source=lps-plumbing&utm_medium=referral&utm_campaign=client_credit" target="_blank" rel="noopener">Latitude Marketing</a></span>
     </div>
   </div>
-  <div class="foot-word" aria-hidden="true">LPS<em style="color:var(--line);font-style:normal">.</em></div>
+  <div class="foot-word" aria-hidden="true">LPS<em style="font-style:normal">.</em></div>
 </footer>
 <div class="callbar" id="callbar"><a href="tel:0452611522" class="cb-call">Call Lewis</a><a href="/quote" class="cb-quote">Get a quote</a></div>
 <script>/* LPS Plumbing Group site behaviour */
