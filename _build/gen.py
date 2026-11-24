@@ -11,6 +11,7 @@ SHARE_HOST = 'https://lps.latitudemarketing.au'
 PHONE, TEL, EMAIL = '0452 611 522', '0452611522', 'info@lpsplumbinggroup.com'
 LIC, ABN = '476073C', '34 280 954 515'
 FORMSPREE = 'https://formspree.io/f/mjglroqj'          # TODO at launch: LPS's own Formspree form
+WEB3FORMS_KEY = ''                                        # LPS access key from web3forms.com (sent to info@lpsplumbinggroup.com). When set, the quote form posts to Web3Forms.
 GA4 = ''                                                  # TODO at launch: LPS GA4 ID
 IG = 'lpsplumbinggroup'
 META_PIXEL = ''                                           # TODO at launch: Meta Pixel ID
@@ -261,9 +262,8 @@ def quote_form(n='06', heading='Send us the plans.', sub='Builders, send through
         <div><span>Hours</span><b>7am to 7pm, 7 days</b></div>
       </div>
     </div>
-    <form class="qf rv" id="quoteForm" action="{FORMSPREE}" method="POST" onsubmit="handleSubmit(event)">
-      <input type="hidden" name="_subject" value="New quote request: LPS Plumbing Group website">
-      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+    <form class="qf rv" id="quoteForm" action="{'https://api.web3forms.com/submit' if WEB3FORMS_KEY else FORMSPREE}" method="POST" onsubmit="handleSubmit(event)">
+      {f'<input type="hidden" name="access_key" value="{WEB3FORMS_KEY}"><input type="hidden" name="subject" value="New quote request: LPS Plumbing Group website"><input type="hidden" name="from_name" value="LPS Plumbing Group website"><input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">' if WEB3FORMS_KEY else '<input type="hidden" name="_subject" value="New quote request: LPS Plumbing Group website"><input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">'}
       <div class="qf-h"><b>Request a quote</b><span>We reply within one business day</span></div>
       <div class="qf-g">
         <label class="qf-f"><span>Name or company *</span><input type="text" name="name" required autocomplete="name"></label>
