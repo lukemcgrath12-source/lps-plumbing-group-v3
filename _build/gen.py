@@ -20,7 +20,11 @@ LIC_CHECK = 'https://www.service.nsw.gov.au/transaction/check-builder-or-tradesp
 INSURANCE_PDF = ''                                        # TODO: certificate of currency file from Lewis
 # Filled from Lewis. Sections stay hidden while these are empty.
 BUILDERS = []   # [('Builder name', 'logo-file.png' or '', 'One line quote or empty', 'Person, Role')]
-REVIEWS = []    # real Google reviews only: [('Name', 'Review text')]
+REVIEWS = [     # real Google reviews only, copied from LPS's Google Business Profile (Nov 2026)
+    ('John M.', 'LPS Plumbing did a great job at our home. Connected hot &amp; cold pipes to rear property. Connected new shower mixer, bath vanity, kitchen sink, outdoor bath and gave great advice repositioning washer dryer with lots of savings. Thankyou Lewis'),
+    ('Sophie D.', 'Very happy with the service. Had a bayonet fitting installed and the work was completed professionally and efficiently. Great communication, arrived on time, and left everything tidy. Would definitely recommend and use again.'),
+    ('Anton L.', 'Big shoutout to Lewis, he\u2019s come through a couple times now when our shop has had issues, handled with professionalism and been great to deal with throughout. Will definitely be in contact again in future when needed!'),
+]
 CASES = []      # [{'img':'key','title':'','suburb':'','builder':'','scope':'','result':''}]
 CSS = open(os.path.join(os.path.dirname(__file__), 'base.css')).read() + open(os.path.join(os.path.dirname(__file__), 'design2.css')).read()
 
@@ -88,11 +92,26 @@ AREAS = [
     ('plumber-eastern-suburbs', 'the Eastern Suburbs', 'Eastern Suburbs', 'shower',
      'Architect designed homes, terraces and full rebuilds across the east. We work with builders who expect premium fixtures installed without a second visit.',
      ['Bondi', 'Coogee', 'Randwick', 'Double Bay', 'Paddington', 'Vaucluse']),
+    ('plumber-st-george', 'St George', 'St George', 'vanity',
+     'Just over the river from our Shire base. Renovations, bathrooms and new builds across Kogarah, Hurstville and the bayside suburbs.',
+     ['Kogarah', 'Hurstville', 'Sans Souci', 'Ramsgate', 'Rockdale', 'Kingsgrove']),
+    ('plumber-inner-west', 'the Inner West', 'Inner West', 'kitchen',
+     'Terraces, semis and full renovations across the Inner West, where older pipework and tight sites need a plumber who plans ahead.',
+     ['Newtown', 'Marrickville', 'Leichhardt', 'Balmain', 'Annandale', 'Summer Hill']),
+    ('plumber-northern-beaches', 'the Northern Beaches', 'Northern Beaches', 'ensuite',
+     'High end homes and coastal renovations from Manly to Avalon, with fixtures and finishes that need to hold up near the water.',
+     ['Manly', 'Dee Why', 'Freshwater', 'Narrabeen', 'Mona Vale', 'Avalon']),
+    ('plumber-wollongong', 'Wollongong', 'Illawarra', 'hotwater',
+     'New builds, renovations and bathrooms across Wollongong and the northern Illawarra, an easy run down from the Shire.',
+     ['Wollongong', 'Thirroul', 'Bulli', 'Corrimal', 'Fairy Meadow', 'Figtree']),
+    ('plumber-shellharbour-kiama', 'Shellharbour and Kiama', 'South Coast', 'miranda',
+     'Plumbing for the growing South Coast, from new estates at Shell Cove to coastal homes in Kiama and Gerringong.',
+     ['Shellharbour', 'Shell Cove', 'Albion Park', 'Kiama', 'Gerringong', 'Lake Illawarra']),
 ]
 
 FAQ = [
     ('Do you work directly with builders?', 'Yes. Most of our work comes through builders on new builds and renovations. Send your plans through the quote form and we will price the full plumbing scope, then work to your program.'),
-    ('What areas do you cover?', 'We are based in the Sutherland Shire and work across Miranda and the Shire, Mascot and the inner south, Neutral Bay and the lower north shore, and the Eastern Suburbs.'),
+    ('What areas do you cover?', 'We are based in the Sutherland Shire and work right across Sydney, from the Shire and St George to the Inner West, the Eastern Suburbs, the North Shore and the Northern Beaches. We also cover the South Coast, including Wollongong, Shellharbour and Kiama.'),
     ('Are you licensed and insured?', f'Yes. LPS Plumbing Group is fully licensed (licence number {LIC}) and insured for residential and commercial work.'),
     ('Do you do emergency call outs?', f'Yes, 24/7. Call Lewis on <a href="tel:{TEL}">{PHONE}</a> for burst pipes, blocked drains, hot water failures or gas leaks.'),
     ('How do I get a quote?', f'Use the quote form and attach a link to your plans or photos, or call <a href="tel:{TEL}">{PHONE}</a>. We will come back to you with a clear, itemised price.'),
@@ -123,7 +142,7 @@ SFAQ = {
   'emergency': [
     ('Do you really answer after hours?', f'Yes. Call {PHONE} any time, 24/7. If we miss you, we call straight back.'),
     ('What should I do while I wait?', 'Turn off the water at the main, usually near the front boundary or water meter. For a gas smell, leave the area, do not use switches and call us from outside.'),
-    ('What areas do you cover for emergencies?', 'Miranda and the Sutherland Shire, Mascot and the inner south, Neutral Bay and the lower north shore, and the Eastern Suburbs.'),
+    ('What areas do you cover for emergencies?', 'All of Sydney and down the South Coast to Wollongong, Shellharbour and Kiama. Call and we will tell you straight how quickly we can get there.'),
   ],
 }
 
@@ -333,7 +352,7 @@ def band():
     return f'''
 <section class="band">
   <div class="wrap px band-in">
-    <div class="rv"><h2>Burst pipe or no hot water? <em>Call now.</em></h2><p>24/7 emergency plumbing across the Shire, the inner south, the north shore and the east.</p></div>
+    <div class="rv"><h2>Burst pipe or no hot water? <em>Call now.</em></h2><p>24/7 emergency plumbing across Sydney and the South Coast.</p></div>
     <div class="rv">{btn('tel:'+TEL, PHONE, 'dark')}</div>
   </div>
 </section>'''
@@ -384,7 +403,7 @@ schema = {
     "telephone": "+61452611522", "email": EMAIL, "url": DOMAIN, "image": SHARE_HOST + "/lps-share.jpg",
     "founder": {"@type": "Person", "name": "Lewis Slatter"},
     "address": {"@type": "PostalAddress", "addressRegion": "NSW", "addressCountry": "AU"},
-    "areaServed": [{"@type": "Place", "name": n} for n in ["Miranda", "Sutherland Shire", "Mascot", "Neutral Bay", "Eastern Suburbs, Sydney"]],
+    "areaServed": [{"@type": "Place", "name": n} for n in ["Sutherland Shire", "St George", "Inner West, Sydney", "Mascot", "Eastern Suburbs, Sydney", "Neutral Bay", "Northern Beaches", "Wollongong", "Shellharbour", "Kiama"]],
     "openingHoursSpecification": {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"], "opens": "07:00", "closes": "19:00"},
     "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": s[1]}} for s in SERVICES],
     "sameAs": [f"https://www.instagram.com/{IG}/"],
