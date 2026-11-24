@@ -94,7 +94,7 @@ AREA_COPY = {
 
 # Extra services the old LPS site ranked for (gas fitting, drainage). Kept honest and general.
 EXTRA_SERVICES = [
-    ('gas-fitting', 'Gas fitting', 'kitchensink',
+    ('gas-fitting', 'Gas fitting', 'stone',
      'Licensed gas fitting for cooktops, hot water and heaters, done safely and signed off.',
      'We install and connect gas cooktops, ovens, hot water systems and heaters, run new gas lines for renovations and new builds, and provide the compliance certificate when the work is finished. If you smell gas, leave the house and call us from outside.',
      ['Cooktop and oven connections', 'Gas hot water installs', 'New gas lines for renos and new builds', 'Gas leak detection and repairs', 'Compliance certificates']),

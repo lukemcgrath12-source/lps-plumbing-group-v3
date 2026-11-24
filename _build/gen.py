@@ -465,7 +465,7 @@ ld = f'<script type="application/ld+json">{json.dumps(schema)}</script><script t
 svc_rows = ''.join(f'''<article class="svc-row rv"><span class="svc-n">0{i+1}</span><h3 class="svc-t">{s[1]}</h3><p class="svc-d">{s[3]} <a href="{L('/'+s[0])}" style="color:var(--gold);font-weight:500;white-space:nowrap">Learn more</a></p><div class="svc-img"><img src="{W(s[2],900,560)}" alt="{s[1]} plumbing by LPS Plumbing Group" loading="lazy"></div></article>''' for i, s in enumerate(SERVICES))
 
 scards = ''.join(f'''<article class="scard"><div class="scard-b"><div><span class="scard-n">0{i+1} / 0{len(SERVICES)}</span><h3 style="margin-top:18px">{s[1]}</h3><p>{s[4]}</p></div><div><ul>{''.join(f'<li>{x}</li>' for x in s[5][:4])}</ul><a class="more" href="{L('/'+s[0])}" style="margin-top:22px">Explore {s[1].lower()} &rarr;</a></div></div><div class="scard-m"><img src="{W(s[2],1100,1100)}" alt="{s[1]} plumbing by LPS Plumbing Group" loading="lazy"></div></article>''' for i, s in enumerate(SERVICES))
-gal = [('miranda','Bathroom','Terracotta powder room'),('basin','Bathroom','Brushed brass wall spout'),('vanity','Kitchen','Brass kitchen mixer fit off'),('ensuite','Bathroom','Ensuite with brass fit off'),('kitchen','New build','Open plan kitchen, new build'),('stonevanity','Renovation','Stone vanity with wall mixer'),('commercial','Commercial','Commercial pipework'),('hotwater','Hot water','Heat pump hot water install')]
+gal = [('miranda','Bathroom','Terracotta powder room'),('basin','Bathroom','Brushed brass wall spout'),('stonevanity','Renovation','Stone vanity with wall mixer'),('sink','Kitchen','Brass sink mixer'),('kitchensink','Kitchen','Kitchen sink fit off')]
 hz = ''.join(f'<figure class="hz-item"><div class="hz-img"><img src="{W(i,800,1000)}" alt="{t}" loading="lazy"></div><figcaption class="hz-cap"><b>{t}</b><span>{k}</span></figcaption></figure>' for i,k,t in gal)
 mq = ''.join(f'<span>{x}</span>' for x in ['New builds','Renovations','Bathrooms','Commercial','Gas fitting','Drainage','Hot water','24/7 emergency']*2)
 arows = ''.join(f'<a class="arow" href="{L("/"+a[0])}"><span>{a[1][0].upper()+a[1][1:]}</span><small>{a[2]} &rarr;</small></a>' for a in AREAS)
@@ -496,7 +496,7 @@ home = head('Plumber Sydney for High End Builds & Renos | LPS Plumbing',
       <div class="stat rv"><b>24/7</b><span>Emergency call outs, any day of the year</span></div>
       <div class="stat rv"><b><span data-count="1">0</span></b><span>Point of contact. You deal with Lewis, start to finish</span></div>
     </div>
-    {gstrip(['stone','bathreno','kitchensink'])}
+    {gstrip(['gooseneck','bathreno','shower'])}
   </div>
 </section>
 
@@ -536,7 +536,7 @@ pages['index.html'] = home
 # ---------------- SERVICES HUB ----------------
 blocks = ''.join(f'''<div class="sblock rv{' flip' if i%2 else ''}"><span class="sb-n">0{i+1}</span><div class="sb-body"><h3>{s[1]}</h3><p>{s[4]}</p><ul class="sb-list">{''.join(f'<li>{x}</li>' for x in s[5])}</ul><div style="margin-top:22px">{btn(L('/'+s[0]), 'More on '+s[1].lower(), 'dark')}</div></div><div class="sb-media"><img src="{W(s[2],1000,750)}" alt="{s[1]} by LPS Plumbing Group" loading="lazy"></div></div>''' for i, s in enumerate(SERVICES))
 pages['services.html'] = head('Plumbing Services Sydney: Builds, Gas & Drainage | LPS',
-    'New builds, renovations, bathrooms, commercial, gas fitting, drainage and 24/7 emergency plumbing across Sydney. Call 0452 611 522.', '/services') + nav() + phead('Services', 'Services', 'Everything in the wall, <em>done right.</em>', 'Plumbing, drainage and gas fitting for builders, developers and homeowners who want it done once, properly.', img='ensuite', path='/services') + f'''
+    'New builds, renovations, bathrooms, commercial, gas fitting, drainage and 24/7 emergency plumbing across Sydney. Call 0452 611 522.', '/services') + nav() + phead('Services', 'Services', 'Everything in the wall, <em>done right.</em>', 'Plumbing, drainage and gas fitting for builders, developers and homeowners who want it done once, properly.', img='gooseneck', path='/services') + f'''
 <section class="sec"><div class="wrap px">{badge('01','What we do')}<div class="sblocks">{blocks}</div></div></section>
 {quote_form('02')}''' + foot() + tail()
 
@@ -665,7 +665,7 @@ projs = [('miranda', 'Bathroom', 'Terracotta powder room', 'Wall hung basin and 
          ('laundry', 'Renovation', 'Laundry fit off', 'Stacked washer and dryer services and floor waste in a fully tiled laundry.')]
 cards = ''.join(f'<article class="pcard rv"><div class="pcard-img"><img src="{W(i,1000,625)}" alt="{t}" loading="lazy"></div><div class="pcard-b"><span class="pcard-k">{k}</span><h3>{t}</h3><p>{d}</p></div></article>' for i, k, t, d in projs)
 pages['projects.html'] = head('Plumbing Projects | LPS Plumbing Group, Sydney',
-    'Recent new builds, renovations, bathrooms and commercial plumbing projects by LPS Plumbing Group across Sydney.', '/projects') + nav() + phead('Projects', 'Projects', 'Recent <em>work.</em>', 'A look at recent builds, renovations and bathrooms we have plumbed.', img='miranda', path='/projects') + f'''
+    'Recent new builds, renovations, bathrooms and commercial plumbing projects by LPS Plumbing Group across Sydney.', '/projects') + nav() + phead('Projects', 'Projects', 'Recent <em>work.</em>', 'A look at recent builds, renovations and bathrooms we have plumbed.', img='bathreno', path='/projects') + f'''
 {"".join(f'<section class="case"><div class="wrap px case-in"><div class="case-m rv"><img src="{W(c["img"],1200,900)}" alt="{c["title"]}" loading="lazy"></div><div class="case-b rv"><span class="badge-lab">{c["suburb"]} · Builder: {c["builder"]}</span><h2>{c["title"]}</h2><p><b>Scope.</b> {c["scope"]}</p><p><b>Result.</b> {c["result"]}</p></div></div></section>' for c in CASES)}
 <section class="sec"><div class="wrap px">{badge('01','Projects')}<div class="pgrid">{cards}</div></div></section>
 {quote_form('02')}''' + foot() + tail()
