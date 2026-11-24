@@ -27,8 +27,8 @@
   gsap.utils.toArray('.rv').forEach(function(el){
     var inHero = !!el.closest('.h2x,.vh');
     if (inHero) { gsap.to(el, { opacity: 1, y: 0, duration: 1, ease: 'expo.out', delay: 2.1 + (heroI++) * 0.08 }); return; }
-    ScrollTrigger.create({ trigger: el, start: 'top 96%', once: true,
-      onEnter: function(){ gsap.to(el, { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' }); } });
+    ScrollTrigger.create({ trigger: el, start: 'top bottom+=160', once: true,
+      onEnter: function(){ gsap.to(el, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' }); } });
   });
 
   /* image wipes + parallax */
@@ -41,7 +41,7 @@
 
   /* statement: rises in once, fully visible */
   document.querySelectorAll('.stmt p.big').forEach(function(p){
-    gsap.from(p, { opacity: 0, y: 30, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: p, start: 'top 92%', once: true } });
+    gsap.from(p, { opacity: 0, y: 30, duration: 0.6, ease: 'power2.out', scrollTrigger: { trigger: p, start: 'top bottom+=120', once: true } });
   });
 
   /* count up */

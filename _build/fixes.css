@@ -70,3 +70,6 @@
 .ft3-btm a{color:rgba(255,255,255,.65)}.ft3-btm a:hover{color:#fff}
 .ft3-up{background:none;border:0;color:var(--mint);cursor:pointer;font-size:12px}
 @media(max-width:899px){.ft3{padding-bottom:96px}}
+.hz-head{width:100%}
+.hz-head>div:first-child{flex:1 1 auto}
+.js-motion .rv{transform:translateY(16px)}

@@ -797,6 +797,9 @@ body{background:var(--paper)}
 .ft3-btm a{color:rgba(255,255,255,.65)}.ft3-btm a:hover{color:#fff}
 .ft3-up{background:none;border:0;color:var(--mint);cursor:pointer;font-size:12px}
 @media(max-width:899px){.ft3{padding-bottom:96px}}
+.hz-head{width:100%}
+.hz-head>div:first-child{flex:1 1 auto}
+.js-motion .rv{transform:translateY(16px)}
 
 </style>
 </head>
@@ -1078,8 +1081,8 @@ document.querySelectorAll('[data-slider]').forEach(function (wrap) {
   gsap.utils.toArray('.rv').forEach(function(el){
     var inHero = !!el.closest('.h2x,.vh');
     if (inHero) { gsap.to(el, { opacity: 1, y: 0, duration: 1, ease: 'expo.out', delay: 2.1 + (heroI++) * 0.08 }); return; }
-    ScrollTrigger.create({ trigger: el, start: 'top 96%', once: true,
-      onEnter: function(){ gsap.to(el, { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' }); } });
+    ScrollTrigger.create({ trigger: el, start: 'top bottom+=160', once: true,
+      onEnter: function(){ gsap.to(el, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' }); } });
   });
 
   /* image wipes + parallax */
@@ -1092,7 +1095,7 @@ document.querySelectorAll('[data-slider]').forEach(function (wrap) {
 
   /* statement: rises in once, fully visible */
   document.querySelectorAll('.stmt p.big').forEach(function(p){
-    gsap.from(p, { opacity: 0, y: 30, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: p, start: 'top 92%', once: true } });
+    gsap.from(p, { opacity: 0, y: 30, duration: 0.6, ease: 'power2.out', scrollTrigger: { trigger: p, start: 'top bottom+=120', once: true } });
   });
 
   /* count up */
