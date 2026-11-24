@@ -132,3 +132,22 @@ async function handleSubmit(event) {
 
 /* click to call + email tracking */
 document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e.target.closest('a[href^="tel:"],a[href^="mailto:"],a[href^="sms:"],a[href*="wa.me"]'):null;if(!a||typeof gtag!=='function')return;var h=a.getAttribute('href');var ev=h.indexOf('tel:')===0?'click_to_call':h.indexOf('sms:')===0?'click_to_text':h.indexOf('wa.me')>-1?'click_to_whatsapp':'email_click';gtag('event',ev,{page_path:location.pathname});if(typeof fbq==='function'&&ev!=='email_click')fbq('track','Contact');},true);
+
+/* SLIDERS: arrows + drag (recent work, reviews) */
+document.querySelectorAll('[data-slider]').forEach(function (wrap) {
+  var track = wrap.querySelector('.slider-track'), prev = wrap.querySelector('.sl-prev'), next = wrap.querySelector('.sl-next');
+  if (!track) return;
+  var step = function () { var c = track.children[0]; return c ? c.getBoundingClientRect().width + 20 : 400; };
+  if (prev) prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: 'smooth' }); });
+  if (next) next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: 'smooth' }); });
+  var sync = function () {
+    if (prev) prev.disabled = track.scrollLeft < 8;
+    if (next) next.disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 8;
+  };
+  track.addEventListener('scroll', sync, { passive: true }); window.addEventListener('resize', sync); sync();
+  var down = false, sx = 0, sl = 0, moved = false;
+  track.addEventListener('pointerdown', function (e) { if (e.pointerType !== 'mouse') return; down = true; moved = false; sx = e.clientX; sl = track.scrollLeft; track.classList.add('drag'); });
+  window.addEventListener('pointermove', function (e) { if (!down) return; var dx = e.clientX - sx; if (Math.abs(dx) > 4) moved = true; track.scrollLeft = sl - dx; });
+  window.addEventListener('pointerup', function () { if (!down) return; down = false; track.classList.remove('drag'); });
+  track.addEventListener('click', function (e) { if (moved) { e.preventDefault(); e.stopPropagation(); } }, true);
+});

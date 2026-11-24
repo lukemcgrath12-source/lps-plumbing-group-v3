@@ -21,13 +21,17 @@ LIC_CHECK = 'https://www.service.nsw.gov.au/transaction/check-builder-or-tradesp
 INSURANCE_PDF = ''                                        # TODO: certificate of currency file from Lewis
 # Filled from Lewis. Sections stay hidden while these are empty.
 BUILDERS = []   # [('Builder name', 'logo-file.png' or '', 'One line quote or empty', 'Person, Role')]
+GOOGLE_RATING, GOOGLE_COUNT = '5.0', 25
+GOOGLE_URL = 'https://www.google.com/maps/search/?api=1&query=LPS%20Plumbing%20Group'
 REVIEWS = [     # real Google reviews only, copied from LPS's Google Business Profile (Nov 2026)
     ('John M.', 'LPS Plumbing did a great job at our home. Connected hot &amp; cold pipes to rear property. Connected new shower mixer, bath vanity, kitchen sink, outdoor bath and gave great advice repositioning washer dryer with lots of savings. Thankyou Lewis'),
     ('Sophie D.', 'Very happy with the service. Had a bayonet fitting installed and the work was completed professionally and efficiently. Great communication, arrived on time, and left everything tidy. Would definitely recommend and use again.'),
+    ('Jessica S.', 'Highly recommend Lewis of LPS plumbing. On time, friendly, reliable and extremely knowledgeable. Extremely happy!'),
     ('Anton L.', 'Big shoutout to Lewis, he\u2019s come through a couple times now when our shop has had issues, handled with professionalism and been great to deal with throughout. Will definitely be in contact again in future when needed!'),
+    ('Kerryanne', 'The entire job was completed perfectly and cleanly in less than half an hour. Before leaving, he also kindly checked if we had any other issues to ensure everything was in order. Thank you for the outstanding service and professionalism.'),
 ]
 CASES = []      # [{'img':'key','title':'','suburb':'','builder':'','scope':'','result':''}]
-CSS = open(os.path.join(os.path.dirname(__file__), 'base.css')).read() + open(os.path.join(os.path.dirname(__file__), 'design2.css')).read()
+CSS = open(os.path.join(os.path.dirname(__file__), 'base.css')).read() + open(os.path.join(os.path.dirname(__file__), 'design2.css')).read() + open(os.path.join(os.path.dirname(__file__), 'fixes.css')).read()
 
 LOCAL = {
     'kitchen': 'lps-new-build-kitchen.jpg', 'vanity': 'lps-brass-kitchen-mixer.jpg', 'ensuite': 'lps-ensuite-brass-fit-off.jpg',
@@ -321,17 +325,28 @@ def builders_block(n='04'):
   </div>
 </section>'''
 
+G_SVG = '''<svg class="g-ico" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>'''
+PREV_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>'
+NEXT_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>'
+
+def sl_nav(dark=False):
+    return f'<div class="sl-nav{" dark" if dark else ""}"><button class="sl-prev" aria-label="Previous">{PREV_SVG}</button><button class="sl-next" aria-label="Next">{NEXT_SVG}</button></div>'
+
 def reviews_block(n='04'):
     if not REVIEWS:
         return ''
-    cards = ''.join(f'<figure class="rvw rv"><div class="stars">★★★★★</div><blockquote>{t}</blockquote><figcaption>{nm} · Google review</figcaption></figure>' for nm, t in REVIEWS)
+    cards = ''.join(f'<article class="rcard"><div class="rcard-h"><span class="rcard-av">{nm[0]}</span><div><b>{nm}</b><span>Google review</span></div>{G_SVG}</div><div class="st">★★★★★</div><p>{t}</p></article>' for nm, t in REVIEWS)
     return f'''
-<section class="revs">
-  <div class="wrap px">
-    {badge(n, 'Reviews')}
-    <h2 class="big rv">What clients <em>say.</em></h2>
-    <div class="rvg">{cards}</div>
+<section class="revs2" data-slider>
+  <div class="wrap px rv2-top">
+    <div>{badge(n, 'Reviews')}<h2 class="big rv">Don't take <em>our word for it.</em></h2></div>
+    <div class="rv2-sum rv">
+      <a class="g-score" href="{GOOGLE_URL}" target="_blank" rel="noopener">{G_SVG}<div><b>{GOOGLE_RATING}</b></div><div><span class="st">★★★★★</span><small>{GOOGLE_COUNT} Google reviews</small></div></a>
+      {sl_nav(True)}
+    </div>
   </div>
+  <div class="slider-track rv">{cards}</div>
+  <div class="wrap px rv" style="margin-top:34px">{btn(GOOGLE_URL, 'Read all reviews on Google', 'dark')}</div>
 </section>'''
 
 def ig_block(n='07'):
@@ -366,27 +381,29 @@ def band():
 </section>'''
 
 def foot():
-    links = [('/services','Services'),('/builders','For builders'),('/builders-checklist','Builder checklist'),('/projects','Projects'),('/about','About'),('/careers','Careers'),('/quote','Get a quote')]
+    links = [('/services','Services'),('/builders','For builders'),('/projects','Projects'),('/about','About'),('/careers','Careers'),('/builders-checklist','Builder checklist'),('/quote','Get a quote')]
     nav_l = ''.join(f'<a href="{L(p)}">{n}</a>' for p, n in links)
     svc = ''.join(f'<a href="{L("/"+x[0])}">{x[1]}</a>' for x in SERVICES)
-    areas = ''.join(f'<a href="{L("/"+a[0])}">{a[1].replace("the ","").title() if a[1].startswith("the") else a[1]}</a>' for a in AREAS)
+    areas = ''.join(f'<a href="{L("/"+a[0])}">{a[1][4:].title() if a[1].startswith("the ") else a[1]}</a>' for a in AREAS)
     return f'''
-<footer class="ft2">
+<footer class="ft3">
   <div class="wrap px">
-    <div class="ft2-cta">
-      <h2>Got a build <em>coming up?</em></h2>
-      <div class="ft2-btns">{btn(L('/quote'), 'Send us your plans')}{btn('tel:'+TEL, PHONE, 'ghost', PHONE_SVG)}</div>
+    <div class="ft3-top">
+      <div class="ft3-brand">
+        <img src="{W('logo',600,150)}" alt="LPS Plumbing Group">
+        <p>Plumbing, drainage and gas fitting for high end builds, renovations and bathrooms across Sydney and the South Coast.</p>
+        <a class="ft3-call" href="tel:{TEL}">{PHONE}</a>
+        <a class="ft3-mail" href="mailto:{EMAIL}">{EMAIL}</a>
+        <div class="ft3-soc"><a href="https://www.instagram.com/{IG}/" target="_blank" rel="noopener">Instagram</a><a href="{GOOGLE_URL}" target="_blank" rel="noopener">Google reviews</a></div>
+      </div>
+      <div><h5>Explore</h5><div class="ft3-col">{nav_l}</div></div>
+      <div><h5>Services</h5><div class="ft3-col">{svc}</div></div>
+      <div><h5>Areas we cover</h5><div class="ft3-areas">{areas}</div></div>
     </div>
-    <div class="ft2-mid">
-      <div class="ft2-brand"><img src="{W('logo',600,150)}" alt="LPS Plumbing Group"><p>Plumbing, drainage and gas fitting for high end builds across Sydney.</p></div>
-      <div class="ft2-col"><h5>Explore</h5>{nav_l}</div>
-      <div class="ft2-col"><h5>Services</h5>{svc}</div>
-      <div class="ft2-col"><h5>Areas</h5>{areas}</div>
-      <div class="ft2-col"><h5>Contact</h5><a href="tel:{TEL}">{PHONE}</a><a href="mailto:{EMAIL}">{EMAIL}</a><a href="https://www.instagram.com/{IG}/" target="_blank" rel="noopener">Instagram</a></div>
-    </div>
-    <div class="ft2-btm">
-      <span>© <span id="yr">2026</span> LPS Plumbing Group · Lic {LIC} · ABN {ABN}</span>
-      <span><a href="{L('/privacy')}">Privacy</a> · <a href="{L('/terms')}">Terms</a> · Site by <a href="https://www.latitudemarketing.au/?utm_source=lps-plumbing&utm_medium=referral&utm_campaign=client_credit" target="_blank" rel="noopener">Latitude Marketing</a></span>
+    <div class="ft3-trust"><span><b>Licensed</b> · Lic {LIC}</span><span><b>Fully insured</b></span><span><b>24/7</b> emergency call outs</span><span><b>Hours</b> 7am to 7pm, 7 days</span></div>
+    <div class="ft3-btm">
+      <span>© <span id="yr">2026</span> LPS Plumbing Group · ABN {ABN}</span>
+      <span><a href="{L('/privacy')}">Privacy</a> · <a href="{L('/terms')}">Terms</a> · Site by <a href="https://www.latitudemarketing.au/?utm_source=lps-plumbing&utm_medium=referral&utm_campaign=client_credit" target="_blank" rel="noopener">Latitude Marketing</a> · <button class="ft3-up" onclick="window.scrollTo({{top:0,behavior:'smooth'}})">Back to top ↑</button></span>
     </div>
   </div>
 </footer>
@@ -467,13 +484,13 @@ home = head('LPS Plumbing Group | Plumber for High End Builds, Sydney',
   </div>
 </section>
 
-<section class="hz">
+<section class="hz" data-slider>
   <div class="hz-pin">
     <div class="wrap px hz-head">
       <div><div class="badge-row"><span class="badge-num" style="background:var(--mint);color:var(--teal)">03</span><span class="badge-lab" style="color:rgba(255,255,255,.5)">Recent work</span></div><h2 data-lines>{lines('The work', '<em>speaks for itself.</em>')}</h2></div>
-      {btn(L('/projects'), 'See projects')}
+      <div class="hz-head-r">{sl_nav()}{btn(L('/projects'), 'See all projects')}</div>
     </div>
-    <div class="hz-track">{hz}</div>
+    <div class="hz-track slider-track">{hz}</div>
   </div>
 </section>
 
@@ -484,11 +501,9 @@ home = head('LPS Plumbing Group | Plumber for High End Builds, Sydney',
     <div class="alist rv">{arows}</div>
   </div>
 </section>
-{builders_block('05')}
 {reviews_block('05')}
-{creds_block('05')}
-{faq_block('06')}
-{ig_block('07')}
+{creds_block('06')}
+{faq_block('07')}
 {quote_form('08')}''' + foot() + tail()
 pages['index.html'] = home
 

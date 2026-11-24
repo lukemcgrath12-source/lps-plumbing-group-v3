@@ -22,12 +22,13 @@
       delay: now ? 2.05 : 0, scrollTrigger: now ? null : { trigger: el, start: 'top 88%' } });
   });
 
-  /* generic reveals */
+  /* generic reveals: quick, once, nothing left half-faded */
   var heroI = 0;
   gsap.utils.toArray('.rv').forEach(function(el){
     var inHero = !!el.closest('.h2x,.vh');
-    var d = inHero ? 2.2 + (heroI++) * 0.1 : 0;
-    gsap.to(el, { opacity: 1, y: 0, duration: 1.1, ease: 'expo.out', delay: d, scrollTrigger: inHero ? null : { trigger: el, start: 'top 90%' } });
+    if (inHero) { gsap.to(el, { opacity: 1, y: 0, duration: 1, ease: 'expo.out', delay: 2.1 + (heroI++) * 0.08 }); return; }
+    ScrollTrigger.create({ trigger: el, start: 'top 96%', once: true,
+      onEnter: function(){ gsap.to(el, { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' }); } });
   });
 
   /* image wipes + parallax */
@@ -38,10 +39,9 @@
     gsap.fromTo(img, { yPercent: -6 }, { yPercent: 6, ease: 'none', scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
   });
 
-  /* statement: words light up as you scroll */
+  /* statement: rises in once, fully visible */
   document.querySelectorAll('.stmt p.big').forEach(function(p){
-    p.innerHTML = p.textContent.trim().split(/\s+/).map(function(w){ return '<span class="w">'+w+'</span>'; }).join(' ');
-    gsap.to(p.querySelectorAll('.w'), { opacity: 1, stagger: 0.06, ease: 'none', scrollTrigger: { trigger: p, start: 'top 80%', end: 'bottom 45%', scrub: true } });
+    gsap.from(p, { opacity: 0, y: 30, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: p, start: 'top 92%', once: true } });
   });
 
   /* count up */
@@ -56,17 +56,6 @@
     var img = c.querySelector('.scard-m img');
     if (img) gsap.to(img, { scale: 1, ease: 'none', scrollTrigger: { trigger: c, start: 'top bottom', end: 'top 100px', scrub: true } });
     if (i < cards.length - 1) gsap.to(c, { scale: 0.92, filter: 'brightness(0.7)', ease: 'none', scrollTrigger: { trigger: cards[i+1], start: 'top bottom', end: 'top 96px', scrub: true } });
-  });
-
-  /* horizontal gallery pinned on desktop */
-  ScrollTrigger.matchMedia({
-    '(min-width: 900px)': function(){
-      var sec = document.querySelector('.hz'), track = document.querySelector('.hz-track');
-      if (!sec || !track) return;
-      var dist = function(){ return Math.max(0, track.scrollWidth - window.innerWidth + 60); };
-      gsap.to(track, { x: function(){ return -dist(); }, ease: 'none',
-        scrollTrigger: { trigger: sec, start: 'top top', end: function(){ return '+=' + dist(); }, pin: true, scrub: 1, invalidateOnRefresh: true } });
-    }
   });
 
   window.addEventListener('load', function(){ ScrollTrigger.refresh(); });

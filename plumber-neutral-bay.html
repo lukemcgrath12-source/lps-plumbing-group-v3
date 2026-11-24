@@ -726,6 +726,78 @@ body{background:var(--paper)}
 .case-b h2{font-size:clamp(30px,3.6vw,48px);letter-spacing:-.035em;color:var(--teal);margin:12px 0 18px}
 .case-b p{color:var(--text-mid);line-height:1.7;margin-top:10px}.case-b p b{color:var(--teal)}
 
+/* ===== v2.1 fixes ===== */
+/* statement text: solid, no faded words */
+.stmt p.big .w{opacity:1}
+/* reveals: shorter travel */
+.js-motion .rv{transform:translateY(24px)}
+
+/* recent work: user-controlled carousel */
+.hz-pin{min-height:0;padding:110px 0 90px}
+.slider-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 20px 6px;cursor:grab;overscroll-behavior-x:contain}
+.slider-track::-webkit-scrollbar{display:none}
+.slider-track.drag{cursor:grabbing;scroll-snap-type:none}
+.slider-track>*{scroll-snap-align:start;user-select:none;-webkit-user-drag:none}
+.slider-track img{pointer-events:none}
+@media(min-width:640px){.slider-track{padding:0 34px 6px;scroll-padding-left:34px}}
+@media(min-width:1024px){.slider-track{padding:0 max(52px,calc((100vw - 1296px)/2 + 52px)) 6px;scroll-padding-left:max(52px,calc((100vw - 1296px)/2 + 52px))}}
+.hz .hz-track{transform:none!important}
+.sl-nav{display:flex;gap:10px}
+.sl-nav button{width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;cursor:pointer;display:grid;place-items:center;transition:background .3s,border-color .3s,opacity .3s}
+.sl-nav button:hover{background:var(--mint);border-color:var(--mint);color:var(--teal)}
+.sl-nav button:disabled{opacity:.3;cursor:default;background:transparent;color:#fff;border-color:rgba(255,255,255,.25)}
+.sl-nav.dark button{border-color:var(--line);color:var(--teal)}
+.sl-nav.dark button:hover{background:var(--teal);border-color:var(--teal);color:#fff}
+.sl-nav.dark button:disabled{background:transparent;color:var(--teal);border-color:var(--line)}
+.hz-head-r{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+
+/* reviews */
+.revs2{padding:110px 0;background:var(--paper)}
+@media(min-width:768px){.revs2{padding:150px 0}}
+.rv2-top{display:grid;gap:30px;align-items:end;margin-bottom:46px}
+@media(min-width:900px){.rv2-top{grid-template-columns:1.2fr 1fr}}
+.rv2-sum{display:flex;align-items:center;gap:22px;flex-wrap:wrap;justify-content:flex-start}
+@media(min-width:900px){.rv2-sum{justify-content:flex-end}}
+.g-score{display:flex;align-items:center;gap:16px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 20px}
+.g-score b{font-size:40px;font-weight:700;letter-spacing:-.04em;color:var(--teal);line-height:1}
+.g-score .st{color:#F5B301;letter-spacing:2px;font-size:16px}
+.g-score small{display:block;font-size:12.5px;color:var(--text-mid);margin-top:2px}
+.g-ico{width:30px;height:30px;flex:0 0 auto}
+.rcard{flex:0 0 auto;width:min(84vw,380px);background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:16px;min-height:290px}
+.rcard-h{display:flex;align-items:center;gap:12px}
+.rcard-av{width:42px;height:42px;border-radius:50%;background:var(--teal);color:var(--mint);display:grid;place-items:center;font-weight:600;font-size:16px;flex:0 0 auto}
+.rcard-h b{display:block;font-size:15px;color:var(--teal)}
+.rcard-h span{font-size:12px;color:var(--text-faint)}
+.rcard-h .g-ico{width:20px;height:20px;margin-left:auto}
+.rcard .st{color:#F5B301;letter-spacing:2px}
+.rcard p{font-size:15px;line-height:1.7;color:var(--text);flex:1}
+
+/* footer v2.1 */
+.ft3{background:var(--teal);color:#fff;padding:80px 0 26px;position:relative;overflow:hidden}
+.ft3-top{display:grid;gap:44px;padding-bottom:50px;border-bottom:1px solid rgba(255,255,255,.12)}
+@media(min-width:1000px){.ft3-top{grid-template-columns:1.3fr 1fr 1fr 1.4fr;gap:40px}}
+.ft3-brand img{height:46px;width:auto}
+.ft3-brand p{font-size:14px;color:rgba(255,255,255,.6);max-width:34ch;line-height:1.7;margin-top:18px}
+.ft3-call{display:block;font-size:30px;font-weight:700;letter-spacing:-.03em;color:#fff;margin-top:22px}
+.ft3-call:hover{color:var(--mint)}
+.ft3-mail{display:block;font-size:14px;color:var(--mint);margin-top:6px}
+.ft3-soc{display:flex;gap:10px;margin-top:22px}
+.ft3-soc a{height:40px;padding:0 16px;border:1px solid rgba(255,255,255,.2);border-radius:999px;display:inline-flex;align-items:center;font-size:13px;color:rgba(255,255,255,.8);transition:background .3s,color .3s}
+.ft3-soc a:hover{background:var(--mint);color:var(--teal);border-color:var(--mint)}
+.ft3 h5{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mint);margin-bottom:16px;font-weight:400}
+.ft3-col{display:flex;flex-direction:column;gap:10px}
+.ft3-col a{font-size:14.5px;color:rgba(255,255,255,.75);transition:color .3s}
+.ft3-col a:hover{color:#fff}
+.ft3-areas{display:flex;flex-wrap:wrap;gap:8px}
+.ft3-areas a{font-size:13px;color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:7px 13px;transition:background .3s,color .3s}
+.ft3-areas a:hover{background:var(--mint);color:var(--teal);border-color:var(--mint)}
+.ft3-trust{display:flex;flex-wrap:wrap;gap:10px 28px;padding:22px 0;font-size:12.5px;color:rgba(255,255,255,.6)}
+.ft3-trust b{color:#fff;font-weight:500}
+.ft3-btm{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-top:20px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;color:rgba(255,255,255,.45)}
+.ft3-btm a{color:rgba(255,255,255,.65)}.ft3-btm a:hover{color:#fff}
+.ft3-up{background:none;border:0;color:var(--mint);cursor:pointer;font-size:12px}
+@media(max-width:899px){.ft3{padding-bottom:96px}}
+
 </style>
 </head>
 <body>
@@ -802,22 +874,24 @@ body{background:var(--paper)}
     </form>
   </div>
 </section>
-<footer class="ft2">
+<footer class="ft3">
   <div class="wrap px">
-    <div class="ft2-cta">
-      <h2>Got a build <em>coming up?</em></h2>
-      <div class="ft2-btns"><a href="/quote" class="btn btn-gold"><span class="roll"><i><b>Send us your plans</b><b>Send us your plans</b></i></span><span class="circ"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></a><a href="tel:0452611522" class="btn btn-ghost"><span class="roll"><i><b>0452 611 522</b><b>0452 611 522</b></i></span><span class="circ"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span></a></div>
+    <div class="ft3-top">
+      <div class="ft3-brand">
+        <img src="https://static.wixstatic.com/media/84f08c_9dd65380a4c24c1b927187305cc5b8ae~mv2.png/v1/fit/w_600,h_150,q_95/lps.png" alt="LPS Plumbing Group">
+        <p>Plumbing, drainage and gas fitting for high end builds, renovations and bathrooms across Sydney and the South Coast.</p>
+        <a class="ft3-call" href="tel:0452611522">0452 611 522</a>
+        <a class="ft3-mail" href="mailto:info@lpsplumbinggroup.com">info@lpsplumbinggroup.com</a>
+        <div class="ft3-soc"><a href="https://www.instagram.com/lpsplumbinggroup/" target="_blank" rel="noopener">Instagram</a><a href="https://www.google.com/maps/search/?api=1&query=LPS%20Plumbing%20Group" target="_blank" rel="noopener">Google reviews</a></div>
+      </div>
+      <div><h5>Explore</h5><div class="ft3-col"><a href="/services">Services</a><a href="/builders">For builders</a><a href="/projects">Projects</a><a href="/about">About</a><a href="/careers">Careers</a><a href="/builders-checklist">Builder checklist</a><a href="/quote">Get a quote</a></div></div>
+      <div><h5>Services</h5><div class="ft3-col"><a href="/new-builds">New builds</a><a href="/renovations">Renovations</a><a href="/bathrooms">Bathrooms</a><a href="/commercial">Commercial</a><a href="/emergency">24/7 emergency</a></div></div>
+      <div><h5>Areas we cover</h5><div class="ft3-areas"><a href="/plumber-miranda">Miranda</a><a href="/plumber-mascot">Mascot</a><a href="/plumber-neutral-bay">Neutral Bay</a><a href="/plumber-eastern-suburbs">Eastern Suburbs</a><a href="/plumber-st-george">St George</a><a href="/plumber-inner-west">Inner West</a><a href="/plumber-northern-beaches">Northern Beaches</a><a href="/plumber-wollongong">Wollongong</a><a href="/plumber-shellharbour-kiama">Shellharbour and Kiama</a></div></div>
     </div>
-    <div class="ft2-mid">
-      <div class="ft2-brand"><img src="https://static.wixstatic.com/media/84f08c_9dd65380a4c24c1b927187305cc5b8ae~mv2.png/v1/fit/w_600,h_150,q_95/lps.png" alt="LPS Plumbing Group"><p>Plumbing, drainage and gas fitting for high end builds across Sydney.</p></div>
-      <div class="ft2-col"><h5>Explore</h5><a href="/services">Services</a><a href="/builders">For builders</a><a href="/builders-checklist">Builder checklist</a><a href="/projects">Projects</a><a href="/about">About</a><a href="/careers">Careers</a><a href="/quote">Get a quote</a></div>
-      <div class="ft2-col"><h5>Services</h5><a href="/new-builds">New builds</a><a href="/renovations">Renovations</a><a href="/bathrooms">Bathrooms</a><a href="/commercial">Commercial</a><a href="/emergency">24/7 emergency</a></div>
-      <div class="ft2-col"><h5>Areas</h5><a href="/plumber-miranda">Miranda</a><a href="/plumber-mascot">Mascot</a><a href="/plumber-neutral-bay">Neutral Bay</a><a href="/plumber-eastern-suburbs">Eastern Suburbs</a><a href="/plumber-st-george">St George</a><a href="/plumber-inner-west">Inner West</a><a href="/plumber-northern-beaches">Northern Beaches</a><a href="/plumber-wollongong">Wollongong</a><a href="/plumber-shellharbour-kiama">Shellharbour and Kiama</a></div>
-      <div class="ft2-col"><h5>Contact</h5><a href="tel:0452611522">0452 611 522</a><a href="mailto:info@lpsplumbinggroup.com">info@lpsplumbinggroup.com</a><a href="https://www.instagram.com/lpsplumbinggroup/" target="_blank" rel="noopener">Instagram</a></div>
-    </div>
-    <div class="ft2-btm">
-      <span>© <span id="yr">2026</span> LPS Plumbing Group · Lic 476073C · ABN 34 280 954 515</span>
-      <span><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · Site by <a href="https://www.latitudemarketing.au/?utm_source=lps-plumbing&utm_medium=referral&utm_campaign=client_credit" target="_blank" rel="noopener">Latitude Marketing</a></span>
+    <div class="ft3-trust"><span><b>Licensed</b> · Lic 476073C</span><span><b>Fully insured</b></span><span><b>24/7</b> emergency call outs</span><span><b>Hours</b> 7am to 7pm, 7 days</span></div>
+    <div class="ft3-btm">
+      <span>© <span id="yr">2026</span> LPS Plumbing Group · ABN 34 280 954 515</span>
+      <span><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · Site by <a href="https://www.latitudemarketing.au/?utm_source=lps-plumbing&utm_medium=referral&utm_campaign=client_credit" target="_blank" rel="noopener">Latitude Marketing</a> · <button class="ft3-up" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top ↑</button></span>
     </div>
   </div>
 </footer>
@@ -956,6 +1030,25 @@ async function handleSubmit(event) {
 
 /* click to call + email tracking */
 document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e.target.closest('a[href^="tel:"],a[href^="mailto:"],a[href^="sms:"],a[href*="wa.me"]'):null;if(!a||typeof gtag!=='function')return;var h=a.getAttribute('href');var ev=h.indexOf('tel:')===0?'click_to_call':h.indexOf('sms:')===0?'click_to_text':h.indexOf('wa.me')>-1?'click_to_whatsapp':'email_click';gtag('event',ev,{page_path:location.pathname});if(typeof fbq==='function'&&ev!=='email_click')fbq('track','Contact');},true);
+
+/* SLIDERS: arrows + drag (recent work, reviews) */
+document.querySelectorAll('[data-slider]').forEach(function (wrap) {
+  var track = wrap.querySelector('.slider-track'), prev = wrap.querySelector('.sl-prev'), next = wrap.querySelector('.sl-next');
+  if (!track) return;
+  var step = function () { var c = track.children[0]; return c ? c.getBoundingClientRect().width + 20 : 400; };
+  if (prev) prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: 'smooth' }); });
+  if (next) next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: 'smooth' }); });
+  var sync = function () {
+    if (prev) prev.disabled = track.scrollLeft < 8;
+    if (next) next.disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 8;
+  };
+  track.addEventListener('scroll', sync, { passive: true }); window.addEventListener('resize', sync); sync();
+  var down = false, sx = 0, sl = 0, moved = false;
+  track.addEventListener('pointerdown', function (e) { if (e.pointerType !== 'mouse') return; down = true; moved = false; sx = e.clientX; sl = track.scrollLeft; track.classList.add('drag'); });
+  window.addEventListener('pointermove', function (e) { if (!down) return; var dx = e.clientX - sx; if (Math.abs(dx) > 4) moved = true; track.scrollLeft = sl - dx; });
+  window.addEventListener('pointerup', function () { if (!down) return; down = false; track.classList.remove('drag'); });
+  track.addEventListener('click', function (e) { if (moved) { e.preventDefault(); e.stopPropagation(); } }, true);
+});
 </script><script>/* LPS v2 motion: Lenis smooth scroll + GSAP ScrollTrigger */
 (function(){
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -980,12 +1073,13 @@ document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e
       delay: now ? 2.05 : 0, scrollTrigger: now ? null : { trigger: el, start: 'top 88%' } });
   });
 
-  /* generic reveals */
+  /* generic reveals: quick, once, nothing left half-faded */
   var heroI = 0;
   gsap.utils.toArray('.rv').forEach(function(el){
     var inHero = !!el.closest('.h2x,.vh');
-    var d = inHero ? 2.2 + (heroI++) * 0.1 : 0;
-    gsap.to(el, { opacity: 1, y: 0, duration: 1.1, ease: 'expo.out', delay: d, scrollTrigger: inHero ? null : { trigger: el, start: 'top 90%' } });
+    if (inHero) { gsap.to(el, { opacity: 1, y: 0, duration: 1, ease: 'expo.out', delay: 2.1 + (heroI++) * 0.08 }); return; }
+    ScrollTrigger.create({ trigger: el, start: 'top 96%', once: true,
+      onEnter: function(){ gsap.to(el, { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' }); } });
   });
 
   /* image wipes + parallax */
@@ -996,10 +1090,9 @@ document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e
     gsap.fromTo(img, { yPercent: -6 }, { yPercent: 6, ease: 'none', scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
   });
 
-  /* statement: words light up as you scroll */
+  /* statement: rises in once, fully visible */
   document.querySelectorAll('.stmt p.big').forEach(function(p){
-    p.innerHTML = p.textContent.trim().split(/\s+/).map(function(w){ return '<span class="w">'+w+'</span>'; }).join(' ');
-    gsap.to(p.querySelectorAll('.w'), { opacity: 1, stagger: 0.06, ease: 'none', scrollTrigger: { trigger: p, start: 'top 80%', end: 'bottom 45%', scrub: true } });
+    gsap.from(p, { opacity: 0, y: 30, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: p, start: 'top 92%', once: true } });
   });
 
   /* count up */
@@ -1014,17 +1107,6 @@ document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e
     var img = c.querySelector('.scard-m img');
     if (img) gsap.to(img, { scale: 1, ease: 'none', scrollTrigger: { trigger: c, start: 'top bottom', end: 'top 100px', scrub: true } });
     if (i < cards.length - 1) gsap.to(c, { scale: 0.92, filter: 'brightness(0.7)', ease: 'none', scrollTrigger: { trigger: cards[i+1], start: 'top bottom', end: 'top 96px', scrub: true } });
-  });
-
-  /* horizontal gallery pinned on desktop */
-  ScrollTrigger.matchMedia({
-    '(min-width: 900px)': function(){
-      var sec = document.querySelector('.hz'), track = document.querySelector('.hz-track');
-      if (!sec || !track) return;
-      var dist = function(){ return Math.max(0, track.scrollWidth - window.innerWidth + 60); };
-      gsap.to(track, { x: function(){ return -dist(); }, ease: 'none',
-        scrollTrigger: { trigger: sec, start: 'top top', end: function(){ return '+=' + dist(); }, pin: true, scrub: 1, invalidateOnRefresh: true } });
-    }
   });
 
   window.addEventListener('load', function(){ ScrollTrigger.refresh(); });
