@@ -1,4 +1,87 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/service-page/drainage-inspection",
+      "destination": "/drainage",
+      "permanent": true
+    },
+    {
+      "source": "/service-page/gas-fitting",
+      "destination": "/gas-fitting",
+      "permanent": true
+    },
+    {
+      "source": "/service-page/general-plumbing",
+      "destination": "/services",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio-collections/my-portfolio/outdoor-plumbing-installations",
+      "destination": "/projects",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio-collections/my-portfolio/modern-bathroom-renovations",
+      "destination": "/bathrooms",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio-collections/my-portfolio",
+      "destination": "/projects",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio",
+      "destination": "/projects",
+      "permanent": true
+    },
+    {
+      "source": "/book-online",
+      "destination": "/quote",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "lps.latitudemarketing.au"
+        }
+      ],
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?<sub>.*)\\.vercel\\.app"
+        }
+      ],
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/img/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
 }

@@ -74,3 +74,18 @@
 .hz-head>div:first-child{flex:1 1 auto}
 .js-motion .rv{transform:translateY(16px)}
 .revs2 h2.big em{color:var(--sea)}
+
+/* image-led page heads */
+.phead-img .phead-in{display:grid;gap:36px;align-items:center}
+@media(min-width:960px){.phead-img .phead-in{grid-template-columns:1.05fr .95fr;gap:60px}.phead-img{padding-bottom:90px}}
+.phead-media{border-radius:22px;overflow:hidden;aspect-ratio:4/4.4;box-shadow:0 40px 80px -40px rgba(11,56,77,.45)}
+@media(max-width:959px){.phead-media{aspect-ratio:16/11}}
+.phead-media img{width:100%;height:100%;object-fit:cover}
+/* photo strips */
+.gstrip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:56px}
+.gstrip figure{border-radius:18px;overflow:hidden;aspect-ratio:3/4}
+.gstrip figure:nth-child(2){transform:translateY(28px)}
+.gstrip img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--ease-out)}
+.gstrip figure:hover img{transform:scale(1.05)}
+@media(max-width:640px){.gstrip{gap:8px}.gstrip figure{border-radius:12px}.gstrip figure:nth-child(2){transform:translateY(16px)}}
+.stmt .gstrip{margin-top:80px}

@@ -802,6 +802,21 @@ body{background:var(--paper)}
 .js-motion .rv{transform:translateY(16px)}
 .revs2 h2.big em{color:var(--sea)}
 
+/* image-led page heads */
+.phead-img .phead-in{display:grid;gap:36px;align-items:center}
+@media(min-width:960px){.phead-img .phead-in{grid-template-columns:1.05fr .95fr;gap:60px}.phead-img{padding-bottom:90px}}
+.phead-media{border-radius:22px;overflow:hidden;aspect-ratio:4/4.4;box-shadow:0 40px 80px -40px rgba(11,56,77,.45)}
+@media(max-width:959px){.phead-media{aspect-ratio:16/11}}
+.phead-media img{width:100%;height:100%;object-fit:cover}
+/* photo strips */
+.gstrip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:56px}
+.gstrip figure{border-radius:18px;overflow:hidden;aspect-ratio:3/4}
+.gstrip figure:nth-child(2){transform:translateY(28px)}
+.gstrip img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--ease-out)}
+.gstrip figure:hover img{transform:scale(1.05)}
+@media(max-width:640px){.gstrip{gap:8px}.gstrip figure{border-radius:12px}.gstrip figure:nth-child(2){transform:translateY(16px)}}
+.stmt .gstrip{margin-top:80px}
+
 </style>
 </head>
 <body>
@@ -828,16 +843,19 @@ body{background:var(--paper)}
   </aside>
 </div>
 
-<header class="phead">
+<header class="phead phead-img">
   <div class="phead-seam"></div>
   <div class="phead-in wrap px">
-    <div class="crumb"><a href="/">Home</a><span>/</span><span>About</span></div>
-    <span class="eyebrow">About</span>
-    <h1 class="rv">Small crew. <em>High standards.</em></h1>
-    <p class="lead rv">LPS Plumbing Group is a licensed plumbing, drainage and gas fitting business led by director Lewis Slatter.</p>
-    <div class="phead-cta"><a href="/quote" class="btn btn-gold"><span class="roll"><i><b>Get a quote</b><b>Get a quote</b></i></span><span class="circ"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></a><a href="tel:0452611522" class="btn btn-ghost"><span class="roll"><i><b>0452 611 522</b><b>0452 611 522</b></i></span><span class="circ"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span></a></div>
+    <div class="phead-txt">
+      <div class="crumb"><a href="/">Home</a><span>/</span><span>About</span></div>
+      <span class="eyebrow">About</span>
+      <h1 class="rv">Small crew. <em>High standards.</em></h1>
+      <p class="lead rv">LPS Plumbing Group is a licensed plumbing, drainage and gas fitting business led by director Lewis Slatter.</p>
+      <div class="phead-cta"><a href="/quote" class="btn btn-gold"><span class="roll"><i><b>Get a quote</b><b>Get a quote</b></i></span><span class="circ"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></a><a href="tel:0452611522" class="btn btn-ghost"><span class="roll"><i><b>0452 611 522</b><b>0452 611 522</b></i></span><span class="circ"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span></a></div>
+    </div>
+    <div class="phead-media rv"><img src="/img/lps-stone-vanity-wall-mixer.webp" alt="Stone vanity with wall mixer" fetchpriority="high"></div>
   </div>
-</header>
+</header><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.lpsplumbinggroup.com.au/"}, {"@type": "ListItem", "position": 2, "name": "About", "item": "https://www.lpsplumbinggroup.com.au/about"}]}</script>
 <section class="sec"><div class="wrap px">
   <div class="badge-row rv"><span class="badge-num">01</span><span class="badge-lab">Our story</span></div>
   <div class="about-grid">
@@ -847,6 +865,7 @@ body{background:var(--paper)}
     <p class="lead" style="margin-top:16px">We are growing. If you are a plumber who takes pride in the finish, <a href="/careers" style="color:var(--sea);font-weight:600">come work with us</a>.</p></div>
   </div>
 </div></section>
+<section class="sec" style="padding-top:0"><div class="wrap px"><div class="gstrip"><figure class="rv"><img src="/img/lps-ensuite-brass-fit-off.webp" alt="Ensuite with brass fit off" loading="lazy"></figure><figure class="rv"><img src="/img/lps-new-build-kitchen.webp" alt="Open plan new build kitchen plumbed by LPS" loading="lazy"></figure><figure class="rv"><img src="/img/lps-brass-wall-spout-basin.webp" alt="Brushed brass wall spout and basin" loading="lazy"></figure></div></div></section>
 
 <section class="creds2">
   <div class="wrap px">
@@ -905,7 +924,7 @@ body{background:var(--paper)}
         <div class="ft3-soc"><a href="https://www.instagram.com/lpsplumbinggroup/" target="_blank" rel="noopener">Instagram</a><a href="https://www.google.com/maps/search/?api=1&query=LPS%20Plumbing%20Group" target="_blank" rel="noopener">Google reviews</a></div>
       </div>
       <div><h5>Explore</h5><div class="ft3-col"><a href="/services">Services</a><a href="/builders">For builders</a><a href="/projects">Projects</a><a href="/about">About</a><a href="/careers">Careers</a><a href="/builders-checklist">Builder checklist</a><a href="/quote">Get a quote</a></div></div>
-      <div><h5>Services</h5><div class="ft3-col"><a href="/new-builds">New builds</a><a href="/renovations">Renovations</a><a href="/bathrooms">Bathrooms</a><a href="/commercial">Commercial</a><a href="/emergency">24/7 emergency</a></div></div>
+      <div><h5>Services</h5><div class="ft3-col"><a href="/new-builds">New builds</a><a href="/renovations">Renovations</a><a href="/bathrooms">Bathrooms</a><a href="/commercial">Commercial</a><a href="/gas-fitting">Gas fitting</a><a href="/drainage">Drainage</a><a href="/emergency">24/7 emergency</a></div></div>
       <div><h5>Areas we cover</h5><div class="ft3-areas"><a href="/plumber-miranda">Miranda</a><a href="/plumber-mascot">Mascot</a><a href="/plumber-neutral-bay">Neutral Bay</a><a href="/plumber-eastern-suburbs">Eastern Suburbs</a><a href="/plumber-st-george">St George</a><a href="/plumber-inner-west">Inner West</a><a href="/plumber-northern-beaches">Northern Beaches</a><a href="/plumber-wollongong">Wollongong</a><a href="/plumber-shellharbour-kiama">Shellharbour and Kiama</a></div></div>
     </div>
     <div class="ft3-trust"><span><b>Licensed</b> · Lic 476073C</span><span><b>Fully insured</b></span><span><b>24/7</b> emergency call outs</span><span><b>Hours</b> 7am to 7pm, 7 days</span></div>

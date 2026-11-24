@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """LPS Plumbing Group site generator (Latitude SAL template, LPS palette)."""
-import os, sys, json, html
+import os, sys, json, html, datetime
+sys.path.insert(0, os.path.dirname(__file__))
+from areas_copy import AREA_COPY, EXTRA_SERVICES, EXTRA_SFAQ, TITLE_KW
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else 'out'
 BASE = sys.argv[2] if len(sys.argv) > 2 else ''          # '' at launch, '/preview/lps-plumbing-group' for preview
@@ -43,7 +45,7 @@ LOCAL = {
 
 def W(i, w=1600, h=1200):
     if i in LOCAL:   # LPS's own job photos, hosted in /img
-        return f'{BASE}/img/{LOCAL[i]}'
+        return f'{BASE}/img/{LOCAL[i][:-4]}.webp'
     ids = {
         'logo': '84f08c_9dd65380a4c24c1b927187305cc5b8ae~mv2.png',
     }
@@ -83,6 +85,8 @@ SERVICES = [
      'When something fails, you need someone who picks up. We take emergency calls 24/7 across our service area and come prepared to fix it properly the first time, not patch it.',
      ['Burst and leaking pipes', 'Blocked drains and sewer', 'Hot water failures', 'Gas leaks', 'Make safe on builder sites']),
 ]
+
+SERVICES = SERVICES[:-1] + EXTRA_SERVICES + SERVICES[-1:]   # emergency stays last
 
 AREAS = [
     ('plumber-miranda', 'Miranda', 'Sutherland Shire', 'miranda',
@@ -151,6 +155,13 @@ SFAQ = {
   ],
 }
 
+SFAQ.update(EXTRA_SFAQ)
+SVC_IMGS = {'new-builds':['kitchen','kitchensink','laundry'],'renovations':['vanity','gooseneck','stonevanity'],'bathrooms':['ensuite','shower','bathreno'],'commercial':['commercial','laundry','kitchensink'],'gas-fitting':['kitchensink','hotwater','stone'],'drainage':['laundry','commercial','shower'],'emergency':['hotwater','laundry','sink']}
+IMG_ALT = {'kitchen':'Open plan new build kitchen plumbed by LPS','kitchensink':'Kitchen sink fit off','laundry':'Laundry fit off with floor waste','vanity':'Brass kitchen mixer on marble','gooseneck':'Gooseneck kitchen mixer','stonevanity':'Stone vanity with wall mixer','ensuite':'Ensuite with brass fit off','shower':'Walk in shower with rail shower','bathreno':'Bathroom renovation with brass tapware','commercial':'Commercial pipework install','hotwater':'Heat pump hot water install','sink':'Brass sink mixer','stone':'Brass mixer on stone benchtop','basin':'Brushed brass wall spout and basin','miranda':'Terracotta powder room'}
+
+def gstrip(keys, place=''):
+    return '<div class="gstrip">' + ''.join(f'<figure class="rv"><img src="{W(k)}" alt="{IMG_ALT.get(k, "Plumbing by LPS Plumbing Group")}{(" in " + place) if place else ""}" loading="lazy"></figure>' for k in keys) + '</div>'
+
 NAV = [('/services', 'Services'), ('/builders', 'For builders'), ('/projects', 'Projects'), ('/about', 'About'), ('/careers', 'Careers')]
 
 def head(title, desc, path, extra=''):
@@ -217,19 +228,26 @@ def nav(hold=False):
 </div>
 '''
 
-def phead(crumb, eyebrow, h1, lead, ctas=True):
+def phead(crumb, eyebrow, h1, lead, ctas=True, img=None, path=None):
     c = f'<div class="phead-cta">{btn(L("/quote"), "Get a quote")}{btn("tel:"+TEL, PHONE, "ghost", PHONE_SVG)}</div>' if ctas else ''
+    bc = ''
+    if path:
+        bc = '<script type="application/ld+json">' + json.dumps({"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":DOMAIN+"/"},{"@type":"ListItem","position":2,"name":html.unescape(crumb),"item":DOMAIN+path}]}) + '</script>'
+    media = f'<div class="phead-media rv"><img src="{W(img)}" alt="{IMG_ALT.get(img, "Plumbing by LPS Plumbing Group")}" fetchpriority="high"></div>' if img else ''
     return f'''
-<header class="phead">
+<header class="phead{' phead-img' if img else ''}">
   <div class="phead-seam"></div>
   <div class="phead-in wrap px">
-    <div class="crumb"><a href="{L('/')}">Home</a><span>/</span><span>{crumb}</span></div>
-    <span class="eyebrow">{eyebrow}</span>
-    <h1 class="rv">{h1}</h1>
-    <p class="lead rv">{lead}</p>
-    {c}
+    <div class="phead-txt">
+      <div class="crumb"><a href="{L('/')}">Home</a><span>/</span><span>{crumb}</span></div>
+      <span class="eyebrow">{eyebrow}</span>
+      <h1 class="rv">{h1}</h1>
+      <p class="lead rv">{lead}</p>
+      {c}
+    </div>
+    {media}
   </div>
-</header>'''
+</header>{bc}'''
 
 def hidden(subject):
     if WEB3FORMS_KEY:
@@ -439,13 +457,13 @@ ld = f'<script type="application/ld+json">{json.dumps(schema)}</script><script t
 
 svc_rows = ''.join(f'''<article class="svc-row rv"><span class="svc-n">0{i+1}</span><h3 class="svc-t">{s[1]}</h3><p class="svc-d">{s[3]} <a href="{L('/'+s[0])}" style="color:var(--gold);font-weight:500;white-space:nowrap">Learn more</a></p><div class="svc-img"><img src="{W(s[2],900,560)}" alt="{s[1]} plumbing by LPS Plumbing Group" loading="lazy"></div></article>''' for i, s in enumerate(SERVICES))
 
-scards = ''.join(f'''<article class="scard"><div class="scard-b"><div><span class="scard-n">0{i+1} / 05</span><h3 style="margin-top:18px">{s[1]}</h3><p>{s[4]}</p></div><div><ul>{''.join(f'<li>{x}</li>' for x in s[5][:4])}</ul><a class="more" href="{L('/'+s[0])}" style="margin-top:22px">Explore {s[1].lower()} &rarr;</a></div></div><div class="scard-m"><img src="{W(s[2],1100,1100)}" alt="{s[1]} plumbing by LPS Plumbing Group" loading="lazy"></div></article>''' for i, s in enumerate(SERVICES))
+scards = ''.join(f'''<article class="scard"><div class="scard-b"><div><span class="scard-n">0{i+1} / 0{len(SERVICES)}</span><h3 style="margin-top:18px">{s[1]}</h3><p>{s[4]}</p></div><div><ul>{''.join(f'<li>{x}</li>' for x in s[5][:4])}</ul><a class="more" href="{L('/'+s[0])}" style="margin-top:22px">Explore {s[1].lower()} &rarr;</a></div></div><div class="scard-m"><img src="{W(s[2],1100,1100)}" alt="{s[1]} plumbing by LPS Plumbing Group" loading="lazy"></div></article>''' for i, s in enumerate(SERVICES))
 gal = [('miranda','Bathroom','Terracotta powder room'),('basin','Bathroom','Brushed brass wall spout'),('vanity','Kitchen','Brass kitchen mixer fit off'),('ensuite','Bathroom','Ensuite with brass fit off'),('kitchen','New build','Open plan kitchen, new build'),('stonevanity','Renovation','Stone vanity with wall mixer'),('commercial','Commercial','Commercial pipework'),('hotwater','Hot water','Heat pump hot water install')]
 hz = ''.join(f'<figure class="hz-item"><div class="hz-img"><img src="{W(i,800,1000)}" alt="{t}" loading="lazy"></div><figcaption class="hz-cap"><b>{t}</b><span>{k}</span></figcaption></figure>' for i,k,t in gal)
 mq = ''.join(f'<span>{x}</span>' for x in ['New builds','Renovations','Bathrooms','Commercial','Gas fitting','Drainage','Hot water','24/7 emergency']*2)
 arows = ''.join(f'<a class="arow" href="{L("/"+a[0])}"><span>{a[1][0].upper()+a[1][1:]}</span><small>{a[2]} &rarr;</small></a>' for a in AREAS)
 
-home = head('LPS Plumbing Group | Plumber for High End Builds, Sydney',
+home = head('Plumber Sydney for High End Builds & Renos | LPS Plumbing',
             'Plumbing, drainage and gas for high end builds, renos and bathrooms across Sydney. Licensed, insured, 24/7. Call Lewis on 0452 611 522.', '/', ld) + nav(True) + f'''
 <header class="vh">
   <video class="vh-vid" autoplay muted loop playsinline preload="auto" poster="{BASE}/lps-hero-poster.jpg" aria-hidden="true"><source src="{BASE}/lps-hero.mp4" type="video/mp4"></video>
@@ -471,6 +489,7 @@ home = head('LPS Plumbing Group | Plumber for High End Builds, Sydney',
       <div class="stat rv"><b>24/7</b><span>Emergency call outs, any day of the year</span></div>
       <div class="stat rv"><b><span data-count="1">0</span></b><span>Point of contact. You deal with Lewis, start to finish</span></div>
     </div>
+    {gstrip(['stone','bathreno','kitchensink'])}
   </div>
 </section>
 
@@ -509,8 +528,8 @@ pages['index.html'] = home
 
 # ---------------- SERVICES HUB ----------------
 blocks = ''.join(f'''<div class="sblock rv{' flip' if i%2 else ''}"><span class="sb-n">0{i+1}</span><div class="sb-body"><h3>{s[1]}</h3><p>{s[4]}</p><ul class="sb-list">{''.join(f'<li>{x}</li>' for x in s[5])}</ul><div style="margin-top:22px">{btn(L('/'+s[0]), 'More on '+s[1].lower(), 'dark')}</div></div><div class="sb-media"><img src="{W(s[2],1000,750)}" alt="{s[1]} by LPS Plumbing Group" loading="lazy"></div></div>''' for i, s in enumerate(SERVICES))
-pages['services.html'] = head('Plumbing Services | LPS Plumbing Group, Sydney',
-    'New builds, renovations, bathrooms, commercial and 24/7 emergency plumbing across Sydney. Licensed and insured. Call 0452 611 522.', '/services') + nav() + phead('Services', 'Services', 'Everything in the wall, <em>done right.</em>', 'Plumbing, drainage and gas fitting for builders, developers and homeowners who want it done once, properly.') + f'''
+pages['services.html'] = head('Plumbing Services Sydney: Builds, Gas & Drainage | LPS',
+    'New builds, renovations, bathrooms, commercial, gas fitting, drainage and 24/7 emergency plumbing across Sydney. Call 0452 611 522.', '/services') + nav() + phead('Services', 'Services', 'Everything in the wall, <em>done right.</em>', 'Plumbing, drainage and gas fitting for builders, developers and homeowners who want it done once, properly.', img='ensuite', path='/services') + f'''
 <section class="sec"><div class="wrap px">{badge('01','What we do')}<div class="sblocks">{blocks}</div></div></section>
 {quote_form('02')}''' + foot() + tail()
 
@@ -519,12 +538,13 @@ for i, s in enumerate(SERVICES):
     slug, name, img, short, long, bullets = s
     others = ''.join(f'<a href="{L("/"+o[0])}">{o[1]}</a>' for o in SERVICES if o[0] != slug)
     h1 = f'{name} plumbing, <em>done properly.</em>' if slug != 'emergency' else 'Emergency plumber, <em>24/7.</em>'
-    title = f'{name} Plumbing Sydney | LPS Plumbing Group' if slug != 'emergency' else 'Emergency Plumber Sydney, 24/7 | LPS Plumbing Group'
+    title = f'{TITLE_KW[slug]} | LPS Plumbing Group'
+    svc_ld = '<script type="application/ld+json">' + json.dumps({"@context":"https://schema.org","@type":"Service","name":name+' plumbing',"serviceType":name,"description":short,"provider":{"@type":"Plumber","name":"LPS Plumbing Group","telephone":"+61452611522","url":DOMAIN},"areaServed":["Sydney","South Coast NSW"]}) + '</script>'
     desc = f'{short} Licensed and insured plumber across Sydney. Call Lewis on 0452 611 522.'
     if len(desc) > 158: desc = f'{short} Call Lewis on 0452 611 522.'
     faqs = SFAQ[slug] + FAQ[:2]
     if slug == 'emergency':
-        pages[f'{slug}.html'] = head(title, desc, '/' + slug, faq_ld(faqs)) + nav() + f'''
+        pages[f'{slug}.html'] = head(title, desc, '/' + slug, faq_ld(faqs) + svc_ld) + nav() + f'''
 <header class="em">
   <div class="wrap px em-in">
     <span class="em-live"><i></i>Answering now · 24/7</span>
@@ -553,11 +573,13 @@ for i, s in enumerate(SERVICES):
 </div></section>
 {faq_block('01', faqs)}''' + foot() + tail()
         continue
-    pages[f'{slug}.html'] = head(title, desc, '/' + slug, faq_ld(faqs)) + nav() + phead(name, 'Services', h1, short) + f'''
+    pages[f'{slug}.html'] = head(title, desc, '/' + slug, faq_ld(faqs) + svc_ld) + nav() + phead(name, 'Services', h1, short, img=img, path='/'+slug) + f'''
 <section class="sec"><div class="wrap px">
   {badge('01', name)}
   <div class="sblocks"><div class="sblock rv"><span class="sb-n">01</span><div class="sb-body"><h3>What you get</h3><p>{long}</p><ul class="sb-list">{''.join(f'<li>{x}</li>' for x in bullets)}</ul></div><div class="sb-media"><img src="{W(img,1000,750)}" alt="{name} plumbing by LPS Plumbing Group" loading="lazy"></div></div></div>
+  {gstrip(SVC_IMGS.get(slug, [img])[:3])}
   <div class="rv" style="margin-top:40px"><span class="badge-lab">Other services</span><div class="chips">{others}</div></div>
+  <div class="rv" style="margin-top:26px"><span class="badge-lab">Areas we cover</span><div class="chips">{''.join(f'<a href="{L("/"+a[0])}">{a[1][4:].title() if a[1].startswith("the ") else a[1]}</a>' for a in AREAS)}</div></div>
 </div></section>
 {faq_block('02', faqs)}
 {quote_form('03')}''' + foot() + tail()
@@ -566,21 +588,35 @@ for i, s in enumerate(SERVICES):
 for a in AREAS:
     slug, place, region, img, blurb, subs = a
     P = place[0].upper() + place[1:]
-    title = f'Plumber {P.replace("The ","")} | LPS Plumbing Group'
-    desc = f'Licensed plumber for new builds, renovations and bathrooms in {place}. Working with builders and homeowners. Call Lewis on 0452 611 522.'
+    Pn = P.replace("The ", "")
+    ac = AREA_COPY[slug]
+    title = f'Plumber {Pn} | Builds, Renos & 24/7 | LPS'
+    desc = f'Licensed plumber in {Pn}: new builds, renovations, bathrooms, gas and drainage, plus 24/7 emergencies. Call Lewis on 0452 611 522.'
+    if len(desc) > 158: desc = f'Licensed plumber in {Pn} for new builds, renos, bathrooms and 24/7 emergencies. Call Lewis on 0452 611 522.'
     svc = ''.join(f'<a href="{L("/"+s[0])}">{s[1]}</a>' for s in SERVICES)
-    pages[f'{slug}.html'] = head(title, desc, '/' + slug) + nav() + phead(f'{region}', region, f'Plumber in {place}, <em>for builds done right.</em>', blurb) + f'''
+    others = ''.join(f'<a href="{L("/"+o[0])}">{o[1][4:].title() if o[1].startswith("the ") else o[1]}</a>' for o in AREAS if o[0] != slug)
+    afaqs = ac['faqs'] + FAQ[2:4]
+    ald = '<script type="application/ld+json">' + json.dumps({"@context":"https://schema.org","@type":"Service","name":f"Plumbing in {Pn}","serviceType":"Plumbing","provider":{"@type":"Plumber","name":"LPS Plumbing Group","telephone":"+61452611522","url":DOMAIN},"areaServed":[{"@type":"Place","name":x} for x in [Pn]+subs]}) + '</script>'
+    paras = ''.join(f'<p class="lead" style="margin-top:18px">{x}</p>' for x in ac['body'])
+    pages[f'{slug}.html'] = head(title, desc, '/' + slug, faq_ld(afaqs) + ald) + nav() + phead(Pn, region, f'Plumber in {place}, <em>for builds done right.</em>', blurb, img=ac['imgs'][0], path='/'+slug) + f'''
 <section class="sec"><div class="wrap px">
-  {badge('01', f'Plumbing in {place}')}
-  <div class="sblocks"><div class="sblock rv"><span class="sb-n">01</span><div class="sb-body"><h3>Builders and homeowners in {place}</h3><p>Whether it is a new build, a renovation or a bathroom, you get the same crew and the same standard. We price from your plans, work to your program and hand over with all the paperwork sorted.</p><ul class="sb-list"><li>New builds and knockdown rebuilds</li><li>Renovations and bathrooms</li><li>Gas fitting, drainage and hot water</li><li>24/7 emergency call outs</li></ul></div><div class="sb-media"><img src="{W(img,1000,750)}" alt="Plumbing work by LPS Plumbing Group in {place}" loading="lazy"></div></div></div>
+  {badge('01', f'Plumbing in {Pn}')}
+  <div class="about-grid">
+    <div class="rv"><h2 class="big">Local work, <em>done properly.</em></h2></div>
+    <div class="rv">{paras}</div>
+  </div>
+  {gstrip(ac['imgs'], Pn)}
+  <div class="sblocks"><div class="sblock rv"><span class="sb-n">01</span><div class="sb-body"><h3>What we do in {Pn}</h3><p>Whether it is a new build, a renovation, a bathroom or an urgent repair, you get the same crew and the same standard. We price from your plans, work to your program and hand over with the paperwork sorted.</p><ul class="sb-list"><li>New builds and knockdown rebuilds</li><li>Renovations and bathrooms</li><li>Gas fitting, drainage and hot water</li><li>24/7 emergency call outs</li></ul></div><div class="sb-media"><img src="{W(ac['imgs'][1])}" alt="{IMG_ALT.get(ac['imgs'][1], 'Plumbing')} in {Pn}" loading="lazy"></div></div></div>
   <div class="rv" style="margin-top:40px"><span class="badge-lab">Suburbs we cover nearby</span><div class="chips">{''.join(f'<span>{x}</span>' for x in subs)}</div></div>
-  <div class="rv" style="margin-top:30px"><span class="badge-lab">Services</span><div class="chips">{svc}</div></div>
+  <div class="rv" style="margin-top:26px"><span class="badge-lab">Services</span><div class="chips">{svc}</div></div>
+  <div class="rv" style="margin-top:26px"><span class="badge-lab">Other areas</span><div class="chips">{others}</div></div>
 </div></section>
-{quote_form('02')}''' + foot() + tail()
+{faq_block('02', afaqs)}
+{quote_form('03')}''' + foot() + tail()
 
 # ---------------- BUILDERS ----------------
 pages['builders.html'] = head('Plumber for Builders, Sydney | LPS Plumbing Group',
-    'A plumbing partner for high end builders in Sydney. Priced from your plans, delivered to program. Send plans or call Lewis on 0452 611 522.', '/builders') + nav() + phead('For builders', 'For builders', 'A plumber that <em>keeps your program moving.</em>', 'We partner with builders on high end homes, renovations and multi unit projects. Send through plans and we will price the full plumbing scope.') + f'''
+    'A plumbing partner for high end builders in Sydney. Priced from your plans, delivered to program. Send plans or call Lewis on 0452 611 522.', '/builders') + nav() + phead('For builders', 'For builders', 'A plumber that <em>keeps your program moving.</em>', 'We partner with builders on high end homes, renovations and multi unit projects. Send through plans and we will price the full plumbing scope.', img='kitchen', path='/builders') + f'''
 <section class="sec"><div class="wrap px">
   {badge('01', 'How we work with builders')}
   <div class="track">
@@ -606,7 +642,7 @@ pages['builders.html'] = head('Plumber for Builders, Sydney | LPS Plumbing Group
 
 # ---------------- QUOTE ----------------
 pages['quote.html'] = head('Get a Plumbing Quote | LPS Plumbing Group',
-    'Request a quote from LPS Plumbing Group. Send plans or photos and get a clear, itemised price. Or call Lewis on 0452 611 522.', '/quote') + nav() + phead('Get a quote', 'Get a quote', 'Tell us about <em>the job.</em>', 'Builders, homeowners and developers. Send the details and we reply within one business day.', False) + quote_form('01') + foot() + tail()
+    'Request a quote from LPS Plumbing Group. Send plans or photos and get a clear, itemised price. Or call Lewis on 0452 611 522.', '/quote') + nav() + phead('Get a quote', 'Get a quote', 'Tell us about <em>the job.</em>', 'Builders, homeowners and developers. Send the details and we reply within one business day.', False, img='basin', path='/quote') + quote_form('01') + foot() + tail()
 
 # ---------------- PROJECTS ----------------
 projs = [('miranda', 'Bathroom', 'Terracotta powder room', 'Wall hung basin and wall mixer set out dead level against handmade terracotta tiles, finished in brushed brass.'),
@@ -620,14 +656,14 @@ projs = [('miranda', 'Bathroom', 'Terracotta powder room', 'Wall hung basin and 
          ('laundry', 'Renovation', 'Laundry fit off', 'Stacked washer and dryer services and floor waste in a fully tiled laundry.')]
 cards = ''.join(f'<article class="pcard rv"><div class="pcard-img"><img src="{W(i,1000,625)}" alt="{t}" loading="lazy"></div><div class="pcard-b"><span class="pcard-k">{k}</span><h3>{t}</h3><p>{d}</p></div></article>' for i, k, t, d in projs)
 pages['projects.html'] = head('Plumbing Projects | LPS Plumbing Group, Sydney',
-    'Recent new builds, renovations, bathrooms and commercial plumbing projects by LPS Plumbing Group across Sydney.', '/projects') + nav() + phead('Projects', 'Projects', 'Recent <em>work.</em>', 'A look at recent builds, renovations and bathrooms we have plumbed.') + f'''
+    'Recent new builds, renovations, bathrooms and commercial plumbing projects by LPS Plumbing Group across Sydney.', '/projects') + nav() + phead('Projects', 'Projects', 'Recent <em>work.</em>', 'A look at recent builds, renovations and bathrooms we have plumbed.', img='miranda', path='/projects') + f'''
 {"".join(f'<section class="case"><div class="wrap px case-in"><div class="case-m rv"><img src="{W(c["img"],1200,900)}" alt="{c["title"]}" loading="lazy"></div><div class="case-b rv"><span class="badge-lab">{c["suburb"]} · Builder: {c["builder"]}</span><h2>{c["title"]}</h2><p><b>Scope.</b> {c["scope"]}</p><p><b>Result.</b> {c["result"]}</p></div></div></section>' for c in CASES)}
 <section class="sec"><div class="wrap px">{badge('01','Projects')}<div class="pgrid">{cards}</div></div></section>
 {quote_form('02')}''' + foot() + tail()
 
 # ---------------- ABOUT ----------------
 pages['about.html'] = head('About LPS Plumbing Group | Lewis Slatter, Director',
-    'LPS Plumbing Group is led by director Lewis Slatter, with 8+ years plumbing high end homes across Sydney. Licensed and insured.', '/about') + nav() + phead('About', 'About', 'Small crew. <em>High standards.</em>', 'LPS Plumbing Group is a licensed plumbing, drainage and gas fitting business led by director Lewis Slatter.') + f'''
+    'LPS Plumbing Group is led by director Lewis Slatter, with 8+ years plumbing high end homes across Sydney. Licensed and insured.', '/about') + nav() + phead('About', 'About', 'Small crew. <em>High standards.</em>', 'LPS Plumbing Group is a licensed plumbing, drainage and gas fitting business led by director Lewis Slatter.', img='stonevanity', path='/about') + f'''
 <section class="sec"><div class="wrap px">
   {badge('01','Our story')}
   <div class="about-grid">
@@ -637,13 +673,14 @@ pages['about.html'] = head('About LPS Plumbing Group | Lewis Slatter, Director',
     <p class="lead" style="margin-top:16px">We are growing. If you are a plumber who takes pride in the finish, <a href="{L('/careers')}" style="color:var(--sea);font-weight:600">come work with us</a>.</p></div>
   </div>
 </div></section>
+<section class="sec" style="padding-top:0"><div class="wrap px">{gstrip(['ensuite','kitchen','basin'])}</div></section>
 {creds_block('02')}
 {quote_form('03')}''' + foot() + tail()
 
 
 # ---------------- CAREERS ----------------
 pages['careers.html'] = head('Plumbing Jobs Sydney | Work with LPS Plumbing Group',
-    'LPS Plumbing Group is hiring plumbers and apprentices for high end builds across Sydney. Apply in two minutes or call Lewis on 0452 611 522.', '/careers') + nav() + phead('Careers', 'We are hiring', 'Work on builds <em>worth your name.</em>', 'We are growing the crew to keep up with high end builders across Sydney. If you take pride in the finish, we want to hear from you.', False) + f'''
+    'LPS Plumbing Group is hiring plumbers and apprentices for high end builds across Sydney. Apply in two minutes or call Lewis on 0452 611 522.', '/careers') + nav() + phead('Careers', 'We are hiring', 'Work on builds <em>worth your name.</em>', 'We are growing the crew to keep up with high end builders across Sydney. If you take pride in the finish, we want to hear from you.', False, img='commercial', path='/careers') + f'''
 <section class="sec"><div class="wrap px">
   {badge('01', 'Open roles')}
   <div class="roles">
@@ -746,8 +783,16 @@ for f, c in pages.items():
     open(os.path.join(OUT, f), 'w').write(c)
 
 indexable = [p for p in pages if p not in ('thank-you.html', '404.html')]
-open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'  <url><loc>{DOMAIN}/{"" if p=="index.html" else p[:-5]}</loc></url>\n' for p in indexable) + '</urlset>\n')
+open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'  <url><loc>{DOMAIN}/{"" if p=="index.html" else p[:-5]}</loc><lastmod>{datetime.date.today().isoformat()}</lastmod></url>\n' for p in indexable) + '</urlset>\n')
 open(os.path.join(OUT, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\nSitemap: {DOMAIN}/sitemap.xml\n')
 if not BASE:
-    open(os.path.join(OUT, 'vercel.json'), 'w').write(json.dumps({"cleanUrls": True, "trailingSlash": False}, indent=2))
+    open(os.path.join(OUT, 'vercel.json'), 'w').write(json.dumps({"cleanUrls": True, "trailingSlash": False,
+        "redirects": [{"source": a, "destination": b, "permanent": True} for a, b in [
+            ("/service-page/drainage-inspection", "/drainage"), ("/service-page/gas-fitting", "/gas-fitting"), ("/service-page/general-plumbing", "/services"),
+            ("/portfolio-collections/my-portfolio/outdoor-plumbing-installations", "/projects"), ("/portfolio-collections/my-portfolio/modern-bathroom-renovations", "/bathrooms"),
+            ("/portfolio-collections/my-portfolio", "/projects"), ("/portfolio", "/projects"), ("/book-online", "/quote")]],
+        "headers": [
+            {"source": "/(.*)", "has": [{"type": "host", "value": "lps.latitudemarketing.au"}], "headers": [{"key": "X-Robots-Tag", "value": "noindex, nofollow"}]},
+            {"source": "/(.*)", "has": [{"type": "host", "value": "(?<sub>.*)\\.vercel\\.app"}], "headers": [{"key": "X-Robots-Tag", "value": "noindex, nofollow"}]},
+            {"source": "/img/(.*)", "headers": [{"key": "Cache-Control", "value": "public, max-age=31536000, immutable"}]}]}, indent=2))
 print(len(pages), 'pages')
