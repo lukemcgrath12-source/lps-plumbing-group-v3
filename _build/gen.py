@@ -544,7 +544,7 @@ pages['services.html'] = head('Plumbing Services Sydney: Builds, Gas & Drainage 
 for i, s in enumerate(SERVICES):
     slug, name, img, short, long, bullets = s
     others = ''.join(f'<a href="{L("/"+o[0])}">{o[1]}</a>' for o in SERVICES if o[0] != slug)
-    h1 = f'{name} plumbing, <em>done properly.</em>' if slug != 'emergency' else 'Emergency plumber, <em>24/7.</em>'
+    h1 = (f'{name}, <em>done properly.</em>' if slug in ('gas-fitting', 'drainage') else f'{name} plumbing, <em>done properly.</em>') if slug != 'emergency' else 'Emergency plumber, <em>24/7.</em>'
     title = f'{TITLE_KW[slug]} | LPS Plumbing Group'
     svc_ld = '<script type="application/ld+json">' + json.dumps({"@context":"https://schema.org","@type":"Service","name":name+' plumbing',"serviceType":name,"description":short,"provider":{"@type":"Plumber","name":"LPS Plumbing Group","telephone":"+61452611522","url":DOMAIN},"areaServed":["Sydney","South Coast NSW"]}) + '</script>'
     desc = f'{short} Licensed and insured plumber across Sydney. Call Lewis on 0452 611 522.'
