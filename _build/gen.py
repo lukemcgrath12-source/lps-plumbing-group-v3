@@ -159,6 +159,13 @@ SFAQ.update(EXTRA_SFAQ)
 SVC_IMGS = {'new-builds':['kitchen','kitchensink','laundry'],'renovations':['vanity','gooseneck','stonevanity'],'bathrooms':['ensuite','shower','bathreno'],'commercial':['commercial','laundry','kitchensink'],'gas-fitting':['kitchensink','hotwater','stone'],'drainage':['laundry','commercial','shower'],'emergency':['hotwater','laundry','sink']}
 IMG_ALT = {'kitchen':'Open plan new build kitchen plumbed by LPS','kitchensink':'Kitchen sink fit off','laundry':'Laundry fit off with floor waste','vanity':'Brass kitchen mixer on marble','gooseneck':'Gooseneck kitchen mixer','stonevanity':'Stone vanity with wall mixer','ensuite':'Ensuite with brass fit off','shower':'Walk in shower with rail shower','bathreno':'Bathroom renovation with brass tapware','commercial':'Commercial pipework install','hotwater':'Heat pump hot water install','sink':'Brass sink mixer','stone':'Brass mixer on stone benchtop','basin':'Brushed brass wall spout and basin','miranda':'Terracotta powder room'}
 
+POOL = ['stone','bathreno','kitchensink','ensuite','basin','stonevanity','kitchen','laundry','gooseneck','shower','miranda','vanity','sink','commercial','hotwater']
+def pick(first, n, seed=0):
+    out = []
+    for k in list(first) + POOL[seed % len(POOL):] + POOL[:seed % len(POOL)]:
+        if k not in out: out.append(k)
+    return out[:n]
+
 def gstrip(keys, place=''):
     return '<div class="gstrip">' + ''.join(f'<figure class="rv"><img src="{W(k)}" alt="{IMG_ALT.get(k, "Plumbing by LPS Plumbing Group")}{(" in " + place) if place else ""}" loading="lazy"></figure>' for k in keys) + '</div>'
 
@@ -573,11 +580,12 @@ for i, s in enumerate(SERVICES):
 </div></section>
 {faq_block('01', faqs)}''' + foot() + tail()
         continue
-    pages[f'{slug}.html'] = head(title, desc, '/' + slug, faq_ld(faqs) + svc_ld) + nav() + phead(name, 'Services', h1, short, img=img, path='/'+slug) + f'''
+    K = pick([img] + SVC_IMGS.get(slug, []), 5, i * 3)
+    pages[f'{slug}.html'] = head(title, desc, '/' + slug, faq_ld(faqs) + svc_ld) + nav() + phead(name, 'Services', h1, short, img=K[0], path='/'+slug) + f'''
 <section class="sec"><div class="wrap px">
   {badge('01', name)}
-  <div class="sblocks"><div class="sblock rv"><span class="sb-n">01</span><div class="sb-body"><h3>What you get</h3><p>{long}</p><ul class="sb-list">{''.join(f'<li>{x}</li>' for x in bullets)}</ul></div><div class="sb-media"><img src="{W(img,1000,750)}" alt="{name} plumbing by LPS Plumbing Group" loading="lazy"></div></div></div>
-  {gstrip(SVC_IMGS.get(slug, [img])[:3])}
+  <div class="sblocks"><div class="sblock rv"><span class="sb-n">01</span><div class="sb-body"><h3>What you get</h3><p>{long}</p><ul class="sb-list">{''.join(f'<li>{x}</li>' for x in bullets)}</ul></div><div class="sb-media"><img src="{W(K[1])}" alt="{IMG_ALT.get(K[1], name+' plumbing')} by LPS Plumbing Group" loading="lazy"></div></div></div>
+  {gstrip(K[2:5])}
   <div class="rv" style="margin-top:40px"><span class="badge-lab">Other services</span><div class="chips">{others}</div></div>
   <div class="rv" style="margin-top:26px"><span class="badge-lab">Areas we cover</span><div class="chips">{''.join(f'<a href="{L("/"+a[0])}">{a[1][4:].title() if a[1].startswith("the ") else a[1]}</a>' for a in AREAS)}</div></div>
 </div></section>
@@ -590,6 +598,7 @@ for a in AREAS:
     P = place[0].upper() + place[1:]
     Pn = P.replace("The ", "")
     ac = AREA_COPY[slug]
+    K = pick(ac['imgs'], 5, AREAS.index(a) * 2 + 1)
     title = f'Plumber {Pn} | Builds, Renos & 24/7 | LPS'
     desc = f'Licensed plumber in {Pn}: new builds, renovations, bathrooms, gas and drainage, plus 24/7 emergencies. Call Lewis on 0452 611 522.'
     if len(desc) > 158: desc = f'Licensed plumber in {Pn} for new builds, renos, bathrooms and 24/7 emergencies. Call Lewis on 0452 611 522.'
@@ -598,15 +607,15 @@ for a in AREAS:
     afaqs = ac['faqs'] + FAQ[2:4]
     ald = '<script type="application/ld+json">' + json.dumps({"@context":"https://schema.org","@type":"Service","name":f"Plumbing in {Pn}","serviceType":"Plumbing","provider":{"@type":"Plumber","name":"LPS Plumbing Group","telephone":"+61452611522","url":DOMAIN},"areaServed":[{"@type":"Place","name":x} for x in [Pn]+subs]}) + '</script>'
     paras = ''.join(f'<p class="lead" style="margin-top:18px">{x}</p>' for x in ac['body'])
-    pages[f'{slug}.html'] = head(title, desc, '/' + slug, faq_ld(afaqs) + ald) + nav() + phead(Pn, region, f'Plumber in {place}, <em>for builds done right.</em>', blurb, img=ac['imgs'][0], path='/'+slug) + f'''
+    pages[f'{slug}.html'] = head(title, desc, '/' + slug, faq_ld(afaqs) + ald) + nav() + phead(Pn, region, f'Plumber in {place}, <em>for builds done right.</em>', blurb, img=K[0], path='/'+slug) + f'''
 <section class="sec"><div class="wrap px">
   {badge('01', f'Plumbing in {Pn}')}
   <div class="about-grid">
     <div class="rv"><h2 class="big">Local work, <em>done properly.</em></h2></div>
     <div class="rv">{paras}</div>
   </div>
-  {gstrip(ac['imgs'], Pn)}
-  <div class="sblocks"><div class="sblock rv"><span class="sb-n">01</span><div class="sb-body"><h3>What we do in {Pn}</h3><p>Whether it is a new build, a renovation, a bathroom or an urgent repair, you get the same crew and the same standard. We price from your plans, work to your program and hand over with the paperwork sorted.</p><ul class="sb-list"><li>New builds and knockdown rebuilds</li><li>Renovations and bathrooms</li><li>Gas fitting, drainage and hot water</li><li>24/7 emergency call outs</li></ul></div><div class="sb-media"><img src="{W(ac['imgs'][1])}" alt="{IMG_ALT.get(ac['imgs'][1], 'Plumbing')} in {Pn}" loading="lazy"></div></div></div>
+  {gstrip(K[1:4], Pn)}
+  <div class="sblocks"><div class="sblock rv"><span class="sb-n">01</span><div class="sb-body"><h3>What we do in {Pn}</h3><p>Whether it is a new build, a renovation, a bathroom or an urgent repair, you get the same crew and the same standard. We price from your plans, work to your program and hand over with the paperwork sorted.</p><ul class="sb-list"><li>New builds and knockdown rebuilds</li><li>Renovations and bathrooms</li><li>Gas fitting, drainage and hot water</li><li>24/7 emergency call outs</li></ul></div><div class="sb-media"><img src="{W(K[4])}" alt="{IMG_ALT.get(K[4], 'Plumbing')} in {Pn}" loading="lazy"></div></div></div>
   <div class="rv" style="margin-top:40px"><span class="badge-lab">Suburbs we cover nearby</span><div class="chips">{''.join(f'<span>{x}</span>' for x in subs)}</div></div>
   <div class="rv" style="margin-top:26px"><span class="badge-lab">Services</span><div class="chips">{svc}</div></div>
   <div class="rv" style="margin-top:26px"><span class="badge-lab">Other areas</span><div class="chips">{others}</div></div>
