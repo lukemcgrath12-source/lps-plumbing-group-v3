@@ -326,3 +326,5 @@ h4{font-weight:600;font-size:16px}
 
 /* hold (unused) */
 .hold{display:none}
+/* LPS logo file is light: render it dark on the white template */
+.nav-chip img,.sheet-top img,.foot-top img{filter:brightness(0);opacity:.88}
