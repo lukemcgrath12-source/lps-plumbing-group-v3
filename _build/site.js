@@ -5,7 +5,7 @@ window.addEventListener('load', function () {
   setTimeout(function () {
     var h = document.getElementById('hold');
     if (h) h.classList.add('exit');
-  }, 2100);
+  }, 1150);
 });
 
 /* NAV: shadow, hide-on-scroll, mobile call bar */

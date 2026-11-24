@@ -19,14 +19,14 @@
   document.querySelectorAll('[data-lines]').forEach(function(el){
     var now = el.dataset.lines === 'now';
     gsap.from(el.querySelectorAll('.ln-in'), { yPercent: 115, duration: 1.2, ease: 'expo.out', stagger: 0.09,
-      delay: now ? 2.05 : 0, scrollTrigger: now ? null : { trigger: el, start: 'top 88%' } });
+      delay: now ? 1.1 : 0, scrollTrigger: now ? null : { trigger: el, start: 'top 88%' } });
   });
 
   /* generic reveals: quick, once, nothing left half-faded */
   var heroI = 0;
   gsap.utils.toArray('.rv').forEach(function(el){
     var inHero = !!el.closest('.h2x,.vh');
-    if (inHero) { gsap.to(el, { opacity: 1, y: 0, duration: 1, ease: 'expo.out', delay: 2.1 + (heroI++) * 0.08 }); return; }
+    if (inHero) { gsap.to(el, { opacity: 1, y: 0, duration: 1, ease: 'expo.out', delay: 1.2 + (heroI++) * 0.08 }); return; }
     ScrollTrigger.create({ trigger: el, start: 'top bottom+=160', once: true,
       onEnter: function(){ gsap.to(el, { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' }); } });
   });

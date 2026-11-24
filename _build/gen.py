@@ -3,6 +3,7 @@
 import os, sys, json, html, datetime
 sys.path.insert(0, os.path.dirname(__file__))
 from areas_copy import AREA_COPY, EXTRA_SERVICES, EXTRA_SFAQ, TITLE_KW
+from guides import GUIDES
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else 'out'
 BASE = sys.argv[2] if len(sys.argv) > 2 else ''          # '' at launch, '/preview/lps-plumbing-group' for preview
@@ -195,7 +196,7 @@ def head(title, desc, path, extra=''):
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{t}"><meta name="twitter:description" content="{d}"><meta name="twitter:image" content="{SHARE_HOST}/lps-share.jpg">
 <link rel="icon" type="image/png" sizes="32x32" href="{BASE}/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="{BASE}/favicon-16x16.png"><link rel="icon" href="{BASE}/favicon.ico" sizes="any"><link rel="apple-touch-icon" sizes="180x180" href="{BASE}/apple-touch-icon.png"><link rel="manifest" href="{BASE}/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,600;1,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,600;1,700&family=IBM+Plex+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,600;1,700&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
 {ga}
 {extra}
 <style>
@@ -406,7 +407,7 @@ def band():
 </section>'''
 
 def foot():
-    links = [('/services','Services'),('/builders','For builders'),('/projects','Projects'),('/about','About'),('/careers','Careers'),('/builders-checklist','Builder checklist'),('/quote','Get a quote')]
+    links = [('/services','Services'),('/builders','For builders'),('/projects','Projects'),('/guides','Guides'),('/about','About'),('/careers','Careers'),('/builders-checklist','Builder checklist'),('/quote','Get a quote')]
     nav_l = ''.join(f'<a href="{L(p)}">{n}</a>' for p, n in links)
     svc = ''.join(f'<a href="{L("/"+x[0])}">{x[1]}</a>' for x in SERVICES)
     areas = ''.join(f'<a href="{L("/"+a[0])}">{a[1][4:].title() if a[1].startswith("the ") else a[1]}</a>' for a in AREAS)
@@ -421,9 +422,9 @@ def foot():
         <a class="ft3-mail" href="mailto:{EMAIL}">{EMAIL}</a>
         <div class="ft3-soc"><a href="https://www.instagram.com/{IG}/" target="_blank" rel="noopener">Instagram</a><a href="{GOOGLE_URL}" target="_blank" rel="noopener">Google reviews</a></div>
       </div>
-      <div><h5>Explore</h5><div class="ft3-col">{nav_l}</div></div>
-      <div><h5>Services</h5><div class="ft3-col">{svc}</div></div>
-      <div><h5>Areas we cover</h5><div class="ft3-areas">{areas}</div></div>
+      <div><p class="ft3-h">Explore</p><div class="ft3-col">{nav_l}</div></div>
+      <div><p class="ft3-h">Services</p><div class="ft3-col">{svc}</div></div>
+      <div><p class="ft3-h">Areas we cover</p><div class="ft3-areas">{areas}</div></div>
     </div>
     <div class="ft3-trust"><span><b>Licensed</b> · Lic {LIC}</span><span><b>Fully insured</b></span><span><b>24/7</b> emergency call outs</span><span><b>Hours</b> 7am to 7pm, 7 days</span></div>
     <div class="ft3-btm">
@@ -471,7 +472,7 @@ mq = ''.join(f'<span>{x}</span>' for x in ['New builds','Renovations','Bathrooms
 arows = ''.join(f'<a class="arow" href="{L("/"+a[0])}"><span>{a[1][0].upper()+a[1][1:]}</span><small>{a[2]} &rarr;</small></a>' for a in AREAS)
 
 home = head('Plumber Sydney for High End Builds & Renos | LPS Plumbing',
-            'Plumbing, drainage and gas for high end builds, renos and bathrooms across Sydney. Licensed, insured, 24/7. Call Lewis on 0452 611 522.', '/', ld) + nav(True) + f'''
+            'Plumbing, drainage and gas for high end builds, renos and bathrooms across Sydney. Licensed, insured, 24/7. Call Lewis on 0452 611 522.', '/', ld + f'<link rel="preload" as="image" href="{BASE}/lps-hero-poster.jpg" fetchpriority="high">') + nav(True) + f'''
 <header class="vh">
   <video class="vh-vid" autoplay muted loop playsinline preload="auto" poster="{BASE}/lps-hero-poster.jpg" aria-hidden="true"><source src="{BASE}/lps-hero.mp4" type="video/mp4"></video>
   <div class="vh-shade"></div>
@@ -761,6 +762,29 @@ pages['builders-checklist.html'] = head("Builder's Plumbing Checklist | LPS Plum
 <script>document.addEventListener('DOMContentLoaded',function(){{var f=document.getElementById('ckForm');if(!f)return;f.addEventListener('submit',function(e){{e.preventDefault();var b=f.querySelector('button');b.disabled=true;fetch(f.action,{{method:'POST',body:new FormData(f),headers:{{Accept:'application/json'}}}}).finally(function(){{f.querySelector('.qf-g').hidden=true;b.hidden=true;document.getElementById('ckDone').hidden=false;if(typeof gtag==='function')gtag('event','generate_lead',{{form:'builder_checklist'}});if(typeof fbq==='function')fbq('track','Lead');}});}});}});</script>
 ''' + foot() + tail()
 
+# ---------------- GUIDES ----------------
+gcards = ''
+for g in GUIDES:
+    url = '/' + g['slug']
+    body = ''.join(f'<h2>{h}</h2><p>{t}</p>' for h, t in g['sections'])
+    art = '<script type="application/ld+json">' + json.dumps({"@context":"https://schema.org","@type":"Article","headline":g['title'],"description":g['meta'],"image":SHARE_HOST+'/img/'+LOCAL[g['img']],"author":{"@type":"Person","name":"Lewis Slatter"},"publisher":{"@type":"Organization","name":"LPS Plumbing Group"},"mainEntityOfPage":DOMAIN+url,"dateModified":datetime.date.today().isoformat()}) + '</script>'
+    sv = g['service']
+    pages[g['slug'] + '.html'] = head(g['title'] + ' | LPS', g['meta'], url, art) + nav() + phead('Guides', 'Guide', g['h1'], g['lead'], False, img=g['img'], path=url) + f'''
+<section class="sec"><div class="wrap px">
+  <div class="about-grid" style="align-items:start">
+    <div class="prose rv">{body}<p style="margin-top:28px">Written by Lewis Slatter, director of LPS Plumbing Group (Lic {LIC}).</p></div>
+    <aside class="rv" style="position:sticky;top:110px">
+      <div class="sb-media" style="border-radius:18px;overflow:hidden;aspect-ratio:4/5"><img src="{W(g['img2'])}" alt="{IMG_ALT.get(g['img2'], 'Plumbing by LPS')}" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>
+      <div style="margin-top:22px;display:flex;flex-wrap:wrap;gap:10px">{btn(L('/quote'), 'Get a quote')}{btn(L('/'+sv[0]), 'More on '+sv[1].lower(), 'dark')}</div>
+    </aside>
+  </div>
+</div></section>
+{quote_form('02')}''' + foot() + tail()
+    gcards += f'<article class="pcard rv"><a href="{L(url)}"><div class="pcard-img"><img src="{W(g["img"])}" alt="{IMG_ALT.get(g["img"], "")}" loading="lazy"></div><div class="pcard-b"><span class="pcard-k">Guide</span><h3>{g["title"]}</h3><p>{g["meta"]}</p></div></a></article>'
+pages['guides.html'] = head('Plumbing Guides for Builders & Homeowners | LPS', 'Practical plumbing guides from LPS Plumbing Group: build timelines, renovating older homes and what to do in a plumbing emergency.', '/guides') + nav() + phead('Guides', 'Guides', 'Plumbing guides, <em>straight from the trade.</em>', 'Practical advice for builders and homeowners from director Lewis Slatter.', False, img='stone', path='/guides') + f'''
+<section class="sec"><div class="wrap px"><div class="pgrid">{gcards}</div></div></section>
+{quote_form('02')}''' + foot() + tail()
+
 # ---------------- LEGAL ----------------
 def legal(slug, title, h1, body):
     return head(f'{title} | LPS Plumbing Group', f'{title} for the LPS Plumbing Group website.', '/' + slug) + nav() + phead(title, 'Legal', h1, 'Last updated November 2026.', False) + f'<section class="sec"><div class="wrap px"><div class="prose">{body}</div></div></section>' + foot() + tail()
@@ -788,7 +812,21 @@ pages['thank-you.html'] = head('Thanks | LPS Plumbing Group', 'Thanks for your e
 pages['404.html'] = head('Page not found | LPS Plumbing Group', 'Page not found.', '/404', '<meta name="robots" content="noindex">') + nav() + phead('404', 'Page not found', 'This page <em>does not exist.</em>', 'Head back home or call Lewis on 0452 611 522.', True) + foot() + tail()
 
 os.makedirs(OUT, exist_ok=True)
+from PIL import Image as _Img
+_IMGDIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'img')
+def _resp(c):
+    import re as _re
+    def fix(m):
+        tag, name = m.group(0), m.group(1)
+        p = os.path.join(_IMGDIR, name + '.webp')
+        if not os.path.exists(p) or 'srcset=' in tag: return tag
+        w, h = _Img.open(p).size
+        extra = f' srcset="{BASE}/img/{name}-800.webp 800w, {BASE}/img/{name}.webp {w}w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="{w}" height="{h}" decoding="async"'
+        return tag[:-1] + extra + '>'
+    return _re.sub(r'<img [^>]*src="[^"]*/img/([a-z0-9-]+?)\.webp"[^>]*>', fix, c)
+pages = {k: _resp(v) for k, v in pages.items()}
 for f, c in pages.items():
+    os.makedirs(os.path.dirname(os.path.join(OUT, f)), exist_ok=True)
     open(os.path.join(OUT, f), 'w').write(c)
 
 indexable = [p for p in pages if p not in ('thank-you.html', '404.html')]
