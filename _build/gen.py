@@ -29,22 +29,22 @@ REVIEWS = [     # real Google reviews only, copied from LPS's Google Business Pr
 CASES = []      # [{'img':'key','title':'','suburb':'','builder':'','scope':'','result':''}]
 CSS = open(os.path.join(os.path.dirname(__file__), 'base.css')).read() + open(os.path.join(os.path.dirname(__file__), 'extras.css')).read()
 
+LOCAL = {
+    'kitchen': 'lps-new-build-kitchen.jpg', 'vanity': 'lps-brass-kitchen-mixer.jpg', 'ensuite': 'lps-ensuite-brass-fit-off.jpg',
+    'shower': 'lps-walk-in-shower.jpg', 'hotwater': 'lps-hot-water-heat-pump.jpg', 'commercial': 'lps-commercial-pipework.jpg',
+    'basin': 'lps-brass-wall-spout-basin.jpg', 'miranda': 'lps-terracotta-powder-room.jpg', 'sink': 'lps-brass-sink-mixer.jpg',
+    'stone': 'lps-brass-mixer-stone.jpg', 'stonevanity': 'lps-stone-vanity-wall-mixer.jpg', 'gooseneck': 'lps-kitchen-gooseneck.jpg',
+    'laundry': 'lps-laundry-fit-off.jpg', 'bathreno': 'lps-bathroom-renovation.jpg', 'kitchensink': 'lps-kitchen-sink-fit-off.jpg',
+}
+
 def W(i, w=1600, h=1200):
+    if i in LOCAL:   # LPS's own job photos, hosted in /img
+        return f'{BASE}/img/{LOCAL[i]}'
     ids = {
-        'vanity': '84f08c_57eb2384d0024e58ab621dfb068bc016~mv2.jpg',
-        'ensuite': '84f08c_c9c2809182b140beaeb077a0cccf09d3~mv2.jpg',
-        'shower': '84f08c_13a4fc071c0343bbaa0cc895a6ffb2ad~mv2.jpg',
-        'hotwater': '84f08c_e65ea6674cb2471dbd05dbee0262826f~mv2.jpg',
-        'kitchen': '84f08c_ea4c88c3d56a454490664f932a2cdc4a~mv2.jpg',
-        'commercial': '84f08c_9eb455ae0f5146ac8238442c67aa7bd7~mv2.jpg',
-        'basin': '84f08c_2135e71c90944570b443375bdf56af56~mv2.jpg',
-        'miranda': '84f08c_054dfe7868444f069aebf91cd0aa9533~mv2.jpg',
         'logo': '84f08c_9dd65380a4c24c1b927187305cc5b8ae~mv2.png',
     }
     f = ids[i]
-    if f.endswith('.png'):
-        return f'https://static.wixstatic.com/media/{f}/v1/fit/w_{w},h_{h},q_95/lps.png'
-    return f'https://static.wixstatic.com/media/{f}/v1/fill/w_{w},h_{h},al_c,q_82/lps.jpg'
+    return f'https://static.wixstatic.com/media/{f}/v1/fit/w_{w},h_{h},q_95/lps.png'
 
 def L(path):  # internal link
     return BASE + path if path != '/' else (BASE + '/' if BASE else '/')
@@ -426,7 +426,7 @@ ld = f'<script type="application/ld+json">{json.dumps(schema)}</script><script t
 svc_rows = ''.join(f'''<article class="svc-row rv"><span class="svc-n">0{i+1}</span><h3 class="svc-t">{s[1]}</h3><p class="svc-d">{s[3]} <a href="{L('/'+s[0])}" style="color:var(--gold);font-weight:500;white-space:nowrap">Learn more</a></p><div class="svc-img"><img src="{W(s[2],900,560)}" alt="{s[1]} plumbing by LPS Plumbing Group" loading="lazy"></div></article>''' for i, s in enumerate(SERVICES))
 
 scards = ''.join(f'''<article class="scard"><div class="scard-b"><div><span class="scard-n">0{i+1} / 05</span><h3 style="margin-top:18px">{s[1]}</h3><p>{s[4]}</p></div><div><ul>{''.join(f'<li>{x}</li>' for x in s[5][:4])}</ul><a class="more" href="{L('/'+s[0])}" style="margin-top:22px">Explore {s[1].lower()} &rarr;</a></div></div><div class="scard-m"><img src="{W(s[2],1100,1100)}" alt="{s[1]} plumbing by LPS Plumbing Group" loading="lazy"></div></article>''' for i, s in enumerate(SERVICES))
-gal = [('miranda','Bathroom','Ensuite renovation, Miranda'),('kitchen','New build','Open plan kitchen'),('shower','Outdoor','Copper outdoor shower'),('basin','Renovation','Brushed brass wall mixer'),('commercial','Commercial','Stack and riser install'),('ensuite','Bathroom','Walk in shower ensuite'),('hotwater','Hot water','Hot water replacement')]
+gal = [('miranda','Bathroom','Terracotta powder room'),('basin','Bathroom','Brushed brass wall spout'),('vanity','Kitchen','Brass kitchen mixer fit off'),('ensuite','Bathroom','Ensuite with brass fit off'),('kitchen','New build','Open plan kitchen, new build'),('stonevanity','Renovation','Stone vanity with wall mixer'),('commercial','Commercial','Commercial pipework'),('hotwater','Hot water','Heat pump hot water install')]
 hz = ''.join(f'<figure class="hz-item"><div class="hz-img"><img src="{W(i,800,1000)}" alt="{t}" loading="lazy"></div><figcaption class="hz-cap"><b>{t}</b><span>{k}</span></figcaption></figure>' for i,k,t in gal)
 mq = ''.join(f'<span>{x}</span>' for x in ['New builds','Renovations','Bathrooms','Commercial','Gas fitting','Drainage','Hot water','24/7 emergency']*2)
 arows = ''.join(f'<a class="arow" href="{L("/"+a[0])}"><span>{a[1][0].upper()+a[1][1:]}</span><small>{a[2]} &rarr;</small></a>' for a in AREAS)
@@ -615,12 +615,15 @@ pages['quote.html'] = head('Get a Plumbing Quote | LPS Plumbing Group',
     'Request a quote from LPS Plumbing Group. Send plans or photos and get a clear, itemised price. Or call Lewis on 0452 611 522.', '/quote') + nav() + phead('Get a quote', 'Get a quote', 'Tell us about <em>the job.</em>', 'Builders, homeowners and developers. Send the details and we reply within one business day.', False) + quote_form('01') + foot() + tail()
 
 # ---------------- PROJECTS ----------------
-projs = [('miranda', 'Bathroom', 'Ensuite renovation, Miranda', 'Wall hung vanity, concealed cistern and recessed shelving, set out for a clean tiled finish.'),
-         ('shower', 'Outdoor', 'Copper outdoor shower', 'Exposed copper run with brass fittings, mounted against a feature cladding wall.'),
-         ('kitchen', 'New build', 'Open plan kitchen, new build', 'Island sink, dishwasher and fridge services run through the slab for a clean, open layout.'),
-         ('commercial', 'Commercial', 'Stack and riser install', 'Multi level stack, vent and water services installed and tested ahead of fit out.'),
-         ('basin', 'Renovation', 'Brushed brass wall mixer', 'In wall mixer set dead level over a timber top vessel basin.'),
-         ('hotwater', 'Hot water', 'Hot water replacement', 'Electric storage system replaced with tidy copper connections and a new tempering valve.')]
+projs = [('miranda', 'Bathroom', 'Terracotta powder room', 'Wall hung basin and wall mixer set out dead level against handmade terracotta tiles, finished in brushed brass.'),
+         ('kitchen', 'New build', 'Open plan kitchen, new build', 'Island sink and appliance services run through the slab for a clean, open layout.'),
+         ('ensuite', 'Bathroom', 'Ensuite with brass fit off', 'Bath, vanity, wall mixers and heated rail fitted off in matching brass.'),
+         ('stonevanity', 'Renovation', 'Stone vanity with wall mixer', 'Wall mixer and spout set into a natural stone splashback over a solid stone basin.'),
+         ('vanity', 'Kitchen', 'Brass kitchen mixer', 'Gooseneck mixer fitted to an undermount sink on a marble benchtop.'),
+         ('shower', 'Bathroom', 'Walk in shower', 'Rail shower, concealed services and floor waste in a full height marble bathroom.'),
+         ('commercial', 'Commercial', 'Commercial pipework', 'Large bore pipework and valves installed and tested on an industrial site.'),
+         ('hotwater', 'Hot water', 'Heat pump hot water', 'Heat pump hot water system installed with tidy copper connections.'),
+         ('laundry', 'Renovation', 'Laundry fit off', 'Stacked washer and dryer services and floor waste in a fully tiled laundry.')]
 cards = ''.join(f'<article class="pcard rv"><div class="pcard-img"><img src="{W(i,1000,625)}" alt="{t}" loading="lazy"></div><div class="pcard-b"><span class="pcard-k">{k}</span><h3>{t}</h3><p>{d}</p></div></article>' for i, k, t, d in projs)
 pages['projects.html'] = head('Plumbing Projects | LPS Plumbing Group, Sydney',
     'Recent new builds, renovations, bathrooms and commercial plumbing projects by LPS Plumbing Group across Sydney.', '/projects') + nav() + phead('Projects', 'Projects', 'Recent <em>work.</em>', 'A look at recent builds, renovations and bathrooms we have plumbed.') + f'''
