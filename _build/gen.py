@@ -241,7 +241,7 @@ def loader(full):
         return f'''<div class="ld ld-mini" id="ld" aria-hidden="true"><img class="ld-logo" src="{W("logo",600,150)}" alt=""><div class="ld-bar"><i></i></div></div>
 <script>(function(){{var d=document.getElementById('ld');document.documentElement.classList.add('ld-on');window.LPS_LD=0.75;setTimeout(function(){{d.classList.add('out');document.documentElement.classList.remove('ld-on')}},650);setTimeout(function(){{d.remove()}},1500)}})();</script>'''
     return f'''<div class="ld" id="ld" aria-hidden="true">
-  <div class="ld-win"><video muted playsinline autoplay loop preload="auto" poster="{BASE}/video/lps-tap.jpg"><source src="{BASE}/video/lps-tap.mp4" type="video/mp4"></video></div>
+  <div class="ld-win"><video muted playsinline autoplay loop preload="auto" poster="{BASE}/video/lps-tap.jpg"><source src="{BASE}/video/lps-tap.mp4#t=2.4" type="video/mp4"></video></div>
   <div class="ld-top"><img class="ld-logo" src="{W("logo",600,150)}" alt=""><span>Sydney to the South Coast</span></div>
   <div class="ld-bot"><b><span id="ldN">000</span></b><p>Plumbing, drainage and gas fitting<br>for builds where the finish matters.</p></div>
   <div class="ld-bar"><i id="ldB"></i></div>
