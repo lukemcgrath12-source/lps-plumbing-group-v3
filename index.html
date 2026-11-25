@@ -154,13 +154,13 @@ h1 em,h2 em,h3 em{font-style:normal}
 /* ---------- SERVICE CARDS ---------- */
 .scards{display:grid;gap:var(--gut)}
 @media(min-width:760px){.scards{grid-template-columns:repeat(2,1fr)}}
-@media(min-width:1100px){.scards{grid-template-columns:repeat(6,1fr)}.scards .sc{grid-column:span 2}.scards .sc:nth-child(n+4){grid-column:span 3}}
+@media(min-width:1100px){.scards{grid-template-columns:repeat(12,1fr)}.scards .sc{grid-column:span 4}.scards .sc:nth-child(n+4){grid-column:span 3;min-height:480px}}
 .sc{position:relative;border-radius:var(--r-lg);overflow:hidden;min-height:460px;display:flex;flex-direction:column;justify-content:space-between;padding:26px;color:#fff;isolation:isolate;transition:transform .6s var(--spring)}
 @media(min-width:1100px){.sc{min-height:520px}}
 .sc:hover{transform:translateY(-4px)}
 .sc>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform 1.2s var(--spring)}
 .sc:hover>img{transform:scale(1.05)}
-.sc:before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(to top,rgba(8,36,50,.86) 0%,rgba(8,36,50,.25) 55%,rgba(8,36,50,.35) 100%)}
+.sc:before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(to top,rgba(6,30,42,.88) 0%,rgba(6,30,42,.45) 32%,rgba(6,30,42,0) 58%),linear-gradient(to bottom,rgba(6,30,42,.35),rgba(6,30,42,0) 22%)}
 .sc-n{display:flex;align-items:center;gap:14px;font-size:12.5px;opacity:.9}
 .sc-n:after{content:'';height:1px;width:46%;background:currentColor;opacity:.45}
 .sc h3{color:inherit;font-size:clamp(28px,2.4vw,36px);margin-bottom:12px}
@@ -182,9 +182,9 @@ h1 em,h2 em,h3 em{font-style:normal}
 .fw{position:relative;border-radius:var(--r-lg);overflow:hidden;min-height:680px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:28px 22px 22px;isolation:isolate}
 @media(min-width:900px){.fw{min-height:760px;padding:52px 48px 40px}}
 .fw-img{position:absolute;inset:0;z-index:-2}
-.fw-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.04);transition:opacity .9s ease,transform 1.6s var(--spring)}
-.fw-img img.on{opacity:1;transform:none}
-.fw:before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(to bottom,rgba(8,36,50,.55),rgba(8,36,50,.1) 35%,rgba(8,36,50,.2) 55%,rgba(8,36,50,.85))}
+.fw-img video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.05);transition:opacity 1s ease,transform 2s var(--spring)}
+.fw-img video.on{opacity:1;transform:none}
+.fw:before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(to bottom,rgba(6,30,42,.5),rgba(6,30,42,0) 30%,rgba(6,30,42,0) 50%,rgba(6,30,42,.82))}
 .fw-top{display:grid;gap:14px}
 @media(min-width:900px){.fw-top{grid-template-columns:1fr 1fr;align-items:start}.fw-top p{justify-self:end;text-align:right;max-width:44ch}}
 .fw h2{color:#fff}
@@ -325,7 +325,7 @@ h1 em,h2 em,h3 em{font-style:normal}
 /* ---------- SPLIT ROW (service / area detail) ---------- */
 .split{display:grid;gap:36px}
 @media(min-width:960px){.split{grid-template-columns:1fr 1fr;gap:70px;align-items:center}.split.flip>:first-child{order:2}}
-.split-img{border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/3.3}
+.split-img{border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/4.6;max-height:720px}
 .split-img img{width:100%;height:100%;object-fit:cover}
 .ticks{list-style:none;margin-top:26px;border-top:1px solid var(--line)}
 .ticks li{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);font-size:15.5px}
@@ -463,6 +463,27 @@ h1 em,h2 em,h3 em{font-style:normal}
 .split-img{width:100%;justify-self:stretch}
 .map .leaflet-tile-pane{filter:grayscale(1) sepia(.15) hue-rotate(110deg) saturate(.6) brightness(1.04) contrast(.92)}
 
+/* ---------- v3.1 polish: video, stats, image reveals ---------- */
+.sc-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;opacity:0;transition:opacity .6s ease}
+.sc.playing .sc-vid{opacity:1}
+.sc>img,.sc-vid{will-change:transform}
+.c-img>video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.hero-media video{object-position:center}
+.stats{padding:var(--gut) 0 0}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--gut)}
+@media(min-width:900px){.stats-row{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--panel);border-radius:var(--r-md);padding:24px 22px 22px}
+.stat b{display:block;font-weight:600;font-size:clamp(36px,3.6vw,54px);letter-spacing:-.05em;line-height:1;color:var(--teal)}
+.stat>span{display:block;margin-top:10px;font-size:14px;color:var(--mid);line-height:1.45}
+.stat:nth-child(2){background:var(--teal)}.stat:nth-child(2) b{color:var(--mint)}.stat:nth-child(2)>span{color:rgba(255,255,255,.75)}
+.ri{overflow:hidden}
+.ri img,.ri video{transform-origin:50% 50%}
+.hero-media video,.hero-media img{transform-origin:50% 60%}
+.vid-btn{position:absolute;right:18px;bottom:18px;z-index:3;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.9);color:var(--teal);display:flex;align-items:center;justify-content:center;transition:transform .4s var(--spring)}
+.vid-btn:hover{transform:scale(1.06)}.vid-btn:active{transform:scale(.94)}
+.vid-btn svg{width:14px;height:14px;fill:currentColor}
+@media(max-width:520px){.hero-tag{right:70px;font-size:12px}}
+
 </style>
 </head>
 <body>
@@ -491,6 +512,7 @@ h1 em,h2 em,h3 em{font-style:normal}
   <div class="hero-media">
     <video autoplay muted loop playsinline preload="auto" poster="/lps-hero-poster.jpg" aria-hidden="true"><source src="/lps-hero.mp4" type="video/mp4"></video>
     <div class="hero-tag"><i></i><b>24/7</b> emergency call outs · Lic 476073C</div>
+    <button class="vid-btn" aria-label="Pause video"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
   </div>
   <div class="hero-panel">
     <h1 class="h-xl" data-lines="now">Plumbing for builds where the finish matters<span class="dot">.</span></h1>
@@ -499,11 +521,17 @@ h1 em,h2 em,h3 em{font-style:normal}
     <div class="hero-foot rv"><a href="/new-builds">New builds</a><a href="/renovations">Renovations</a><a href="/bathrooms">Bathrooms</a><a href="/commercial">Commercial</a><a href="/gas-fitting">Gas fitting</a><a href="/drainage">Drainage</a><a href="/emergency">24/7 emergency</a></div>
   </div>
 </div></div></header>
-<section class="sec"><div class="wrap"><div class="inner"><h2 class="h-lg center" data-lines style="margin-bottom:56px">Everything in the wall, done properly<span class="dot">.</span></h2><div class="scards"><a class="sc rv" href="/new-builds"><img src="/img/lps-new-build-kitchen.webp" alt="Open plan new build kitchen plumbed by LPS" loading="lazy" srcset="/img/lps-new-build-kitchen-800.webp 800w, /img/lps-new-build-kitchen.webp 1067w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1067" height="1600" decoding="async"><div class="sc-n">01</div><div class="sc-body"><h3>New builds</h3><p>Full plumbing for custom homes and high end builds, from first fix to final.</p><span class="sc-l">Explore new builds</span></div><span class="sc-go"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span></span></a><a class="sc feat rv" href="/renovations"><div class="sc-top"><div class="sc-n">02</div><h3>Renovations</h3><p>Kitchens, laundries and whole home renos, planned around the existing house.</p><span class="sc-l">Explore renovations</span></div><img src="/img/lps-brass-kitchen-mixer.webp" alt="Brass kitchen mixer on marble" loading="lazy" srcset="/img/lps-brass-kitchen-mixer-800.webp 800w, /img/lps-brass-kitchen-mixer.webp 1200w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1200" height="1600" decoding="async"><span class="sc-go"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span></span></a><a class="sc rv" href="/bathrooms"><img src="/img/lps-ensuite-brass-fit-off.webp" alt="Ensuite with brass fit off" loading="lazy" srcset="/img/lps-ensuite-brass-fit-off-800.webp 800w, /img/lps-ensuite-brass-fit-off.webp 1200w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1200" height="1600" decoding="async"><div class="sc-n">03</div><div class="sc-body"><h3>Bathrooms</h3><p>Bathrooms and ensuites with the detail high end finishes need.</p><span class="sc-l">Explore bathrooms</span></div><span class="sc-go"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span></span></a><a class="sc rv" href="/commercial"><img src="/img/lps-commercial-pipework.webp" alt="Commercial pipework install" loading="lazy" srcset="/img/lps-commercial-pipework-800.webp 800w, /img/lps-commercial-pipework.webp 1200w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1200" height="1600" decoding="async"><div class="sc-n">04</div><div class="sc-body"><h3>Commercial</h3><p>Commercial fit outs and multi unit work, delivered to program.</p><span class="sc-l">Explore commercial</span></div><span class="sc-go"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span></span></a><a class="sc rv" href="/gas-fitting"><img src="/img/lps-brass-mixer-stone.webp" alt="Brass mixer on stone benchtop" loading="lazy" srcset="/img/lps-brass-mixer-stone-800.webp 800w, /img/lps-brass-mixer-stone.webp 1280w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1280" height="1600" decoding="async"><div class="sc-n">05</div><div class="sc-body"><h3>Gas fitting</h3><p>Licensed gas fitting for cooktops, hot water and heaters, done safely and signed off.</p><span class="sc-l">Explore gas fitting</span></div><span class="sc-go"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span></span></a><a class="sc rv" href="/drainage"><img src="/img/lps-laundry-fit-off.webp" alt="Laundry fit off with floor waste" loading="lazy" srcset="/img/lps-laundry-fit-off-800.webp 800w, /img/lps-laundry-fit-off.webp 1067w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1067" height="1600" decoding="async"><div class="sc-n">06</div><div class="sc-body"><h3>Drainage</h3><p>Blocked drains, sewer and stormwater, found and fixed properly.</p><span class="sc-l">Explore drainage</span></div><span class="sc-go"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span></span></a><a class="sc rv" href="/emergency"><img src="/img/lps-hot-water-heat-pump.webp" alt="Heat pump hot water install" loading="lazy" srcset="/img/lps-hot-water-heat-pump-800.webp 800w, /img/lps-hot-water-heat-pump.webp 900w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="900" height="1200" decoding="async"><div class="sc-n">07</div><div class="sc-body"><h3>24/7 emergency</h3><p>Burst pipes, blocked drains and no hot water. Call any hour.</p><span class="sc-l">Explore 24/7 emergency</span></div><span class="sc-go"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span></span></a></div></div></div></section>
+<section class="stats"><div class="wrap"><div class="inner stats-row">
+  <div class="stat rv"><b><span data-count="8">8</span>+</b><span>Years in the trade</span></div>
+  <div class="stat rv"><b>24/7</b><span>Emergency call outs, any day of the year</span></div>
+  <div class="stat rv"><b><span data-count="25">25</span></b><span>Five star Google reviews</span></div>
+  <div class="stat rv"><b><span data-count="9">9</span></b><span>Service areas, Sydney to Kiama</span></div>
+</div></div></section>
+<section class="sec"><div class="wrap"><div class="inner"><h2 class="h-lg center" data-lines style="margin-bottom:56px">Everything in the wall, done properly<span class="dot">.</span></h2><div class="scards"><a class="sc rv" href="/new-builds"><img src="/img/lps-new-build-kitchen.webp" alt="Open plan new build kitchen plumbed by LPS" loading="lazy" srcset="/img/lps-new-build-kitchen-800.webp 800w, /img/lps-new-build-kitchen.webp 1067w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1067" height="1600" decoding="async"><video class="sc-vid" muted loop playsinline preload="none" poster="/video/lps-kitchen.jpg" data-lazy="1" aria-label="Open plan new build kitchen"><source data-src="/video/lps-kitchen.mp4" src="" type="video/mp4"></video><div class="sc-n">01</div><div class="sc-body"><h3>New builds</h3><p>Full plumbing for custom homes and high end builds, from first fix to final.</p><span class="sc-l">Explore new builds</span></div><span class="sc-go"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span></span></a><a class="sc feat rv" href="/renovations"><div class="sc-top"><div class="sc-n">02</div><h3>Renovations</h3><p>Kitchens, laundries and whole home renos, planned around the existing house.</p><span class="sc-l">Explore renovations</span></div><img src="/img/lps-brass-kitchen-mixer.webp" alt="Brass kitchen mixer on marble" loading="lazy" srcset="/img/lps-brass-kitchen-mixer-800.webp 800w, /img/lps-brass-kitchen-mixer.webp 1200w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1200" height="1600" decoding="async"><span class="sc-go"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span></span></a><a class="sc rv" href="/bathrooms"><img src="/img/lps-ensuite-brass-fit-off.webp" alt="Ensuite with brass fit off" loading="lazy" srcset="/img/lps-ensuite-brass-fit-off-800.webp 800w, /img/lps-ensuite-brass-fit-off.webp 1200w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1200" height="1600" decoding="async"><video class="sc-vid" muted loop playsinline preload="none" poster="/video/lps-bath.jpg" data-lazy="1" aria-label="Bathroom with timber vanity and wall mixer"><source data-src="/video/lps-bath.mp4" src="" type="video/mp4"></video><div class="sc-n">03</div><div class="sc-body"><h3>Bathrooms</h3><p>Bathrooms and ensuites with the detail high end finishes need.</p><span class="sc-l">Explore bathrooms</span></div><span class="sc-go"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span></span></a><a class="sc rv" href="/commercial"><img src="/img/lps-commercial-pipework.webp" alt="Commercial pipework install" loading="lazy" srcset="/img/lps-commercial-pipework-800.webp 800w, /img/lps-commercial-pipework.webp 1200w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1200" height="1600" decoding="async"><div class="sc-n">04</div><div class="sc-body"><h3>Commercial</h3><p>Commercial fit outs and multi unit work, delivered to program.</p><span class="sc-l">Explore commercial</span></div><span class="sc-go"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span></span></a><a class="sc rv" href="/gas-fitting"><img src="/img/lps-brass-mixer-stone.webp" alt="Brass mixer on stone benchtop" loading="lazy" srcset="/img/lps-brass-mixer-stone-800.webp 800w, /img/lps-brass-mixer-stone.webp 1280w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1280" height="1600" decoding="async"><div class="sc-n">05</div><div class="sc-body"><h3>Gas fitting</h3><p>Licensed gas fitting for cooktops, hot water and heaters, done safely and signed off.</p><span class="sc-l">Explore gas fitting</span></div><span class="sc-go"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span></span></a><a class="sc rv" href="/drainage"><img src="/img/lps-laundry-fit-off.webp" alt="Laundry fit off with floor waste" loading="lazy" srcset="/img/lps-laundry-fit-off-800.webp 800w, /img/lps-laundry-fit-off.webp 1067w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1067" height="1600" decoding="async"><div class="sc-n">06</div><div class="sc-body"><h3>Drainage</h3><p>Blocked drains, sewer and stormwater, found and fixed properly.</p><span class="sc-l">Explore drainage</span></div><span class="sc-go"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span></span></a><a class="sc rv" href="/emergency"><img src="/img/lps-hot-water-heat-pump.webp" alt="Heat pump hot water install" loading="lazy" srcset="/img/lps-hot-water-heat-pump-800.webp 800w, /img/lps-hot-water-heat-pump.webp 900w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="900" height="1200" decoding="async"><div class="sc-n">07</div><div class="sc-body"><h3>24/7 emergency</h3><p>Burst pipes, blocked drains and no hot water. Call any hour.</p><span class="sc-l">Explore 24/7 emergency</span></div><span class="sc-go"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span></span></a></div></div></div></section>
 <section class="sec sec-tight"><div class="wrap"><div class="inner"><div class="fw" id="fw">
-    <div class="fw-img"><img src="/img/lps-terracotta-powder-room.webp" alt="Terracotta powder room" class=on srcset="/img/lps-terracotta-powder-room-800.webp 800w, /img/lps-terracotta-powder-room.webp 1279w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1279" height="1600" decoding="async"><img src="/img/lps-stone-vanity-wall-mixer.webp" alt="Stone vanity with wall mixer" srcset="/img/lps-stone-vanity-wall-mixer-800.webp 800w, /img/lps-stone-vanity-wall-mixer.webp 1279w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1279" height="1600" decoding="async"><img src="/img/lps-bathroom-renovation.webp" alt="Bathroom renovation" srcset="/img/lps-bathroom-renovation-800.webp 800w, /img/lps-bathroom-renovation.webp 1067w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1067" height="1600" decoding="async"><img src="/img/lps-walk-in-shower.webp" alt="Walk in shower" srcset="/img/lps-walk-in-shower-800.webp 800w, /img/lps-walk-in-shower.webp 1200w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1200" height="1600" decoding="async"></div>
+    <div class="fw-img"><video class="on" muted loop playsinline autoplay preload="none" poster="/video/lps-shower.jpg" data-lazy="1" aria-label="Copper outdoor shower on a feature wall"><source data-src="/video/lps-shower.mp4" src="" type="video/mp4"></video><video class="" muted loop playsinline autoplay preload="none" poster="/video/lps-kitchen.jpg" data-lazy="1" aria-label="Open plan new build kitchen"><source data-src="/video/lps-kitchen.mp4" src="" type="video/mp4"></video><video class="" muted loop playsinline autoplay preload="none" poster="/video/lps-bath.jpg" data-lazy="1" aria-label="Bathroom with timber vanity and wall mixer"><source data-src="/video/lps-bath.mp4" src="" type="video/mp4"></video><video class="" muted loop playsinline autoplay preload="none" poster="/video/lps-tap.jpg" data-lazy="1" aria-label="Brushed brass wall spout running into a stone basin"><source data-src="/video/lps-tap.mp4" src="" type="video/mp4"></video></div>
     <div class="fw-top"><h2 class="h-lg">The work speaks for itself<span class="dot" style="color:var(--mint)">.</span></h2><p>New builds, renovations and bathrooms across Sydney, all plumbed by the same small crew.</p></div>
-    <div><div class="fw-cur" aria-live="polite"><h3 id="fwT">Terracotta powder room</h3><p id="fwD">Wall hung basin and wall mixer set out dead level against handmade terracotta tiles, finished in brushed brass.</p></div><div class="fw-tabs"><button class="fw-tab on" data-i="0" data-t="Terracotta powder room" data-d="Wall hung basin and wall mixer set out dead level against handmade terracotta tiles, finished in brushed brass." aria-pressed="true"><small>Bathroom</small><b>Terracotta powder room</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></button><button class="fw-tab" data-i="1" data-t="Stone vanity with wall mixer" data-d="Wall mixer and spout set into a natural stone splashback over a solid stone basin." aria-pressed="false"><small>Renovation</small><b>Stone vanity with wall mixer</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></button><button class="fw-tab" data-i="2" data-t="Bathroom renovation" data-d="A full bathroom renovation finished with brass tapware." aria-pressed="false"><small>Bathroom</small><b>Bathroom renovation</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></button><button class="fw-tab" data-i="3" data-t="Walk in shower" data-d="Rail shower, concealed services and floor waste in a full height marble bathroom." aria-pressed="false"><small>Bathroom</small><b>Walk in shower</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></button></div></div>
+    <div><div class="fw-cur" aria-live="polite"><h3 id="fwT">Copper outdoor shower</h3><p id="fwD">Exposed copper run with brass fittings, mounted against a feature cladding wall.</p></div><div class="fw-tabs"><button class="fw-tab on" data-i="0" data-t="Copper outdoor shower" data-d="Exposed copper run with brass fittings, mounted against a feature cladding wall." aria-pressed="true"><small>Outdoor</small><b>Copper outdoor shower</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></button><button class="fw-tab" data-i="1" data-t="Open plan kitchen" data-d="Island sink and appliance services run through the slab for a clean, open layout." aria-pressed="false"><small>New build</small><b>Open plan kitchen</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></button><button class="fw-tab" data-i="2" data-t="Bathroom fit off" data-d="Wall mixer, vanity and concealed cistern set out for a clean tiled finish." aria-pressed="false"><small>Bathroom</small><b>Bathroom fit off</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></button><button class="fw-tab" data-i="3" data-t="Brushed brass wall spout" data-d="Wall spout and mixer set dead level over a stone basin." aria-pressed="false"><small>Renovation</small><b>Brushed brass wall spout</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></button></div></div>
   </div><div class="after-link rv"><a class="ulink" href="/projects"><span>See more of our work</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></div></div></section>
 <section class="sec"><div class="wrap"><div class="inner"><div class="collab">
     <div class="mosaic rv"><div><img src="/img/lps-brass-wall-spout-basin.webp" alt="Brushed brass wall spout and basin" loading="lazy" srcset="/img/lps-brass-wall-spout-basin-800.webp 800w, /img/lps-brass-wall-spout-basin.webp 1280w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1280" height="1600" decoding="async"><img src="/img/lps-brass-sink-mixer.webp" alt="Brass sink mixer" loading="lazy" srcset="/img/lps-brass-sink-mixer-800.webp 800w, /img/lps-brass-sink-mixer.webp 1280w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1280" height="1600" decoding="async"></div><div><img src="/img/lps-kitchen-gooseneck.webp" alt="Gooseneck kitchen mixer" loading="lazy" srcset="/img/lps-kitchen-gooseneck-800.webp 800w, /img/lps-kitchen-gooseneck.webp 1279w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1279" height="1600" decoding="async"><img src="/img/lps-kitchen-sink-fit-off.webp" alt="Kitchen sink fit off" loading="lazy" srcset="/img/lps-kitchen-sink-fit-off-800.webp 800w, /img/lps-kitchen-sink-fit-off.webp 1200w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="1200" height="1600" decoding="async"></div></div>
@@ -534,7 +562,7 @@ h1 em,h2 em,h3 em{font-style:normal}
     <div class="faq rv"><div class="fq"><button class="fq-q" aria-expanded="false">Do you work directly with builders?</button><div class="fq-a"><p>Yes. Most of our work comes through builders on new builds and renovations. Send your plans through the quote form and we will price the full plumbing scope, then work to your program.</p></div></div><div class="fq"><button class="fq-q" aria-expanded="false">What areas do you cover?</button><div class="fq-a"><p>We are based in the Sutherland Shire and work right across Sydney, from the Shire and St George to the Inner West, the Eastern Suburbs, the North Shore and the Northern Beaches. We also cover the South Coast, including Wollongong, Shellharbour and Kiama.</p></div></div><div class="fq"><button class="fq-q" aria-expanded="false">Are you licensed and insured?</button><div class="fq-a"><p>Yes. LPS Plumbing Group is fully licensed (licence number 476073C) and insured for residential and commercial work.</p></div></div><div class="fq"><button class="fq-q" aria-expanded="false">Do you do emergency call outs?</button><div class="fq-a"><p>Yes, 24/7. Call Lewis on <a href="tel:0452611522">0452 611 522</a> for burst pipes, blocked drains, hot water failures or gas leaks.</p></div></div><div class="fq"><button class="fq-q" aria-expanded="false">How do I get a quote?</button><div class="fq-a"><p>Use the quote form and attach a link to your plans or photos, or call <a href="tel:0452611522">0452 611 522</a>. We will come back to you with a clear, itemised price.</p></div></div></div>
   </div></div></div></section>
 <section class="sec" id="quote"><div class="wrap"><div class="inner contact">
-  <div class="c-img"><img src="/lps-hero-poster.jpg" alt="LPS Plumbing Group on site" loading="lazy"><h2 class="h-lg">Tell us what you are building<span class="dot">.</span></h2><p>Builders, send through plans or a scope and we will price the full plumbing package. Homeowners, tell us about the job and we will come back with a clear, itemised quote.</p><div class="c-list">
+  <div class="c-img"><video class="" muted loop playsinline autoplay preload="none" poster="/video/lps-vanity.jpg" data-lazy="1" aria-label="Timber vanity with vessel basin and wall mixer"><source data-src="/video/lps-vanity.mp4" src="" type="video/mp4"></video><h2 class="h-lg">Tell us what you are building<span class="dot">.</span></h2><p>Builders, send through plans or a scope and we will price the full plumbing package. Homeowners, tell us about the job and we will come back with a clear, itemised quote.</p><div class="c-list">
       <a href="tel:0452611522"><span>Call Lewis, 24/7</span><b>0452 611 522</b></a>
       <a href="mailto:info@lpsplumbinggroup.com"><span>Email</span><b>info@lpsplumbinggroup.com</b></a>
       <a href="sms:+61452611522"><span>Text</span><b>Send a text</b></a>
@@ -734,17 +762,16 @@ document.querySelectorAll('[data-slider]').forEach(function (wrap) {
 (function () {
   var fw = document.getElementById('fw');
   if (!fw) return;
-  var imgs = fw.querySelectorAll('.fw-img img'), tabs = fw.querySelectorAll('.fw-tab'),
+  var imgs = fw.querySelectorAll('.fw-img video'), tabs = fw.querySelectorAll('.fw-tab'),
       t = document.getElementById('fwT'), d = document.getElementById('fwD'), cur = 0, timer;
   function go(i) {
     cur = i;
-    imgs.forEach(function (im, k) { im.classList.toggle('on', k === i); });
+    imgs.forEach(function (im, k) { im.classList.toggle('on', k === i); if (k === i) { window.lpsPlay && window.lpsPlay(im); } else { im.pause(); } });
     tabs.forEach(function (b, k) { b.classList.toggle('on', k === i); b.setAttribute('aria-pressed', k === i ? 'true' : 'false'); });
     t.textContent = tabs[i].dataset.t; d.textContent = tabs[i].dataset.d;
   }
   function auto() { clearInterval(timer); timer = setInterval(function () { go((cur + 1) % tabs.length); }, 6000); }
   tabs.forEach(function (b, k) { b.addEventListener('click', function () { go(k); auto(); }); });
-  imgs.forEach(function (im) { im.loading = 'eager'; });
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) auto();
 })();
 
@@ -782,6 +809,45 @@ window.addEventListener('load', function () {
     b.addEventListener('click', function () { show(i + (+b.dataset.rev)); });
   });
 })();
+
+
+/* VIDEO: load when near view, play only while visible, hover play on service cards */
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function load(v) {
+    if (v.dataset.loaded) return;
+    var s = v.querySelector('source[data-src]');
+    if (s && !s.getAttribute('src')) { s.src = s.dataset.src; v.load(); }
+    v.dataset.loaded = '1';
+  }
+  window.lpsPlay = function (v) { if (reduce) return; load(v); var p = v.play(); if (p && p.catch) p.catch(function () {}); };
+  var auto = Array.prototype.slice.call(document.querySelectorAll('video[autoplay]'));
+  if (reduce) { auto.forEach(function (v) { v.removeAttribute('autoplay'); v.pause(); }); }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var v = e.target;
+        if (v.closest('.fw-img') && !v.classList.contains('on')) return;
+        if (v.dataset.paused) return;
+        if (e.isIntersecting) window.lpsPlay(v); else v.pause();
+      });
+    }, { rootMargin: '200px 0px' });
+    auto.forEach(function (v) { io.observe(v); });
+  }
+  document.querySelectorAll('.sc').forEach(function (c) {
+    var v = c.querySelector('.sc-vid');
+    if (!v || !window.matchMedia('(hover: hover)').matches) return;
+    c.addEventListener('mouseenter', function () { c.classList.add('playing'); window.lpsPlay(v); });
+    c.addEventListener('mouseleave', function () { c.classList.remove('playing'); v.pause(); });
+  });
+  document.querySelectorAll('.vid-btn').forEach(function (b) {
+    var v = b.parentElement.querySelector('video');
+    b.addEventListener('click', function () {
+      if (v.paused) { delete v.dataset.paused; window.lpsPlay(v); b.setAttribute('aria-label', 'Pause video'); b.innerHTML = '<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'; }
+      else { v.pause(); v.dataset.paused = '1'; b.setAttribute('aria-label', 'Play video'); b.innerHTML = '<svg viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></svg>'; }
+    });
+  });
+})();
 </script><script>/* LPS v3 motion: Lenis smooth scroll + calm GSAP reveals */
 (function(){
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -814,9 +880,15 @@ window.addEventListener('load', function () {
       delay: now ? base : 0, scrollTrigger: now ? null : { trigger: el, start: 'top 88%' } });
   });
 
+  /* grouped items rise in with a stagger */
+  var GROUP = '.sc, .step, .pt, .cr, .stat, .pc, .fq, .gcard, .card, .igp';
+  ScrollTrigger.batch(GROUP, { start: 'top 92%', once: true,
+    onEnter: function(b){ gsap.fromTo(b, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.1, ease: 'expo.out', stagger: 0.09, overwrite: true }); } });
+
   /* generic reveals */
   var heroI = 0;
   gsap.utils.toArray('.rv').forEach(function(el){
+    if (el.matches(GROUP) && !el.closest('.hero')) { gsap.set(el, { opacity: 0, y: 40 }); return; }
     var inHero = !!el.closest('.hero');
     gsap.to(el, { opacity: 1, y: 0, duration: 1.1, ease: 'expo.out', delay: inHero ? base + 0.35 + (heroI++) * 0.08 : 0,
       scrollTrigger: inHero ? null : { trigger: el, start: 'top 90%' } });
@@ -827,6 +899,26 @@ window.addEventListener('load', function () {
     gsap.from(m, { clipPath: 'inset(8% 8% 8% 8% round 28px)', duration: 1.5, ease: 'expo.out', delay: base });
     var v = m.querySelector('img,video');
     if (v) gsap.to(v, { yPercent: 8, ease: 'none', scrollTrigger: { trigger: m, start: 'top top', end: 'bottom top', scrub: true } });
+  });
+
+  /* images: open from a soft inset and settle from a zoom */
+  var REVEAL = '.split-img, .gstrip figure, .mosaic img, .c-img, .gcard>div:first-child, .rev-img';
+  gsap.utils.toArray(REVEAL).forEach(function(el){
+    var r = getComputedStyle(el).borderRadius || '24px';
+    var st = { trigger: el, start: 'top 90%', once: true };
+    gsap.fromTo(el, { clipPath: 'inset(12% 8% 12% 8% round ' + r + ')' }, { clipPath: 'inset(0% 0% 0% 0% round ' + r + ')', duration: 1.5, ease: 'expo.out', scrollTrigger: st });
+    var m = el.matches('img') ? null : el.querySelector('img,video');
+    if (m) gsap.fromTo(m, { scale: 1.22 }, { scale: 1.04, duration: 2, ease: 'expo.out', scrollTrigger: st });
+  });
+  /* gentle parallax inside large images */
+  gsap.utils.toArray('.split-img img, .c-img>img, .c-img>video, .sc>img').forEach(function(m){
+    gsap.fromTo(m, { yPercent: -4 }, { yPercent: 4, ease: 'none', scrollTrigger: { trigger: m.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
+
+  /* count up */
+  document.querySelectorAll('[data-count]').forEach(function(el){
+    var end = +el.dataset.count, o = { v: 0 };
+    gsap.to(o, { v: end, duration: 1.8, ease: 'power2.out', delay: el.closest('.stats') ? base + 0.4 : 0, scrollTrigger: { trigger: el, start: 'top 95%', once: true }, onUpdate: function(){ el.textContent = Math.round(o.v); } });
   });
 
   /* featured work zooms gently while in view */

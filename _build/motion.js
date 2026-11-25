@@ -30,9 +30,15 @@
       delay: now ? base : 0, scrollTrigger: now ? null : { trigger: el, start: 'top 88%' } });
   });
 
+  /* grouped items rise in with a stagger */
+  var GROUP = '.sc, .step, .pt, .cr, .stat, .pc, .fq, .gcard, .card, .igp';
+  ScrollTrigger.batch(GROUP, { start: 'top 92%', once: true,
+    onEnter: function(b){ gsap.fromTo(b, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.1, ease: 'expo.out', stagger: 0.09, overwrite: true }); } });
+
   /* generic reveals */
   var heroI = 0;
   gsap.utils.toArray('.rv').forEach(function(el){
+    if (el.matches(GROUP) && !el.closest('.hero')) { gsap.set(el, { opacity: 0, y: 40 }); return; }
     var inHero = !!el.closest('.hero');
     gsap.to(el, { opacity: 1, y: 0, duration: 1.1, ease: 'expo.out', delay: inHero ? base + 0.35 + (heroI++) * 0.08 : 0,
       scrollTrigger: inHero ? null : { trigger: el, start: 'top 90%' } });
@@ -43,6 +49,26 @@
     gsap.from(m, { clipPath: 'inset(8% 8% 8% 8% round 28px)', duration: 1.5, ease: 'expo.out', delay: base });
     var v = m.querySelector('img,video');
     if (v) gsap.to(v, { yPercent: 8, ease: 'none', scrollTrigger: { trigger: m, start: 'top top', end: 'bottom top', scrub: true } });
+  });
+
+  /* images: open from a soft inset and settle from a zoom */
+  var REVEAL = '.split-img, .gstrip figure, .mosaic img, .c-img, .gcard>div:first-child, .rev-img';
+  gsap.utils.toArray(REVEAL).forEach(function(el){
+    var r = getComputedStyle(el).borderRadius || '24px';
+    var st = { trigger: el, start: 'top 90%', once: true };
+    gsap.fromTo(el, { clipPath: 'inset(12% 8% 12% 8% round ' + r + ')' }, { clipPath: 'inset(0% 0% 0% 0% round ' + r + ')', duration: 1.5, ease: 'expo.out', scrollTrigger: st });
+    var m = el.matches('img') ? null : el.querySelector('img,video');
+    if (m) gsap.fromTo(m, { scale: 1.22 }, { scale: 1.04, duration: 2, ease: 'expo.out', scrollTrigger: st });
+  });
+  /* gentle parallax inside large images */
+  gsap.utils.toArray('.split-img img, .c-img>img, .c-img>video, .sc>img').forEach(function(m){
+    gsap.fromTo(m, { yPercent: -4 }, { yPercent: 4, ease: 'none', scrollTrigger: { trigger: m.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
+
+  /* count up */
+  document.querySelectorAll('[data-count]').forEach(function(el){
+    var end = +el.dataset.count, o = { v: 0 };
+    gsap.to(o, { v: end, duration: 1.8, ease: 'power2.out', delay: el.closest('.stats') ? base + 0.4 : 0, scrollTrigger: { trigger: el, start: 'top 95%', once: true }, onUpdate: function(){ el.textContent = Math.round(o.v); } });
   });
 
   /* featured work zooms gently while in view */

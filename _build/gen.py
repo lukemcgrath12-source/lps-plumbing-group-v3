@@ -192,6 +192,14 @@ def ttl(p):  # 'the Inner West' -> 'Inner West'
 def alt(k, extra=''):
     return IMG_ALT.get(k, 'Plumbing by LPS Plumbing Group') + extra
 
+VIDS = {'tap': 'Brushed brass wall spout running into a stone basin', 'bath': 'Bathroom with timber vanity and wall mixer',
+        'kitchen': 'Open plan new build kitchen', 'shower': 'Copper outdoor shower on a feature wall', 'vanity': 'Timber vanity with vessel basin and wall mixer'}
+VBTN = '<button class="vid-btn" aria-label="Pause video"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>'
+def vid(k, cls='', lazy=True, auto=True):
+    a = ' autoplay' if auto else ''
+    pre = 'none' if lazy else 'auto'
+    return f'<video class="{cls}" muted loop playsinline{a} preload="{pre}" poster="{BASE}/video/lps-{k}.jpg" data-lazy="{1 if lazy else 0}" aria-label="{VIDS[k]}"><source data-src="{BASE}/video/lps-{k}.mp4" src="{"" if lazy else BASE + "/video/lps-" + k + ".mp4"}" type="video/mp4"></video>'
+
 def head(title, desc, path, extra=''):
     canon = DOMAIN + (path if path != '/' else '/')
     robots = '<meta name="robots" content="noindex,nofollow">' if NOINDEX else ''
@@ -255,7 +263,7 @@ def nav(hold=False, cur=''):
 </div>
 '''
 
-def phead(crumb, eyebrow, h1, lead, ctas=True, img=None, path=None, extra=''):
+def phead(crumb, eyebrow, h1, lead, ctas=True, img=None, path=None, extra='', video=None):
     c = f'<div class="cta-row rv">{btn(L("/quote"), "Get a quote")}{btn("tel:"+TEL, PHONE, "ghost", PH)}</div>' if ctas else ''
     bc = ''
     if path:
@@ -269,7 +277,7 @@ def phead(crumb, eyebrow, h1, lead, ctas=True, img=None, path=None, extra=''):
     if not img:
         return f'<header class="hero hero-solo"><div class="wrap"><div class="inner">{panel}</div></div></header>{bc}'
     return f'''<header class="hero"><div class="wrap"><div class="inner hero-grid short">
-    <div class="hero-media"><img src="{W(img)}" alt="{alt(img)}" fetchpriority="high"></div>
+    <div class="hero-media">{vid(video, lazy=False) + VBTN if video else f'<img src="{W(img)}" alt="{alt(img)}" fetchpriority="high">'}</div>
     {panel}
   </div></div></header>{bc}'''
 
@@ -300,6 +308,8 @@ def faq_block(faqs=None):
   </div>''')
 
 def cimg(img, h, p, extra=''):
+    if img.startswith('v:'):
+        return f'<div class="c-img">{vid(img[2:])}<h2 class="h-lg">{hd(h)}</h2><p>{p}</p>{extra}</div>'
     src, a = (BASE + img, 'LPS Plumbing Group on site') if img.startswith('/') else (W(img), alt(img))
     return f'<div class="c-img"><img src="{src}" alt="{a}" loading="lazy"><h2 class="h-lg">{hd(h)}</h2><p>{p}</p>{extra}</div>'
 
@@ -403,10 +413,12 @@ MAPLIB = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.
 def tail():
     return f'{LIBS}<script>{JS}</script><script>{MOTION}</script>\n<script>window.va=window.va||function(){{(window.vaq=window.vaq||[]).push(arguments);}};</script><script defer src="/_vercel/insights/script.js"></script>\n</body>\n</html>\n'
 
+SC_VID = {'new-builds': 'kitchen', 'bathrooms': 'bath'}
 def scard(i, s, feat=False):
     if feat:
         return f'''<a class="sc feat rv" href="{L('/'+s[0])}"><div class="sc-top"><div class="sc-n">0{i+1}</div><h3>{s[1]}</h3><p>{s[3]}</p><span class="sc-l">Explore {s[1].lower()}</span></div><img src="{W(s[2])}" alt="{alt(s[2])}" loading="lazy"><span class="sc-go"><span>{NE}</span></span></a>'''
-    return f'''<a class="sc rv" href="{L('/'+s[0])}"><img src="{W(s[2])}" alt="{alt(s[2])}" loading="lazy"><div class="sc-n">0{i+1}</div><div class="sc-body"><h3>{s[1]}</h3><p>{s[3]}</p><span class="sc-l">Explore {s[1].lower()}</span></div><span class="sc-go"><span>{NE}</span></span></a>'''
+    v = vid(SC_VID[s[0]], 'sc-vid', auto=False) if s[0] in SC_VID else ''
+    return f'''<a class="sc rv" href="{L('/'+s[0])}"><img src="{W(s[2])}" alt="{alt(s[2])}" loading="lazy">{v}<div class="sc-n">0{i+1}</div><div class="sc-body"><h3>{s[1]}</h3><p>{s[3]}</p><span class="sc-l">Explore {s[1].lower()}</span></div><span class="sc-go"><span>{NE}</span></span></a>'''
 
 def scards():
     return '<div class="scards">' + ''.join(scard(i, s, i == 1) for i, s in enumerate(SERVICES)) + '</div>'
@@ -451,9 +463,13 @@ GAL = [('miranda', 'Bathroom', 'Terracotta powder room', 'Wall hung basin and wa
        ('ensuite', 'Bathroom', 'Ensuite with brass fit off', 'Bath, vanity, wall mixers and heated rail fitted off in matching brass.'),
        ('stonevanity', 'Renovation', 'Stone vanity with wall mixer', 'Wall mixer and spout set into a natural stone splashback over a solid stone basin.'),
        ('kitchen', 'New build', 'Open plan kitchen', 'Island sink and appliance services run through the slab for a clean, open layout.')]
+FWV = [('shower', 'Outdoor', 'Copper outdoor shower', 'Exposed copper run with brass fittings, mounted against a feature cladding wall.'),
+       ('kitchen', 'New build', 'Open plan kitchen', 'Island sink and appliance services run through the slab for a clean, open layout.'),
+       ('bath', 'Bathroom', 'Bathroom fit off', 'Wall mixer, vanity and concealed cistern set out for a clean tiled finish.'),
+       ('tap', 'Renovation', 'Brushed brass wall spout', 'Wall spout and mixer set dead level over a stone basin.')]
 def featured_block():
-    GAL = [(k,) + GALD[k] for k in ('miranda', 'stonevanity', 'bathreno', 'shower')]
-    imgs = ''.join(f'<img src="{W(k)}" alt="{t}"{" class=on" if i == 0 else ""}>' for i, (k, c, t, d) in enumerate(GAL))
+    GAL = FWV
+    imgs = ''.join(vid(k, 'on' if i == 0 else '') for i, (k, c, t, d) in enumerate(GAL))
     tabs = ''.join(f'<button class="fw-tab{" on" if i == 0 else ""}" data-i="{i}" data-t="{html.escape(t)}" data-d="{html.escape(d)}" aria-pressed="{"true" if i == 0 else "false"}"><small>{c}</small><b>{t}</b>{NE}</button>' for i, (k, c, t, d) in enumerate(GAL))
     k, c, t, d = GAL[0]
     return section(f'''<div class="fw" id="fw">
@@ -491,6 +507,7 @@ pages['index.html'] = head('Plumber Sydney for High End Builds & Renos | LPS Plu
   <div class="hero-media">
     <video autoplay muted loop playsinline preload="auto" poster="{BASE}/lps-hero-poster.jpg" aria-hidden="true"><source src="{BASE}/lps-hero.mp4" type="video/mp4"></video>
     <div class="hero-tag"><i></i><b>24/7</b> emergency call outs · Lic {LIC}</div>
+    {VBTN}
   </div>
   <div class="hero-panel">
     <h1 class="h-xl" data-lines="now">Plumbing for builds where the finish matters<span class="dot">.</span></h1>
@@ -499,6 +516,12 @@ pages['index.html'] = head('Plumber Sydney for High End Builds & Renos | LPS Plu
     <div class="hero-foot rv">{svc_foot}</div>
   </div>
 </div></div></header>
+<section class="stats"><div class="wrap"><div class="inner stats-row">
+  <div class="stat rv"><b><span data-count="8">8</span>+</b><span>Years in the trade</span></div>
+  <div class="stat rv"><b>24/7</b><span>Emergency call outs, any day of the year</span></div>
+  <div class="stat rv"><b><span data-count="{GOOGLE_COUNT}">{GOOGLE_COUNT}</span></b><span>Five star Google reviews</span></div>
+  <div class="stat rv"><b><span data-count="9">9</span></b><span>Service areas, Sydney to Kiama</span></div>
+</div></div></section>
 {section('<h2 class="h-lg center" data-lines style="margin-bottom:56px">Everything in the wall, done properly<span class="dot">.</span></h2>' + scards())}
 {featured_block()}
 {collab_block(keys=('basin', 'sink', 'gooseneck', 'kitchensink'))}
@@ -508,7 +531,7 @@ pages['index.html'] = head('Plumber Sydney for High End Builds & Renos | LPS Plu
 {areas_block()}
 {creds_block()}
 {faq_block()}
-{quote_form(img='/lps-hero-poster.jpg')}''' + foot() + tail()
+{quote_form(img='v:vanity')}''' + foot() + tail()
 
 # ---------------- SERVICES HUB ----------------
 def svc_split(i, s):
@@ -516,7 +539,7 @@ def svc_split(i, s):
     return split(s[2], inner, i % 2 == 1)
 
 pages['services.html'] = head('Plumbing Services Sydney: Builds, Gas & Drainage | LPS',
-    'New builds, renovations, bathrooms, commercial, gas fitting, drainage and 24/7 emergency plumbing across Sydney. Call 0452 611 522.', '/services') + nav(cur='/services') + phead('Services', 'Services', 'Everything in the wall, done right.', 'Plumbing, drainage and gas fitting for builders, developers and homeowners who want it done once, properly.', img='gooseneck', path='/services') + f'''
+    'New builds, renovations, bathrooms, commercial, gas fitting, drainage and 24/7 emergency plumbing across Sydney. Call 0452 611 522.', '/services') + nav(cur='/services') + phead('Services', 'Services', 'Everything in the wall, done right.', 'Plumbing, drainage and gas fitting for builders, developers and homeowners who want it done once, properly.', img='gooseneck', path='/services', video='tap') + f'''
 {section('<div class="blocks">' + ''.join(svc_split(i, s) for i, s in enumerate(SERVICES)) + '</div>')}
 {steps_block()}
 {quote_form(img='miranda')}''' + foot() + tail()
@@ -563,7 +586,7 @@ for i, s in enumerate(SERVICES):
         continue
     areas_c = ''.join(f'<a href="{L("/"+a[0])}">{ttl(a[1])}</a>' for a in AREAS)
     inner = f'<h2 class="h-lg">What you get<span class="dot">.</span></h2><p class="lead">{long}</p>{ticks(bullets)}<span class="lbl" style="margin-top:30px">Other services</span><div class="chips on-white">{others}</div>'
-    pages[f'{slug}.html'] = head(title, desc, '/' + slug, faq_ld(faqs) + svc_ld) + nav(cur='/services') + phead(name, 'Services', h1, short, img=K[0], path='/'+slug) + f'''
+    pages[f'{slug}.html'] = head(title, desc, '/' + slug, faq_ld(faqs) + svc_ld) + nav(cur='/services') + phead(name, 'Services', h1, short, img=K[0], path='/'+slug, video={'new-builds': 'kitchen', 'bathrooms': 'bath', 'renovations': 'vanity'}.get(slug)) + f'''
 {section(split(K[1], inner) + gstrip(K[2:5]) + f'<div class="rv" style="margin-top:40px"><span class="lbl">Areas we cover</span><div class="chips on-white">{areas_c}</div></div>')}
 {steps_block(link=False)}
 {faq_block(faqs)}
@@ -617,7 +640,7 @@ projs = [('miranda', 'Bathroom', 'Terracotta powder room', 'Wall hung basin and 
 cards = ''.join(f'<article class="pc rv"><img src="{W(i)}" alt="{t}" loading="lazy"><small>{k}</small><h3>{t}</h3><p>{d}</p></article>' for i, k, t, d in projs)
 cases = ''.join(split(c['img'], f'<span class="lbl">{c["suburb"]} · Builder: {c["builder"]}</span><h2 class="h-lg">{hd(c["title"]+".")}</h2><p class="lead"><b>Scope.</b> {c["scope"]}</p><p class="lead"><b>Result.</b> {c["result"]}</p>') for c in CASES)
 pages['projects.html'] = head('Plumbing Projects | LPS Plumbing Group, Sydney',
-    'Recent new builds, renovations, bathrooms and commercial plumbing projects by LPS Plumbing Group across Sydney.', '/projects') + nav(cur='/projects') + phead('Projects', 'Projects', 'Recent work.', 'A look at recent builds, renovations and bathrooms we have plumbed across Sydney.', img='bathreno', path='/projects') + f'''
+    'Recent new builds, renovations, bathrooms and commercial plumbing projects by LPS Plumbing Group across Sydney.', '/projects') + nav(cur='/projects') + phead('Projects', 'Projects', 'Recent work.', 'A look at recent builds, renovations and bathrooms we have plumbed across Sydney.', img='bathreno', path='/projects', video='shower') + f'''
 {section('<div class="blocks">' + cases + '</div>') if CASES else ''}
 {section(f'<div class="pgrid">{cards}</div>')}
 {reviews_block()}
@@ -629,7 +652,7 @@ about_inner = f"""<h2 class="h-lg">Built on doing it once, properly<span class="
 <p class="lead">The market is full of cheap plumbing. We are not trying to be the cheapest. We are trying to be the plumber you never have to call back.</p>
 <p class="lead">We are growing. If you are a plumber who takes pride in the finish, <a href="{L('/careers')}" style="color:var(--sea-dk);font-weight:600">come work with us</a>.</p>"""
 pages['about.html'] = head('About LPS Plumbing Group | Lewis Slatter, Director',
-    'LPS Plumbing Group is led by director Lewis Slatter, with 8+ years plumbing high end homes across Sydney. Licensed and insured.', '/about') + nav(cur='/about') + phead('About', 'About', 'Small crew. High standards.', 'LPS Plumbing Group is a licensed plumbing, drainage and gas fitting business led by director Lewis Slatter.', img='stonevanity', path='/about') + f'''
+    'LPS Plumbing Group is led by director Lewis Slatter, with 8+ years plumbing high end homes across Sydney. Licensed and insured.', '/about') + nav(cur='/about') + phead('About', 'About', 'Small crew. High standards.', 'LPS Plumbing Group is a licensed plumbing, drainage and gas fitting business led by director Lewis Slatter.', img='stonevanity', path='/about', video='tap') + f'''
 {section(split('ensuite', about_inner) + gstrip(['kitchen', 'basin', 'shower']))}
 {collab_block('What you can expect.', ('miranda', 'sink', 'bathreno', 'laundry'))}
 {reviews_block()}

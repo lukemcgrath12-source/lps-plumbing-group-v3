@@ -155,17 +155,16 @@ document.querySelectorAll('[data-slider]').forEach(function (wrap) {
 (function () {
   var fw = document.getElementById('fw');
   if (!fw) return;
-  var imgs = fw.querySelectorAll('.fw-img img'), tabs = fw.querySelectorAll('.fw-tab'),
+  var imgs = fw.querySelectorAll('.fw-img video'), tabs = fw.querySelectorAll('.fw-tab'),
       t = document.getElementById('fwT'), d = document.getElementById('fwD'), cur = 0, timer;
   function go(i) {
     cur = i;
-    imgs.forEach(function (im, k) { im.classList.toggle('on', k === i); });
+    imgs.forEach(function (im, k) { im.classList.toggle('on', k === i); if (k === i) { window.lpsPlay && window.lpsPlay(im); } else { im.pause(); } });
     tabs.forEach(function (b, k) { b.classList.toggle('on', k === i); b.setAttribute('aria-pressed', k === i ? 'true' : 'false'); });
     t.textContent = tabs[i].dataset.t; d.textContent = tabs[i].dataset.d;
   }
   function auto() { clearInterval(timer); timer = setInterval(function () { go((cur + 1) % tabs.length); }, 6000); }
   tabs.forEach(function (b, k) { b.addEventListener('click', function () { go(k); auto(); }); });
-  imgs.forEach(function (im) { im.loading = 'eager'; });
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) auto();
 })();
 
@@ -201,5 +200,44 @@ window.addEventListener('load', function () {
   }
   document.querySelectorAll('[data-rev]').forEach(function (b) {
     b.addEventListener('click', function () { show(i + (+b.dataset.rev)); });
+  });
+})();
+
+
+/* VIDEO: load when near view, play only while visible, hover play on service cards */
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function load(v) {
+    if (v.dataset.loaded) return;
+    var s = v.querySelector('source[data-src]');
+    if (s && !s.getAttribute('src')) { s.src = s.dataset.src; v.load(); }
+    v.dataset.loaded = '1';
+  }
+  window.lpsPlay = function (v) { if (reduce) return; load(v); var p = v.play(); if (p && p.catch) p.catch(function () {}); };
+  var auto = Array.prototype.slice.call(document.querySelectorAll('video[autoplay]'));
+  if (reduce) { auto.forEach(function (v) { v.removeAttribute('autoplay'); v.pause(); }); }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var v = e.target;
+        if (v.closest('.fw-img') && !v.classList.contains('on')) return;
+        if (v.dataset.paused) return;
+        if (e.isIntersecting) window.lpsPlay(v); else v.pause();
+      });
+    }, { rootMargin: '200px 0px' });
+    auto.forEach(function (v) { io.observe(v); });
+  }
+  document.querySelectorAll('.sc').forEach(function (c) {
+    var v = c.querySelector('.sc-vid');
+    if (!v || !window.matchMedia('(hover: hover)').matches) return;
+    c.addEventListener('mouseenter', function () { c.classList.add('playing'); window.lpsPlay(v); });
+    c.addEventListener('mouseleave', function () { c.classList.remove('playing'); v.pause(); });
+  });
+  document.querySelectorAll('.vid-btn').forEach(function (b) {
+    var v = b.parentElement.querySelector('video');
+    b.addEventListener('click', function () {
+      if (v.paused) { delete v.dataset.paused; window.lpsPlay(v); b.setAttribute('aria-label', 'Pause video'); b.innerHTML = '<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'; }
+      else { v.pause(); v.dataset.paused = '1'; b.setAttribute('aria-label', 'Play video'); b.innerHTML = '<svg viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></svg>'; }
+    });
   });
 })();
