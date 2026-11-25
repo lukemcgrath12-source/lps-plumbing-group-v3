@@ -63,7 +63,7 @@ SERVICES = [
      'Full plumbing for custom homes and high end builds, from first fix to final.',
      'We plumb custom homes and architect designed builds from slab to handover. Drainage, rough in, gas, hot water and fit off, run to your program and finished to the standard your clients are paying for.',
      ['Stormwater, sewer and drainage set out', 'Rough in and pressure testing', 'Gas fitting and hot water systems', 'Fit off of premium tapware and fixtures', 'Compliance certificates on handover']),
-    ('renovations', 'Renovations', 'vanity',
+    ('renovations', 'Renovations', 'gooseneck',
      'Kitchens, laundries and whole home renos, planned around the existing house.',
      'Renovations need a plumber who can work around what is already there. We plan the runs early, keep the site tidy and line up with your trades so walls close on time.',
      ['Kitchen and laundry relocations', 'Re-piping older homes', 'Wall hung and concealed fixtures', 'Coordination with builders and trades', 'Clean, protected work areas']),
@@ -151,14 +151,15 @@ SFAQ = {
 }
 
 SFAQ.update(EXTRA_SFAQ)
-SVC_IMGS = {'new-builds':['kitchen','kitchensink','laundry'],'renovations':['vanity','gooseneck','stonevanity'],'bathrooms':['ensuite','shower','bathreno'],'commercial':['commercial','laundry','kitchensink'],'gas-fitting':['kitchensink','hotwater','stone'],'drainage':['laundry','commercial','shower'],'emergency':['hotwater','laundry','sink']}
+SVC_IMGS = {'new-builds':['kitchen','kitchensink','laundry','gooseneck'],'renovations':['gooseneck','stonevanity','bathreno','miranda','vanity'],'bathrooms':['ensuite','shower','miranda','stonevanity','basin'],'commercial':['commercial','laundry','kitchensink'],'gas-fitting':['hotwater','kitchen','kitchensink'],'drainage':['laundry','shower','commercial'],'emergency':['hotwater','laundry','shower']}
 IMG_ALT = {'lewis':'Lewis Slatter, director of LPS Plumbing Group','kitchen':'Open plan new build kitchen plumbed by LPS','kitchensink':'Kitchen sink fit off','laundry':'Laundry fit off with floor waste','vanity':'Brass kitchen mixer on marble','gooseneck':'Gooseneck kitchen mixer','stonevanity':'Stone vanity with wall mixer','ensuite':'Ensuite with brass fit off','shower':'Walk in shower with rail shower','bathreno':'Bathroom renovation with brass tapware','commercial':'Commercial pipework install','hotwater':'Heat pump hot water install','sink':'Brass sink mixer','stone':'Brass mixer on stone benchtop','basin':'Brushed brass wall spout and basin','miranda':'Terracotta powder room'}
 
 POOL = ['stone','bathreno','kitchensink','ensuite','basin','stonevanity','kitchen','laundry','gooseneck','shower','miranda','vanity','sink','commercial','hotwater']
 def pick(first, n, seed=0):
     out = []
     for k in list(first) + POOL[seed % len(POOL):] + POOL[:seed % len(POOL)]:
-        if k not in out: out.append(k)
+        twin = {'ensuite': 'bathreno', 'bathreno': 'ensuite'}.get(k)
+        if k not in out and twin not in out: out.append(k)
     return out[:n]
 
 def gstrip(keys, place=''):
@@ -434,6 +435,8 @@ def tail():
 
 SC_VID = {'new-builds': 'kitchen', 'bathrooms': 'bath'}
 def scard(i, s, feat=False):
+    if s[0] == 'emergency':
+        return f'''<a class="sc em-card rv" href="{L('/'+s[0])}"><div class="sc-n">0{i+1}</div><div class="sc-body"><span class="em-live"><i></i>Answering now</span><h3>24/7 emergency</h3><p>{s[3]}</p><span class="em-ph">{PHONE}</span></div><span class="sc-go"><span>{NE}</span></span></a>'''
     if feat:
         return f'''<a class="sc feat rv" href="{L('/'+s[0])}"><div class="sc-top"><div class="sc-n">0{i+1}</div><h3>{s[1]}</h3><p>{s[3]}</p><span class="sc-l">Explore {s[1].lower()}</span></div><img src="{W(s[2])}" alt="{alt(s[2])}" loading="lazy"><span class="sc-go"><span>{NE}</span></span></a>'''
     v = vid(SC_VID[s[0]], 'sc-vid', auto=False) if s[0] in SC_VID else ''
@@ -551,7 +554,7 @@ pages['index.html'] = head('Plumber Sydney for High End Builds & Renos | LPS Plu
 {section('<h2 class="h-lg center" data-lines style="margin-bottom:56px">Everything in the wall, done properly<span class="dot">.</span></h2>' + scards())}
 {featured_block()}
 {lewis_block()}
-{collab_block(keys=('basin', 'sink', 'gooseneck', 'kitchensink'))}
+{collab_block(keys=('basin', 'sink', 'stonevanity', 'kitchensink'))}
 {steps_block()}
 {reviews_block()}
 {builders_block()}
@@ -563,7 +566,7 @@ pages['index.html'] = head('Plumber Sydney for High End Builds & Renos | LPS Plu
 # ---------------- SERVICES HUB ----------------
 def svc_split(i, s):
     inner = f'<span class="lbl">0{i+1}</span><h2 class="h-lg">{hd(s[1]+".")}</h2><p class="lead">{s[4]}</p>{ticks(s[5])}{btn(L("/"+s[0]), "More on "+s[1].lower(), "teal")}'
-    return split(s[2], inner, i % 2 == 1)
+    return split({'emergency': 'shower'}.get(s[0], s[2]), inner, i % 2 == 1)
 
 pages['services.html'] = head('Plumbing Services Sydney: Builds, Gas & Drainage | LPS',
     'New builds, renovations, bathrooms, commercial, gas fitting, drainage and 24/7 emergency plumbing across Sydney. Call 0452 611 522.', '/services') + nav(cur='/services') + phead('Services', 'Services', 'Everything in the wall, done right.', 'Plumbing, drainage and gas fitting for builders, developers and homeowners who want it done once, properly.', img='gooseneck', path='/services', video='tap') + f'''
@@ -575,7 +578,8 @@ pages['services.html'] = head('Plumbing Services Sydney: Builds, Gas & Drainage 
 for i, s in enumerate(SERVICES):
     slug, name, img, short, long, bullets = s
     others = ''.join(f'<a href="{L("/"+o[0])}">{o[1]}</a>' for o in SERVICES if o[0] != slug)
-    h1 = (f'{name}, done properly.' if slug in ('gas-fitting', 'drainage') else f'{name} plumbing, done properly.')
+    h1 = {'new-builds': 'New build plumbing, done properly.', 'renovations': 'Renovation plumbing, done properly.', 'bathrooms': 'Bathroom plumbing, done properly.',
+          'commercial': 'Commercial plumbing, done properly.'}.get(slug, f'{name}, done properly.')
     title = f'{TITLE_KW[slug]} | LPS Plumbing Group'
     svc_ld = '<script type="application/ld+json">' + json.dumps({"@context":"https://schema.org","@type":"Service","name":name+' plumbing',"serviceType":name,"description":short,"provider":{"@type":"Plumber","name":"LPS Plumbing Group","telephone":"+61452611522","url":DOMAIN},"areaServed":["Sydney","South Coast NSW"]}) + '</script>'
     desc = f'{short} Licensed and insured plumber across Sydney. Call Lewis on 0452 611 522.'
@@ -614,7 +618,7 @@ for i, s in enumerate(SERVICES):
     areas_c = ''.join(f'<a href="{L("/"+a[0])}">{ttl(a[1])}</a>' for a in AREAS)
     inner = f'<h2 class="h-lg">What you get<span class="dot">.</span></h2><p class="lead">{long}</p>{ticks(bullets)}<span class="lbl" style="margin-top:30px">Other services</span><div class="chips on-white">{others}</div>'
     pages[f'{slug}.html'] = head(title, desc, '/' + slug, faq_ld(faqs) + svc_ld) + nav(cur='/services') + phead(name, 'Services', h1, short, img=K[0], path='/'+slug, video={'new-builds': 'kitchen', 'bathrooms': 'bath', 'renovations': 'vanity'}.get(slug)) + f'''
-{section(split(K[1], inner) + gstrip(K[2:5]) + f'<div class="rv" style="margin-top:40px"><span class="lbl">Areas we cover</span><div class="chips on-white">{areas_c}</div></div>')}
+{section((f'<div class="split" style="align-items:start"><div class="rv"><h2 class="h-lg">What you get<span class="dot">.</span></h2><p class="lead">{long}</p></div><div class="rv">{ticks(bullets)}<span class="lbl" style="margin-top:30px">Other services</span><div class="chips on-white">{others}</div></div></div>' if slug == 'commercial' else split(K[1], inner) + gstrip(K[2:5])) + f'<div class="rv" style="margin-top:40px"><span class="lbl">Areas we cover</span><div class="chips on-white">{areas_c}</div></div>')}
 {steps_block(link=False)}
 {faq_block(faqs)}
 {quote_form(img=K[5])}''' + foot() + tail()
