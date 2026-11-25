@@ -235,10 +235,25 @@ def head(title, desc, path, extra=''):
 <body>
 """
 
+def loader(full):
+    """Loading screen on every page load. Full version on the home page, a quick curtain elsewhere."""
+    if not full:
+        return f'''<div class="ld ld-mini" id="ld" aria-hidden="true"><img class="ld-logo" src="{W("logo",600,150)}" alt=""><div class="ld-bar"><i></i></div></div>
+<script>(function(){{var d=document.getElementById('ld');document.documentElement.classList.add('ld-on');window.LPS_LD=0.75;setTimeout(function(){{d.classList.add('out');document.documentElement.classList.remove('ld-on')}},650);setTimeout(function(){{d.remove()}},1500)}})();</script>'''
+    return f'''<div class="ld" id="ld" aria-hidden="true">
+  <div class="ld-win"><video muted playsinline autoplay loop preload="auto" poster="{BASE}/video/lps-tap.jpg"><source src="{BASE}/video/lps-tap.mp4" type="video/mp4"></video></div>
+  <div class="ld-top"><img class="ld-logo" src="{W("logo",600,150)}" alt=""><span>Sydney to the South Coast</span></div>
+  <div class="ld-bot"><b><span id="ldN">000</span></b><p>Plumbing, drainage and gas fitting<br>for builds where the finish matters.</p></div>
+  <div class="ld-bar"><i id="ldB"></i></div>
+</div>
+<script>(function(){{var d=document.getElementById('ld'),n=document.getElementById('ldN'),b=document.getElementById('ldB'),v=d.querySelector('video'),t0=performance.now(),T=1700;
+document.documentElement.classList.add('ld-on');window.LPS_LD=2.55;
+try{{var p=v.play();if(p&&p.catch)p.catch(function(){{}})}}catch(e){{}}
+function f(t){{var k=Math.min(1,(t-t0)/T),e=1-Math.pow(1-k,3),x=Math.round(e*100);n.textContent=(x<10?'00':x<100?'0':'')+x;b.style.transform='scaleX('+e+')';if(k<1)requestAnimationFrame(f);else{{d.classList.add('grow');setTimeout(function(){{d.classList.add('out');document.documentElement.classList.remove('ld-on')}},800);setTimeout(function(){{d.remove()}},1900)}}}}
+requestAnimationFrame(f)}})();</script>'''
+
 def nav(hold=False, cur=''):
-    h = ''
-    if hold:
-        h = f'<div class="hold" id="hold" aria-hidden="true"><img class="hold-logo" src="{W("logo",900,230)}" alt=""><div class="hold-line"><i></i></div></div><script>try{{if(sessionStorage.getItem("lps_hold")||location.hash){{document.getElementById("hold").remove()}}sessionStorage.setItem("lps_hold","1")}}catch(e){{}}</script>'
+    h = loader(hold)
     links = ''.join(f'<a href="{L(p)}"{" class=on" if p == cur else ""}>{n}</a>' for p, n in NAV)
     sheet = ''.join(f'<a href="{L(p)}">{n} <i>0{i+1}</i></a>' for i, (p, n) in enumerate(NAV + [('/careers', 'Careers'), ('/quote', 'Get a quote')]))
     return h + f'''

@@ -165,7 +165,7 @@ document.querySelectorAll('[data-slider]').forEach(function (wrap) {
   }
   function auto() { clearInterval(timer); timer = setInterval(function () { go((cur + 1) % tabs.length); }, 6000); }
   tabs.forEach(function (b, k) { b.addEventListener('click', function () { go(k); auto(); }); });
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) auto();
+  auto();
 })();
 
 
@@ -213,9 +213,8 @@ window.addEventListener('load', function () {
     if (s && !s.getAttribute('src')) { s.src = s.dataset.src; v.load(); }
     v.dataset.loaded = '1';
   }
-  window.lpsPlay = function (v) { if (reduce) return; load(v); var p = v.play(); if (p && p.catch) p.catch(function () {}); };
+  window.lpsPlay = function (v) { load(v); v.muted = true; v.setAttribute('muted', ''); var p = v.play(); if (p && p.catch) p.catch(function () {}); };
   var auto = Array.prototype.slice.call(document.querySelectorAll('video[autoplay]'));
-  if (reduce) { auto.forEach(function (v) { v.removeAttribute('autoplay'); v.pause(); }); }
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (e) {
@@ -227,6 +226,14 @@ window.addEventListener('load', function () {
     }, { rootMargin: '200px 0px' });
     auto.forEach(function (v) { io.observe(v); });
   }
+  /* phones in low power mode block autoplay until the first tap or scroll: start visible videos then */
+  function kick() {
+    auto.forEach(function (v) { if (v.dataset.paused || (v.closest('.fw-img') && !v.classList.contains('on'))) return; var r = v.getBoundingClientRect(); if (r.bottom > 0 && r.top < innerHeight) window.lpsPlay(v); });
+  }
+  ['touchstart', 'pointerdown', 'scroll', 'keydown'].forEach(function (ev) { window.addEventListener(ev, kick, { passive: true, once: true }); });
+  window.addEventListener('pageshow', kick);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) kick(); });
+  setTimeout(kick, 300);
   document.querySelectorAll('.sc').forEach(function (c) {
     var v = c.querySelector('.sc-vid');
     if (!v || !window.matchMedia('(hover: hover)').matches) return;

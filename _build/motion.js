@@ -1,11 +1,10 @@
 /* LPS v3 motion: Lenis smooth scroll + calm GSAP reveals */
 (function(){
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduce || !window.gsap || !window.ScrollTrigger) { return; }
+  if (!window.gsap || !window.ScrollTrigger) { return; }
   gsap.registerPlugin(ScrollTrigger);
   document.documentElement.classList.add('js-motion');
-  var hold = document.getElementById('hold');
-  var base = hold ? 1.1 : 0.15;
+  var base = (window.LPS_LD || 0) + 0.1;
 
   var lenis = window.Lenis ? new Lenis({ lerp: 0.09, smoothWheel: true }) : null;
   if (lenis) {
