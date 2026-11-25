@@ -176,7 +176,7 @@ window.addEventListener('load', function () {
   if (!el || !window.L) return;
   var pts = JSON.parse(el.dataset.pts);
   var m = L.map(el, { scrollWheelZoom: false, zoomControl: true, attributionControl: true });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap &copy; CARTO', subdomains: 'abcd', maxZoom: 18 }).addTo(m);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors', maxZoom: 18 }).addTo(m);
   
   var b = [];
   pts.forEach(function (p) {
