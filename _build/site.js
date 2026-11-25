@@ -151,3 +151,55 @@ document.querySelectorAll('[data-slider]').forEach(function (wrap) {
   window.addEventListener('pointerup', function () { if (!down) return; down = false; track.classList.remove('drag'); });
   track.addEventListener('click', function (e) { if (moved) { e.preventDefault(); e.stopPropagation(); } }, true);
 });
+/* FEATURED WORK TABS */
+(function () {
+  var fw = document.getElementById('fw');
+  if (!fw) return;
+  var imgs = fw.querySelectorAll('.fw-img img'), tabs = fw.querySelectorAll('.fw-tab'),
+      t = document.getElementById('fwT'), d = document.getElementById('fwD'), cur = 0, timer;
+  function go(i) {
+    cur = i;
+    imgs.forEach(function (im, k) { im.classList.toggle('on', k === i); });
+    tabs.forEach(function (b, k) { b.classList.toggle('on', k === i); b.setAttribute('aria-pressed', k === i ? 'true' : 'false'); });
+    t.textContent = tabs[i].dataset.t; d.textContent = tabs[i].dataset.d;
+  }
+  function auto() { clearInterval(timer); timer = setInterval(function () { go((cur + 1) % tabs.length); }, 6000); }
+  tabs.forEach(function (b, k) { b.addEventListener('click', function () { go(k); auto(); }); });
+  imgs.forEach(function (im) { im.loading = 'eager'; });
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) auto();
+})();
+
+
+/* AREA MAP */
+window.addEventListener('load', function () {
+  var el = document.getElementById('map');
+  if (!el || !window.L) return;
+  var pts = JSON.parse(el.dataset.pts);
+  var m = L.map(el, { scrollWheelZoom: false, zoomControl: true, attributionControl: true });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap &copy; CARTO', subdomains: 'abcd', maxZoom: 18 }).addTo(m);
+  
+  var b = [];
+  pts.forEach(function (p) {
+    var mk = L.marker(p.ll, { icon: L.divIcon({ className: '', html: '<div class="pin' + (p.h ? ' here' : '') + '"></div>', iconSize: [30, 30], iconAnchor: [15, 30] }), title: p.n }).addTo(m);
+    mk.bindTooltip(p.n, { permanent: !!p.h, direction: 'top', offset: [0, -30], className: 'pin-tip' });
+    mk.on('click', function () { location.href = p.u; });
+    b.push(p.ll);
+  });
+  m.fitBounds(b, { padding: [50, 50] });
+});
+
+/* REVIEWS: one at a time */
+(function () {
+  var s = document.querySelectorAll('.rev-slide'), i = 0, imgs = document.querySelectorAll('.rev-img img');
+  if (s.length < 2) return;
+  var c = document.getElementById('revCount');
+  function show(n) {
+    s[i].classList.remove('on'); if (imgs[i % imgs.length]) imgs[i % imgs.length].classList.remove('on');
+    i = (n + s.length) % s.length;
+    s[i].classList.add('on'); if (imgs[i % imgs.length]) imgs[i % imgs.length].classList.add('on');
+    if (c) c.textContent = (i + 1) + ' / ' + s.length;
+  }
+  document.querySelectorAll('[data-rev]').forEach(function (b) {
+    b.addEventListener('click', function () { show(i + (+b.dataset.rev)); });
+  });
+})();

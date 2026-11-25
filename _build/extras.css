@@ -1,9 +1,0 @@
-
-/* LPS extras on the SAL template */
-@media(min-width:800px){.foot-top.foot-top5{grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:34px}}
-@media(min-width:900px){.sblock.noimg{grid-template-columns:58px 1fr}}
-.sblock.flip.noimg .sb-body{order:0}
-.nav-chip img{height:26px;width:auto;display:block}
-.chips a{text-decoration:none}
-.form-card .form-head h3{color:var(--text)}
-.sec:not(.sec-dark) :is(.pillar-k,.sb-n,.quote-mk,.tstep-n){color:var(--gold-dk)}
