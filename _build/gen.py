@@ -42,6 +42,7 @@ LOCAL = {
     'basin': 'lps-brass-wall-spout-basin.jpg', 'miranda': 'lps-terracotta-powder-room.jpg', 'sink': 'lps-brass-sink-mixer.jpg',
     'stone': 'lps-brass-mixer-stone.jpg', 'stonevanity': 'lps-stone-vanity-wall-mixer.jpg', 'gooseneck': 'lps-kitchen-gooseneck.jpg',
     'laundry': 'lps-laundry-fit-off.jpg', 'bathreno': 'lps-bathroom-renovation.jpg', 'kitchensink': 'lps-kitchen-sink-fit-off.jpg',
+    'lewis': 'lps-lewis-slatter.jpg',
 }
 
 def W(i, w=1600, h=1200):
@@ -151,7 +152,7 @@ SFAQ = {
 
 SFAQ.update(EXTRA_SFAQ)
 SVC_IMGS = {'new-builds':['kitchen','kitchensink','laundry'],'renovations':['vanity','gooseneck','stonevanity'],'bathrooms':['ensuite','shower','bathreno'],'commercial':['commercial','laundry','kitchensink'],'gas-fitting':['kitchensink','hotwater','stone'],'drainage':['laundry','commercial','shower'],'emergency':['hotwater','laundry','sink']}
-IMG_ALT = {'kitchen':'Open plan new build kitchen plumbed by LPS','kitchensink':'Kitchen sink fit off','laundry':'Laundry fit off with floor waste','vanity':'Brass kitchen mixer on marble','gooseneck':'Gooseneck kitchen mixer','stonevanity':'Stone vanity with wall mixer','ensuite':'Ensuite with brass fit off','shower':'Walk in shower with rail shower','bathreno':'Bathroom renovation with brass tapware','commercial':'Commercial pipework install','hotwater':'Heat pump hot water install','sink':'Brass sink mixer','stone':'Brass mixer on stone benchtop','basin':'Brushed brass wall spout and basin','miranda':'Terracotta powder room'}
+IMG_ALT = {'lewis':'Lewis Slatter, director of LPS Plumbing Group','kitchen':'Open plan new build kitchen plumbed by LPS','kitchensink':'Kitchen sink fit off','laundry':'Laundry fit off with floor waste','vanity':'Brass kitchen mixer on marble','gooseneck':'Gooseneck kitchen mixer','stonevanity':'Stone vanity with wall mixer','ensuite':'Ensuite with brass fit off','shower':'Walk in shower with rail shower','bathreno':'Bathroom renovation with brass tapware','commercial':'Commercial pipework install','hotwater':'Heat pump hot water install','sink':'Brass sink mixer','stone':'Brass mixer on stone benchtop','basin':'Brushed brass wall spout and basin','miranda':'Terracotta powder room'}
 
 POOL = ['stone','bathreno','kitchensink','ensuite','basin','stonevanity','kitchen','laundry','gooseneck','shower','miranda','vanity','sink','commercial','hotwater']
 def pick(first, n, seed=0):
@@ -195,10 +196,13 @@ def alt(k, extra=''):
 VIDS = {'tap': 'Brushed brass wall spout running into a stone basin', 'bath': 'Bathroom with timber vanity and wall mixer',
         'kitchen': 'Open plan new build kitchen', 'shower': 'Copper outdoor shower on a feature wall', 'vanity': 'Timber vanity with vessel basin and wall mixer'}
 VBTN = '<button class="vid-btn" aria-label="Pause video"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>'
+def vsrc(name, lazy):
+    a = 'data-src' if lazy else 'src'
+    return f'<source {a}="{BASE}/video/{name}.mp4" media="(min-width: 800px)" type="video/mp4"><source {a}="{BASE}/video/{name}-sd.mp4" type="video/mp4">'
 def vid(k, cls='', lazy=True, auto=True):
     a = ' autoplay' if auto else ''
     pre = 'none' if lazy else 'auto'
-    return f'<video class="{cls}" muted loop playsinline{a} preload="{pre}" poster="{BASE}/video/lps-{k}.jpg" data-lazy="{1 if lazy else 0}" aria-label="{VIDS[k]}"><source data-src="{BASE}/video/lps-{k}.mp4" src="{"" if lazy else BASE + "/video/lps-" + k + ".mp4"}" type="video/mp4"></video>'
+    return f'<video class="{cls}" muted loop playsinline{a} preload="{pre}" poster="{BASE}/video/lps-{k}.jpg" aria-label="{VIDS[k]}">{vsrc("lps-" + k, lazy)}</video>'
 
 def head(title, desc, path, extra=''):
     canon = DOMAIN + (path if path != '/' else '/')
@@ -241,7 +245,7 @@ def loader(full):
         return f'''<div class="ld ld-mini" id="ld" aria-hidden="true"><img class="ld-logo" src="{W("logo",600,150)}" alt=""><div class="ld-bar"><i></i></div></div>
 <script>(function(){{var d=document.getElementById('ld');document.documentElement.classList.add('ld-on');window.LPS_LD=0.75;setTimeout(function(){{d.classList.add('out');document.documentElement.classList.remove('ld-on')}},650);setTimeout(function(){{d.remove()}},1500)}})();</script>'''
     return f'''<div class="ld" id="ld" aria-hidden="true">
-  <div class="ld-win"><video muted playsinline autoplay loop preload="auto" poster="{BASE}/video/lps-tap.jpg"><source src="{BASE}/video/lps-tap.mp4#t=2.4" type="video/mp4"></video></div>
+  <div class="ld-win"><video muted playsinline autoplay loop preload="auto" poster="{BASE}/video/lps-tap.jpg"><source src="{BASE}/video/lps-tap.mp4#t=2.4" media="(min-width: 800px)" type="video/mp4"><source src="{BASE}/video/lps-tap-sd.mp4#t=2.4" type="video/mp4"></video></div>
   <div class="ld-top"><img class="ld-logo" src="{W("logo",600,150)}" alt=""><span>Sydney to the South Coast</span></div>
   <div class="ld-bot"><b><span id="ldN">000</span></b><p>Plumbing, drainage and gas fitting<br>for builds where the finish matters.</p></div>
   <div class="ld-bar"><i id="ldB"></i></div>
@@ -493,6 +497,13 @@ def featured_block():
     <div><div class="fw-cur" aria-live="polite"><h3 id="fwT">{t}</h3><p id="fwD">{d}</p></div><div class="fw-tabs">{tabs}</div></div>
   </div><div class="after-link rv">{ulink(L('/projects'), 'See more of our work')}</div>''', 'sec sec-tight')
 
+def lewis_block(h='Meet Lewis.'):
+    inner = f'''<span class="lbl">Director, LPS Plumbing Group</span><h2 class="h-lg" data-lines>{hd(h)}</h2>
+<blockquote class="lq">&ldquo;I started LPS Plumbing Group with the goal of building a plumbing business known for quality work, being reliable and building good relationships with our clients and builders.&rdquo;</blockquote>
+<p class="lead">Lewis Slatter has 8+ years on the tools. He runs every job and he is the one who picks up when you call.</p>
+<div class="cta-row" style="margin-top:28px">{btn('tel:'+TEL, 'Call Lewis: '+PHONE, 'teal', PH)}{ulink(L('/about'), 'More about LPS')}</div>'''
+    return section(f'<div class="split lewis"><div class="split-img rv"><img src="{W("lewis")}" alt="{alt("lewis")}" loading="lazy"></div><div class="rv">{inner}</div></div>')
+
 def split(img, inner, flip=False, alt_extra=''):
     return f'<div class="split{" flip" if flip else ""}"><div class="split-img rv"><img src="{W(img)}" alt="{alt(img, alt_extra)}" loading="lazy"></div><div class="rv">{inner}</div></div>'
 
@@ -513,14 +524,14 @@ schema = {
     "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": s[1]}} for s in SERVICES],
     "sameAs": [f"https://www.instagram.com/{IG}/"],
 }
-ld = f'<script type="application/ld+json">{json.dumps(schema)}</script>{faq_ld(FAQ)}{MAPLIB}<link rel="preload" as="image" href="{BASE}/lps-hero-poster.jpg" fetchpriority="high">'
+ld = f'<script type="application/ld+json">{json.dumps(schema)}</script>{faq_ld(FAQ)}{MAPLIB}<link rel="preload" as="image" href="{BASE}/video/lps-hero-hd.jpg" fetchpriority="high">'
 svc_foot = ''.join(f'<a href="{L("/"+s[0])}">{s[1]}</a>' for s in SERVICES)
 
 pages['index.html'] = head('Plumber Sydney for High End Builds & Renos | LPS Plumbing',
             'Plumbing, drainage and gas for high end builds, renos and bathrooms across Sydney. Licensed, insured, 24/7. Call Lewis on 0452 611 522.', '/', ld) + nav(True) + f'''
 <header class="hero"><div class="wrap"><div class="inner hero-grid">
   <div class="hero-media">
-    <video autoplay muted loop playsinline preload="auto" poster="{BASE}/lps-hero-poster.jpg" aria-hidden="true"><source src="{BASE}/lps-hero.mp4" type="video/mp4"></video>
+    <video autoplay muted loop playsinline preload="auto" poster="{BASE}/video/lps-hero-hd.jpg" aria-label="LPS Plumbing Group work: brass tapware, bathrooms and a new build kitchen"><source src="{BASE}/video/lps-hero-hd.mp4" media="(min-width: 800px)" type="video/mp4"><source src="{BASE}/lps-hero.mp4" type="video/mp4"></video>
     <div class="hero-tag"><i></i><b>24/7</b> emergency call outs · Lic {LIC}</div>
     {VBTN}
   </div>
@@ -539,6 +550,7 @@ pages['index.html'] = head('Plumber Sydney for High End Builds & Renos | LPS Plu
 </div></div></section>
 {section('<h2 class="h-lg center" data-lines style="margin-bottom:56px">Everything in the wall, done properly<span class="dot">.</span></h2>' + scards())}
 {featured_block()}
+{lewis_block()}
 {collab_block(keys=('basin', 'sink', 'gooseneck', 'kitchensink'))}
 {steps_block()}
 {reviews_block()}
@@ -667,7 +679,7 @@ about_inner = f"""<h2 class="h-lg">Built on doing it once, properly<span class="
 <p class="lead">The market is full of cheap plumbing. We are not trying to be the cheapest. We are trying to be the plumber you never have to call back.</p>
 <p class="lead">We are growing. If you are a plumber who takes pride in the finish, <a href="{L('/careers')}" style="color:var(--sea-dk);font-weight:600">come work with us</a>.</p>"""
 pages['about.html'] = head('About LPS Plumbing Group | Lewis Slatter, Director',
-    'LPS Plumbing Group is led by director Lewis Slatter, with 8+ years plumbing high end homes across Sydney. Licensed and insured.', '/about') + nav(cur='/about') + phead('About', 'About', 'Small crew. High standards.', 'LPS Plumbing Group is a licensed plumbing, drainage and gas fitting business led by director Lewis Slatter.', img='stonevanity', path='/about', video='tap') + f'''
+    'LPS Plumbing Group is led by director Lewis Slatter, with 8+ years plumbing high end homes across Sydney. Licensed and insured.', '/about') + nav(cur='/about') + phead('About', 'About', 'Small crew. High standards.', 'LPS Plumbing Group is a licensed plumbing, drainage and gas fitting business led by director Lewis Slatter.', img='lewis', path='/about') + f'''
 {section(split('ensuite', about_inner) + gstrip(['kitchen', 'basin', 'shower']))}
 {collab_block('What you can expect.', ('miranda', 'sink', 'bathreno', 'laundry'))}
 {reviews_block()}
@@ -789,7 +801,7 @@ def _resp(c):
         p = os.path.join(_IMGDIR, name + '.webp')
         if not os.path.exists(p) or 'srcset=' in tag: return tag
         w, h = _Img.open(p).size
-        extra = f' srcset="{BASE}/img/{name}-800.webp 800w, {BASE}/img/{name}.webp {w}w" sizes="(max-width: 700px) 92vw, (max-width: 1200px) 50vw, 640px" width="{w}" height="{h}" decoding="async"'
+        extra = f' srcset="{BASE}/img/{name}-800.webp 800w, {BASE}/img/{name}.webp {w}w" sizes="(max-width: 700px) 100vw, 50vw" width="{w}" height="{h}" decoding="async"'
         return tag[:-1] + extra + '>'
     return _re.sub(r'<img [^>]*src="[^"]*/img/([a-z0-9-]+?)\.webp"[^>]*>', fix, c)
 pages = {k: _resp(v) for k, v in pages.items()}
