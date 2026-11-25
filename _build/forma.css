@@ -24,7 +24,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 :focus-visible{outline:2px solid var(--sea);outline-offset:3px;border-radius:6px}
 
 .wrap{max-width:1440px;margin:0 auto;padding-left:var(--gut);padding-right:var(--gut)}
-.in{max-width:1376px;margin:0 auto}
+.inner{max-width:1376px;margin:0 auto}
 .pad{padding-left:20px;padding-right:20px}
 @media(min-width:700px){.pad{padding-left:16px;padding-right:16px}}
 

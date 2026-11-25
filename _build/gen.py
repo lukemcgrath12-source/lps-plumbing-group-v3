@@ -267,8 +267,8 @@ def phead(crumb, eyebrow, h1, lead, ctas=True, img=None, path=None, extra=''):
       {c}{extra}
     </div>'''
     if not img:
-        return f'<header class="hero hero-solo"><div class="wrap"><div class="in">{panel}</div></div></header>{bc}'
-    return f'''<header class="hero"><div class="wrap"><div class="in hero-grid short">
+        return f'<header class="hero hero-solo"><div class="wrap"><div class="inner">{panel}</div></div></header>{bc}'
+    return f'''<header class="hero"><div class="wrap"><div class="inner hero-grid short">
     <div class="hero-media"><img src="{W(img)}" alt="{alt(img)}" fetchpriority="high"></div>
     {panel}
   </div></div></header>{bc}'''
@@ -283,7 +283,7 @@ def form_action():
 
 def section(inner, cls='sec', id=''):
     i = f' id="{id}"' if id else ''
-    return f'<section class="{cls}"{i}><div class="wrap"><div class="in">{inner}</div></div></section>'
+    return f'<section class="{cls}"{i}><div class="wrap"><div class="inner">{inner}</div></div></section>'
 
 def sec_head(h, lead='', tag='h2'):
     l = f'<p class="lead rv">{lead}</p>' if lead else ''
@@ -312,7 +312,7 @@ CLIST = f'''<div class="c-list">
     </div>'''
 
 def quote_form(heading='Tell us what you are building.', sub='Builders, send through plans or a scope and we will price the full plumbing package. Homeowners, tell us about the job and we will come back with a clear, itemised quote.', img='kitchen'):
-    return f'''<section class="sec" id="quote"><div class="wrap"><div class="in contact">
+    return f'''<section class="sec" id="quote"><div class="wrap"><div class="inner contact">
   {cimg(img, heading, sub, CLIST)}
   <form class="c-form rv" id="quoteForm" action="{form_action()}" method="POST" onsubmit="handleSubmit(event)">
     {hidden('New quote request: LPS Plumbing Group website')}
@@ -377,7 +377,7 @@ def foot():
     areas = ''.join(f'<a href="{L("/"+a[0])}">{ttl(a[1])}</a>' for a in AREAS)
     return f'''
 <footer class="ft">
-  <div class="wrap"><div class="in">
+  <div class="wrap"><div class="inner">
     <div class="ft-top"><h2>From the first pit to the final tap.</h2><a class="ulink" href="{L('/quote')}"><span>Send us your plans</span>{NE}</a></div>
     <div class="ft-mid">
       <div class="ft-brand"><img src="{W('logo',600,150)}" alt="LPS Plumbing Group" width="138" height="34"><p>Plumbing, drainage and gas fitting for high end builds, renovations and bathrooms across Sydney and the South Coast.</p></div>
@@ -487,7 +487,7 @@ svc_foot = ''.join(f'<a href="{L("/"+s[0])}">{s[1]}</a>' for s in SERVICES)
 
 pages['index.html'] = head('Plumber Sydney for High End Builds & Renos | LPS Plumbing',
             'Plumbing, drainage and gas for high end builds, renos and bathrooms across Sydney. Licensed, insured, 24/7. Call Lewis on 0452 611 522.', '/', ld) + nav(True) + f'''
-<header class="hero"><div class="wrap"><div class="in hero-grid">
+<header class="hero"><div class="wrap"><div class="inner hero-grid">
   <div class="hero-media">
     <video autoplay muted loop playsinline preload="auto" poster="{BASE}/lps-hero-poster.jpg" aria-hidden="true"><source src="{BASE}/lps-hero.mp4" type="video/mp4"></video>
     <div class="hero-tag"><i></i><b>24/7</b> emergency call outs · Lic {LIC}</div>
@@ -547,7 +547,7 @@ for i, s in enumerate(SERVICES):
     <div id="formStatus" role="status"></div>
   </form>'''
         pages[f'{slug}.html'] = head(title, desc, '/' + slug, faq_ld(faqs) + svc_ld) + nav() + f'''
-<header class="hero"><div class="wrap"><div class="in hero-grid short">
+<header class="hero"><div class="wrap"><div class="inner hero-grid short">
   <div class="hero-panel em-panel">
     <span class="em-live"><i></i>Answering now · 24/7</span>
     <h1 class="h-xl" data-lines="now">Emergency plumber, 24/7<span class="dot" style="color:var(--mint)">.</span></h1>
@@ -646,7 +646,7 @@ pages['careers.html'] = head('Plumbing Jobs Sydney | Work with LPS Plumbing Grou
     'LPS Plumbing Group is hiring plumbers and apprentices for high end builds across Sydney. Apply in two minutes or call Lewis on 0452 611 522.', '/careers') + nav() + phead('Careers', 'We are hiring', 'Work on builds worth your name.', 'We are growing the crew to keep up with high end builders across Sydney. If you take pride in the finish, we want to hear from you.', False, img='commercial', path='/careers', extra=f'<div class="cta-row rv">{btn("#apply", "Apply in two minutes")}</div>') + f'''
 {section(sec_head('Open roles.') + roles)}
 {section(sec_head('Why work at LPS.') + why_w)}
-<section class="sec" id="apply"><div class="wrap"><div class="in contact">
+<section class="sec" id="apply"><div class="wrap"><div class="inner contact">
   {cimg('laundry', 'Two minutes. No resume needed.', f'Fill this in and Lewis will give you a call. Got a resume? Add a link or email it to {EMAIL}.', f'<div class="c-list"><a href="tel:{TEL}"><span>Rather chat?</span><b>Call {PHONE}</b></a></div>')}
   <form class="c-form rv" id="quoteForm" action="{form_action()}" method="POST" onsubmit="handleSubmit(event)">
     {hidden('Job application: LPS Plumbing Group website')}
@@ -670,7 +670,7 @@ pages['careers.html'] = head('Plumbing Jobs Sydney | Work with LPS Plumbing Grou
 # ---------------- BUILDER CHECKLIST (lead magnet) ----------------
 pages['builders-checklist.html'] = head("Builder's Plumbing Checklist | LPS Plumbing Group",
     'Free plumbing checklist for builders: what to lock in before pricing, slab, rough in and handover so plumbing never holds up your program.', '/builders-checklist') + nav() + phead('Builder checklist', 'Free for builders', "The builder's plumbing checklist.", 'What to lock in before pricing, slab, rough in, fit off and handover, so plumbing never holds up your program. One page, free.', False, img='laundry', path='/builders-checklist') + f'''
-<section class="sec"><div class="wrap"><div class="in split" style="align-items:start">
+<section class="sec"><div class="wrap"><div class="inner split" style="align-items:start">
   <div class="rv">
     <h2 class="h-lg">What's inside<span class="dot">.</span></h2>
     <ul class="cklist">
